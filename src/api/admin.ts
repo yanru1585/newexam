@@ -1,7 +1,10 @@
 import {post,get} from './request'
 import {AxiosResponse} from 'axios'
 
-// 访客统计
-// export const statistics = (): Promise<AxiosResponse<any>> => {
-//   return get('/visituser/statistics')
-// };
+// 老师登录
+interface Iadmin{
+  (username:string,pass:string):any
+}
+export const Loginteach:Iadmin=(username:string,pass:string):Promise<AxiosResponse<any>>=>{
+  return post('/teacher/checklogin',{username,pass})
+}

@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
-// import { Loginteach } from '../api/admin';
+import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
 
@@ -68,19 +68,19 @@ const rules = reactive<FormRules>({
 });
 
 // 老师登录
-// const Login = async () => {
-//   const res = await Loginteach(ruleForm.username, ruleForm.pass);
-//   console.log(res);
-//   if (res.errCode === 10000) {
-//     ElMessage({
-//       message: '登陆成功',
-//       type: 'success',
-//     });
-//     sessionStorage.setItem('token',res.data)
-//   } else {
-//     ElMessage.error(res.errMsg);
-//   }
-// };
+const Login = async () => {
+  const res = await Loginteach(ruleForm.username, ruleForm.pass);
+  console.log(res);
+  if (res.errCode === 10000) {
+    ElMessage({
+      message: '登陆成功',
+      type: 'success',
+    });
+    sessionStorage.setItem('token',res.data)
+  } else {
+    ElMessage.error(res.errMsg);
+  }
+};
 </script>
 
 <style scoped>
