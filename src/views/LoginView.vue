@@ -29,7 +29,7 @@
               placeholder="用户名"
             />
           </el-form-item>
-          <el-form-item prop="username">
+          <el-form-item prop="pass">
             <el-input
               type="password"
               v-model="ruleForm.pass"
@@ -43,7 +43,7 @@
           </el-form-item>
           <el-form-item>
             <div class="user">
-              <p class="username">忘记密码</p>
+              <p class="username1">忘记密码</p>
             </div>
           </el-form-item>
         </el-form>
@@ -65,11 +65,17 @@ const ruleForm = reactive({
   pass: '',
 });
 const rules = reactive<FormRules>({
-  username: [{ required: true, message: '请输入账号', trigger: 'blur' }],
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '账号为3到5个字符', trigger: 'blur' },],
+  pass: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
 });
 
 // 老师登录
 const Login = async () => {
+ if(ruleForm.username === ''){
+  ElMessage.error('请输入账号');
+}else if(ruleForm.pass === ''){
+  ElMessage.error('请输入密码');
+}else{
   const res = await Loginteach(ruleForm.username, ruleForm.pass);
   console.log(res);
   if (res.errCode === 10000) {
@@ -78,9 +84,12 @@ const Login = async () => {
       type: 'success',
     });
     sessionStorage.setItem('token',res.data)
+    router.push('/Home')
   } else {
     ElMessage.error(res.errMsg);
   }
+}
+
 };
 </script>
 
@@ -110,7 +119,7 @@ const Login = async () => {
 .user {
   width: 100%;
 }
-.username {
+.username1 {
   color: cornflowerblue;
   font-size: 16px;
 }
