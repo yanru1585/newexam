@@ -41,12 +41,16 @@
       </el-form-item>
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
-      <el-table-column align="center" label="操作" #default="scope">
-      <el-button type="success" >修改</el-button>
-      <el-button type="danger" >删除</el-button>
-    </el-table-column>
-    <el-table :data="data.tableData" stripe style="width: 100%;">
-      <el-table-column type="selection" />
+    <div style="padding: 10px 0px;" v-if="istop">
+      
+      <el-button type="danger" @click="deletelist">批量删除</el-button>
+      <el-button type="primary">发布考试</el-button>
+      <el-button type="success" >取消发布</el-button>
+    </div>
+
+
+    <el-table :data="data.tableData" stripe style="width: 100%;" @selection-change="handleSelectionChange">
+      <el-table-column type="selection"  />
       <el-table-column prop="title" label="考试名称" #default="scope">
         <span  style=" color: #409eff;">{{ scope.row.title}} </span>
         </el-table-column>
@@ -97,8 +101,8 @@
 import {onMounted} from 'vue'
 import { reactive } from 'vue';
 import { ref } from 'vue';
-import { list } from '../../../api/admin'
-
+import { list,dele } from '../../../api/admin'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const formInline:Iform = reactive({
   personType:[//访客类型列表
     {id:1,type_name:'所有'},
@@ -107,6 +111,7 @@ const formInline:Iform = reactive({
   ],
 });
 const radio = ref(3);
+const istop =ref(true)
 //列表数据
 interface Iparams {
   page: number; //页码 默认是1
@@ -117,15 +122,16 @@ interface Iparams {
   opentime: string; //opentime>0 开放时间：永久开放
   begindate: string; //开放时间：开始日期
   enddate: string; //开放时间：截止日期
-  state: number; //状态 0:所有，1已发布，2未发布
-  isread: number; //1考试列表（判卷）
+  state: string; //状态 0:所有，1已发布，2未发布
+  isread: string; //1考试列表（判卷）
   result: string; //学生考试结果 “已通过”，”未通过”，”待阅卷”，”未考试”
 }
 //定义表格
 interface Istate{
   tableData:Array<any>
   params:Iparams
-  total:Number
+  total:Number,
+  ids:Array<any>
 }
 //数据
 interface Iform {//数据对象接口
@@ -142,27 +148,71 @@ const data = reactive<Istate>({
   opentime: '', //opentime>0 开放时间：永久开放
   begindate: '', //开放时间：开始日期
   enddate: '', //开放时间：截止日期
-  state: 1, //状态 0:所有，1已发布，2未发布
-  isread: 1, //1考试列表（判卷）
+  state: '', //状态 0:所有，1已发布，2未发布
+  isread: '', //1考试列表（判卷）
   result: '', //学生考试结果 “已通过”，”未通过”，”待阅卷”，”未考试”
  },
  tableData:[],
- total:0
+ total:0,
+ ids:[]
 })
+//列表请求
 const getlist =async()=>{
 let res:any = await list(data.params)
 console.log(res);
 if(res.errCode ===10000){
   data.tableData=res.data.list
   data.total = res.data.counts
-  console.log(data.total);
-  
+  console.log(data.tableData);
+  console.log(res.data.list);
 }
 }
 onMounted(()=>{
 getlist()
 })
-
+//多选数据
+ const  handleSelectionChange =(val:any)=>{
+  console.log(val);
+  const arr = val.map((item:{id:any})=>{
+    return item.id
+  })
+  console.log(arr);
+  
+  // istop = true
+}
+//批量删除
+const deletelist = ()=>{
+  ElMessageBox.confirm(
+    '是否确定删除',
+    '删除',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(async() => {
+      const datas = {
+        ids:data.ids
+      }
+      console.log(datas);
+      
+      const res:any = await dele(datas)
+      console.log(res);
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      })
+      getlist()
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      })
+    })
+  
+}
 //分页
 const pageSize2 =ref(4)
 const currentPage1= ref(1)
