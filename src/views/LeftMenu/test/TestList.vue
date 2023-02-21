@@ -35,12 +35,16 @@
       </div>
       <el-form-item label="状态" prop="region" style="margin-left: 10px">
         <el-select style="width: 100px" placeholder="请选择">
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
+        <el-option v-for="item in  formInline.personType" :key="item.id" :label="item.type_name" :value="item.id" />
+   
         </el-select>
       </el-form-item>
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
+      <el-table-column align="center" label="操作" #default="scope">
+      <el-button type="success" >修改</el-button>
+      <el-button type="danger" >删除</el-button>
+    </el-table-column>
     <el-table :data="data.tableData" stripe style="width: 100%;">
       <el-table-column type="selection" />
       <el-table-column prop="title" label="考试名称" #default="scope">
@@ -79,7 +83,7 @@
       v-model:current-page="currentPage1"
       v-model:page-size="pageSize2"
       :page-sizes="[5,10,15,20]"
-      style="float: right;"
+      style="margin-top: 10px;float: right;"
       layout="total, sizes, prev, pager, next, jumper"
       :total="data.total"
       @size-change="handleSizeChange"
@@ -97,9 +101,9 @@ import { list } from '../../../api/admin'
 
 const formInline:Iform = reactive({
   personType:[//访客类型列表
-    {id:1,type_name:'外来人员'},
-    {id:2,type_name:'老师'},
-    {id:3,type_name:'学生'},
+    {id:1,type_name:'所有'},
+    {id:2,type_name:'已发布'},
+    {id:3,type_name:'未发布'},
   ],
 });
 const radio = ref(3);
