@@ -37,7 +37,7 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="Loginbutton" 
+            <el-button type="primary" class="Loginbutton"  @click="Login"
               >登录</el-button
             >
           </el-form-item>
