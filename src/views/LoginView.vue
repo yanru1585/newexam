@@ -96,8 +96,8 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       type: 'success',
     });
     sessionStorage.setItem('token',res.data.token)//存储token
-    sessionStorage.setItem('menu',res.data)//存储菜单数据
-    sessionStorage.setItem('model',res.data.model)//存储管理员数据
+    sessionStorage.setItem('menu',JSON.stringify(res.data.menu))//存储菜单数据
+    sessionStorage.setItem('model',JSON.stringify(res.data.model))//存储管理员数据
     sessionStorage.setItem('type',res.data.type)//登录类型
     router.push('/Home')
   } else {
