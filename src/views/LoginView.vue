@@ -58,6 +58,7 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
+import { fa } from 'element-plus/es/locale';
 
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
@@ -65,8 +66,8 @@ const ruleForm = reactive({
   pass: '',
 });
 const rules = reactive<FormRules>({
-  username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '账号为3到5个字符', trigger: 'blur' },],
-  pass: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
+  username: [{ required: false, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '账号为3到5个字符', trigger: 'blur' },],
+  pass: [{ required: false, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
 });
 
 // 老师登录
