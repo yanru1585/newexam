@@ -16,7 +16,7 @@
       <div>
         <el-form
           ref="ruleFormRef"
-          :model="ruleForm"
+          :model="loginData"
           :rules="rules"
           label-width="120px"
           class="demo-ruleForm"
@@ -25,19 +25,19 @@
           <el-form-item prop="username">
             <el-input
               type="text"
-              v-model="ruleForm.username"
+              v-model="loginData.username"
               placeholder="用户名"
             />
           </el-form-item>
           <el-form-item prop="pass">
             <el-input
               type="password"
-              v-model="ruleForm.pass"
+              v-model="loginData.pass"
               placeholder="请输入密码"
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="Loginbutton"  @click="Login"
+            <el-button type="primary" class="Loginbutton"  @click="submitForm(ruleFormRef)"
               >登录</el-button
             >
           </el-form-item>
@@ -54,44 +54,82 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref,toRefs } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
 
 const ruleFormRef = ref<FormInstance>();
+interface Ilogin{
+  username: String,
+  pass: String,
+}
+interface Irule{
+  loginData:Ilogin
+}
 const ruleForm = reactive({
-  username: '',
-  pass: '',
+  loginData:{
+    username: '',
+    pass: '',
+  } 
 });
+const {loginData}=toRefs(ruleForm)
 const rules = reactive<FormRules>({
   username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '账号为3到5个字符', trigger: 'blur' },],
-  pass: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
+  
+  pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
 });
 
-// 老师登录
-const Login = async () => {
- if(ruleForm.username === ''){
-  ElMessage.error('请输入账号');
-}else if(ruleForm.pass === ''){
-  ElMessage.error('请输入密码');
-}else{
-  const res = await Loginteach(ruleForm.username, ruleForm.pass);
-  console.log(res);
+
+// 点击登录
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async(valid, fields) => {
+    if (valid) {
+      // console.log('submit!')
+      const res = await Loginteach(loginData.value.username,loginData.value.pass);
+      console.log(res);
   if (res.errCode === 10000) {
     ElMessage({
       message: '登陆成功',
       type: 'success',
     });
-    sessionStorage.setItem('token',res.data)
+    sessionStorage.setItem('token',res.data.token)//存储token
+    sessionStorage.setItem('menu',res.data)//存储菜单数据
+    sessionStorage.setItem('model',res.data.model)//存储管理员数据
+    sessionStorage.setItem('type',res.data.type)//登录类型
     router.push('/Home')
   } else {
     ElMessage.error(res.errMsg);
   }
+    } else {
+      // console.log('error submit!', fields)
+      ElMessage.error('请正确输入账号密码')
+    }
+  })
 }
+// const Login = async () => {
+//  if(ruleForm.username === ''){
+//   ElMessage.error('请输入账号');
+// }else if(ruleForm.pass === ''){
+//   ElMessage.error('请输入密码');
+// }else{
+//   const res = await Loginteach(ruleForm.username, ruleForm.pass);
+//   console.log(res);
+//   if (res.errCode === 10000) {
+//     ElMessage({
+//       message: '登陆成功',
+//       type: 'success',
+//     });
+//     sessionStorage.setItem('token',res.data)
+//     router.push('/Home')
+//   } else {
+//     ElMessage.error(res.errMsg);
+//   }
+// }
 
-};
+// };
 </script>
 
 
