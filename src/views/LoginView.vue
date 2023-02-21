@@ -1,3 +1,4 @@
+
 <template>
   <div class="boxlogin">
     <div class="login">
@@ -130,3 +131,4 @@ const Login = async () => {
   margin-left: 60px;
 }
 </style>
+
