@@ -59,6 +59,7 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
+import { fa } from 'element-plus/es/locale';
 
 const ruleFormRef = ref<FormInstance>();
 interface Ilogin{
@@ -76,6 +77,7 @@ const ruleForm = reactive({
 });
 const {loginData}=toRefs(ruleForm)
 const rules = reactive<FormRules>({
+
   username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 5, message: '账号为3到5个字符', trigger: 'blur' },],
   
   pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 5, message: '密码为3到5个字符', trigger: 'blur' },],
