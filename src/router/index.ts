@@ -29,6 +29,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/exam/ExamList.vue'),
       },
       {
+        path: '/Examsee', //阅卷查看或阅卷
+        name: 'Examsee',
+        component: () => import('../views/LeftMenu/exam/Examsee.vue'),
+      },
+      {
         path: '/subjects', //试卷
         name: 'Subjects',
         component: () => import('../views/LeftMenu/subjects/SubjectsList.vue'),

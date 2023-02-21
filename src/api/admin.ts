@@ -15,3 +15,20 @@ export const list=(params:any):Promise<AxiosResponse<any>>=>{
 export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
+
+
+// 阅卷管理列表
+interface Iist{
+  (page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>
+}
+export const Ilist:Iist=(page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>=>{
+  return get('/test/list',{page,psize,isread,key})
+}
+// 阅卷查看
+interface Isee{
+  (page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>
+}
+export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>=>{
+  return get('/student/test',{page,psize,testid,key,state})
+}
+
