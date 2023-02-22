@@ -1,26 +1,28 @@
 <template>
   <div>
-   <!-- 试卷 -->
-   <h3>试卷管理</h3>
+     <div class="header">
+      <h3>试卷管理</h3>
+      <el-button type="primary" @click="addSubject">创建试卷</el-button>
+     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
     <el-form-item label="关键字">
-      <el-input v-model="formInline.key" placeholder="考试名称" />
+      <el-input v-model="formInline.key" placeholder="考试名称" clearable />
     </el-form-item>
     <el-form-item label="创建人">
-      <el-input v-model="formInline.admin" placeholder="创建人" />
+      <el-input v-model="formInline.admin" placeholder="创建人"  clearable />
     </el-form-item>
     <el-form-item >
-      <el-checkbox-group v-model="formInline.ismy">
-        <el-checkbox  label="true" value="只看我创建的" name="type" >
+      <el-checkbox-group v-model="checkIsmy" @change="checkoutIsmy" >
+        <el-checkbox  label="true" value="只看我创建的" name="type" :checked='ischeck' >
           只看我创建的
           </el-checkbox>
       </el-checkbox-group>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">查询</el-button>
+      <el-button type="primary" @click="seacher">查询</el-button>
     </el-form-item>
   </el-form>
-  <el-table :data="tableData" border style="width: auto">
+  <el-table :data="tableData"  style="width: auto">
     <el-table-column prop="title" label="试卷名称" align="center" />
     <el-table-column prop="counts" label="题量" align="center"  />
     <el-table-column prop="singles" label="单选" align="center" />
@@ -56,14 +58,16 @@
 
 <script lang="ts" setup>
 import {subjectList}from '../../../api/subjects'
-import { reactive,toRefs,onMounted,ref } from 'vue';
+import { reactive,toRefs,onMounted,ref,watchEffect } from 'vue';
+import { useRouter } from 'vue-router';
+const router =useRouter()
 const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
 interface Iform{
   key:String
   admin:String
-  ismy:Array<any>
+  ismy:Number
   page:Number
   psize:Number
 }
@@ -72,25 +76,30 @@ interface Idata{
   formInline:Iform
   tableData:Array<any>
   total:Number
+  checkIsmy:Array<any>
+    ischeck:Boolean
 }
 const data:Idata=reactive({
   formInline:{//搜索框数据
     key:'',//搜素关键字
     admin:'',//创建人
-    ismy:[],//只看我的
+    ismy:0,//只看我的
     page:1,//页码
     psize:5,//显示数量
   },
+  checkIsmy:[],//多选框
   tableData:[],//表格数据
   total:0,//共计多少条
+  ischeck:false
 })
 
 
 
-const {formInline,tableData,total}=toRefs(data)
+const {formInline,tableData,total,checkIsmy,ischeck}=toRefs(data)
 // 点击查询
-const onSubmit=()=>{
-  console.log(formInline.value);
+const seacher=()=>{
+  getList()
+  // console.log(formInline.value);
 }
 // 获取试卷列表
 const getList= async ()=>{
@@ -118,15 +127,38 @@ const handleCurrentChange = (val: number) => {
 onMounted(()=>{
   getList()
 })
+// 触发只看我创建的
+const checkoutIsmy=()=>{
+  console.log(checkIsmy.value);
+  
+  
+  formInline.value.admin=''
+  formInline.value.ismy=1
+  console.log(formInline.value.admin);
+}
+// 触发创建人输入框时
+watchEffect(()=>{
+  if(formInline.value.admin){
+    checkIsmy.value=[]
+  }
+})
+// 点击创建试卷
+const addSubject=()=>{
+  router.push('/SubjectsAdd')
+}
 
 </script>
 <style lang="less" scoped>
-h3{
+.header{
+  display: flex;
+  justify-content: space-between;
+  h3{
   font-size: 20px;
   color: rgb(33, 33, 33);
   font-weight: normal;
-  line-height: 50px;
+  }
 }
+
 .el-form{
   margin-top: 10px;
 }

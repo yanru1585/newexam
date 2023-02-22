@@ -39,6 +39,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/subjects/SubjectsList.vue'),
       },
       {
+        path: '/SubjectsAdd', //创建试卷
+        name: 'AddSubject',
+        component: () => import('../views/LeftMenu/subjects/AddSubject.vue'),
+      },
+      {
         path: '/databaselist', //题库
         name: 'Databaselist',
         component: () => import('../views/LeftMenu/databaselist/DatabaseList.vue'),
