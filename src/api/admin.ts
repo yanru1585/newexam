@@ -22,3 +22,10 @@ interface Isee{
 export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>=>{
   return get('/student/test',{page,psize,testid,key,state})
 }
+//部门数据
+interface Iclasses{
+  (page:number,psize:number,):Promise<AxiosResponse<any>>
+}
+export const IClasses:Iclasses=(page:number,psize:number,):Promise<AxiosResponse<any>>=>{
+  return get('/classes/list',{page,psize})
+}
