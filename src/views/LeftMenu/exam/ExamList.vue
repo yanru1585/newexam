@@ -8,24 +8,26 @@
             <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
           </div>
           <div>
-            <el-table :data="data.list" border style="width: 100%">
+            <el-table :data="data.list"   border style="width: 100%">
               <el-table-column prop="title" label="考试名称" />
               <el-table-column prop="info" label="考试说明" />
               <el-table-column prop="subjectnum" label="题量" />
               <el-table-column prop="studentcounts" label="考试人数" />
-              <el-table-column prop="incomplete" label="未判人数" />
+              <el-table-column  label="未判人数" >
+                <template #default="scope">
+                  <span class="incomplete">{{scope.row.incomplete}}</span>
+                </template >
+              </el-table-column>
               <el-table-column label="开放时间">
                 <template #default="scope">
-                  <span>{{
-                    scope.row.begintime === ''
-                      ? scope.row.begintime至scope.row.endtime
-                      : '不限'
-                  }}</span>
-                </template>
+                  <span>{{scope.row.begintime===null ? '不限':scope.row.begintime}}</span>
+                </template >
               </el-table-column>
               <el-table-column label="操作">
                 <template #default="scope" >
-                  <el-button link type="primary" size="small" @click="see(scope.row)">阅卷</el-button>
+                  <el-button link type="primary" size="small" @click="see(scope.row)">
+                  <span>{{scope.row.incomplete === 0 ? '查看':'阅卷'}}</span>
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -70,7 +72,7 @@ const data: marking = reactive({
 });
 const getIlist = async () => {
   const res = await Ilist(data.page, data.psize, data.isread,data.key);
-  // console.log(res);
+  console.log(res);
   data.list = res.data.list;
   // console.log(data.list);
   total.value = res.data.counts;
@@ -113,5 +115,8 @@ onMounted(() => {
 }
 .cha {
   margin-bottom: 30px;
+}
+.incomplete{
+  color: red;
 }
 </style>
