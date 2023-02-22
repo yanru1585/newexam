@@ -3,7 +3,7 @@
     <el-drawer
       v-model="drawer"
       title="I am the title"
-      size="60%"
+      size="50%"
       :with-header="false"
       :close-on-click-modal="false"
     >
