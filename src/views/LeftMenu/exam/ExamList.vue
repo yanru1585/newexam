@@ -72,7 +72,7 @@ const data: marking = reactive({
 });
 const getIlist = async () => {
   const res = await Ilist(data.page, data.psize, data.isread,data.key);
-  console.log(res);
+  // console.log(res);
   data.list = res.data.list;
   // console.log(data.list);
   total.value = res.data.counts;
@@ -100,7 +100,7 @@ const reser=()=>{
 }
 // 查看
 const see=(row:any)=>{
-  console.log(row.title);
+  // console.log(row);
   router.push({path:"/Examsee",query:{id:row.id,title:row.title}})
 }
 onMounted(() => {

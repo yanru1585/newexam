@@ -39,6 +39,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/exam/Examsee.vue'),
       },
       {
+        path: '/Examdrawer', //阅卷抽屉
+        name: 'Examdrawer',
+        component: () => import('../views/LeftMenu/exam/Examdrawer.vue'),
+      },
+      {
         path: '/subjects', //试卷
         name: 'Subjects',
         component: () => import('../views/LeftMenu/subjects/SubjectsList.vue'),
@@ -77,6 +82,11 @@ const routes: any = [
         path: '/role', //角色
         name: 'Role',
         component: () => import('../views/LeftMenu/role/RoleList.vue'),
+      },
+      {
+        path: '/databasequestionlist', //试题列表
+        name: 'Databasequestionlist',
+        component: () => import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
     ],
   },
