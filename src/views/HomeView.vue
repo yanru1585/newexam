@@ -22,7 +22,8 @@ import LeftMenu from '../components/LeftMenu.vue';
 <style lang="less" scoped>
 .el-aside {
   background-color: #ebebeb;
-  height: 100vh;
+  height: 100%;
+  // position: fixed;
 }
 
 </style>
