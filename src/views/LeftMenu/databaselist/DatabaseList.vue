@@ -14,17 +14,28 @@
           <el-input v-model="admin" placeholder="请输入创建人" />
         </el-form-item>
         <el-form-item>
-          <el-checkbox v-model="ismy" label="只看我创建的" size="large" />
+          <el-checkbox
+            v-model="ismy"
+            true-label="1"
+            false-label="0"
+            label="只看我创建的"
+            size="large"
+          />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="search">查询</el-button>
-          <el-button type="danger">批量删除</el-button>
+          <el-button type="danger" @click="delAll">批量删除</el-button>
         </el-form-item>
       </el-form>
     </div>
 
     <div>
-      <el-table :data="tableData" style="width: 100%" size="small">
+      <el-table
+        :data="tableData"
+        style="width: 100%"
+        size="small"
+        @selection-change="selectionChange"
+      >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="题库" width="450" />
         <el-table-column prop="counts" label="题目数量" width="180" />
@@ -40,7 +51,13 @@
               >试题</el-button
             >
             <el-button link type="primary" size="small">编辑</el-button>
-            <el-button link type="primary" size="small">删除</el-button>
+            <el-button
+              link
+              type="primary"
+              size="small"
+              @click="del(scope.row.id)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -66,9 +83,13 @@
 
 <script lang="ts" setup>
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
-import { ElMessage } from 'element-plus';
-import { reactive, toRefs, onMounted, ref, watch } from 'vue';
-import { databaseList } from '../../../api/database';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { reactive, toRefs, onMounted, ref, watch, toRaw } from 'vue';
+import {
+  databaseList,
+  databaseDelete,
+  databaseDeleteall,
+} from '../../../api/database';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -101,10 +122,11 @@ const data: any = reactive({
 const state: any = reactive({
   tableData: [],
   total: 0,
+  ids: [],
 });
 
 const { key, admin, ismy } = toRefs(data);
-const { tableData, total } = toRefs(state);
+const { tableData, total, ids } = toRefs(state);
 
 onMounted(() => {
   getList(); //题库列表
@@ -130,6 +152,74 @@ const getList = async () => {
 // 查询
 const search = () => {
   getList();
+};
+
+// 删除题库(单删)
+const del = (id: any) => {
+  console.log(id);
+  ElMessageBox.confirm('你确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await databaseDelete(id);
+      console.log('删除题库(单删)', res);
+      if (res.errCode !== 10000) {
+        return false;
+      }
+      ElMessage({
+        type: 'success',
+        message: '删除成功!',
+      });
+      getList();
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      });
+    });
+};
+
+// 获取批删的id
+const selectionChange = (val: any) => {
+  console.log(val);
+  state.ids = val.map((item: any) => {
+    console.log(item.id);
+    // state.ids=item.id
+    return item.id;
+  });
+  console.log(toRaw(state.ids));
+};
+
+// 批量删除
+const delAll = async () => {
+  console.log(toRaw(state.ids));
+
+  ElMessageBox.confirm('你确定要删除选中的吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await databaseDeleteall(state.ids);
+      console.log('批量删除题库', res);
+      if (res.errCode !== 10000) {
+        return false;
+      }
+      ElMessage({
+        type: 'success',
+        message: '删除成功!',
+      });
+      getList();
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      });
+    });
 };
 
 // 点击跳转到试题列表
