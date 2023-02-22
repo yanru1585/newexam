@@ -63,6 +63,11 @@ const routes: any = [
         name: 'Role',
         component: () => import('../views/LeftMenu/role/RoleList.vue'),
       },
+      {
+        path: '/databasequestionlist', //试题列表
+        name: 'Databasequestionlist',
+        component: () => import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
+      },
     ],
   },
 ];
