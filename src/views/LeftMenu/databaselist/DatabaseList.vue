@@ -50,7 +50,9 @@
               @click="toQuestions(scope.row.id)"
               >试题</el-button
             >
-            <el-button link type="primary" size="small">编辑</el-button>
+            <el-button link type="primary" size="small" @click="edit(scope.row)"
+              >编辑</el-button
+            >
             <el-button
               link
               type="primary"
@@ -78,7 +80,11 @@
     />
   </div>
 
-  <DatabaseDialog ref="dialogRef" :getListDialog="getList"></DatabaseDialog>
+  <DatabaseDialog
+    ref="dialogRef"
+    :getListDialog="getList"
+    :editList="editList"
+  ></DatabaseDialog>
 </template>
 
 <script lang="ts" setup>
@@ -123,10 +129,11 @@ const state: any = reactive({
   tableData: [],
   total: 0,
   ids: [],
+  editList: {},
 });
 
 const { key, admin, ismy } = toRefs(data);
-const { tableData, total, ids } = toRefs(state);
+const { tableData, total, ids, editList } = toRefs(state);
 
 onMounted(() => {
   getList(); //题库列表
@@ -220,6 +227,14 @@ const delAll = async () => {
         message: '取消删除',
       });
     });
+};
+
+// 编辑
+const edit = (val: any) => {
+  console.log('编辑', val);
+  state.editList = val;
+  dialogRef.value.dialogVisible = true;
+  console.log(state.editList);
 };
 
 // 点击跳转到试题列表

@@ -44,7 +44,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="cancel">取消</el-button>
         <el-button type="primary" @click="confirm(ruleFormRef)">
           确定
         </el-button>
@@ -119,6 +119,10 @@ import type { FormInstance, FormRules } from 'element-plus';
 const props = defineProps({
   getListDialog: {
     type: Function,
+    required: true,
+  },
+  editList: {
+    type: Object,
     required: true,
   },
 });
@@ -200,7 +204,18 @@ const { list, teacherArr, teacherData } = toRefs(data);
 
 onMounted(() => {
   getList();
+  Object.assign(props.editList, addData);
 });
+// 编辑回显
+watch(
+  [() => props.editList.title, () => props.editList.id],
+  (newValue, oldValue) => {
+    console.log('person的job变化了', newValue, oldValue);
+    addData.title = newValue[0];
+    addData.id = newValue[1];
+  },
+  { immediate: true, deep: true }
+);
 
 const getList = async () => {
   let res: any = await departmentList();
@@ -218,6 +233,12 @@ const getList = async () => {
   data.teacherData = result.data.list;
 };
 
+// 取消
+const cancel = () => {
+  dialogVisible.value = false;
+  addData.title = '';
+};
+
 // 确定
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
@@ -227,12 +248,24 @@ const confirm = async (formEl: FormInstance | undefined) => {
       let res: any = await databaseAdd(addData);
       console.log('添加题库', res);
       if (res.errCode !== 10000) {
+        ElMessage({
+          message: '操作失败！',
+          type: 'error',
+        });
         return false;
       }
-      ElMessage({
-        message: '添加成功！',
-        type: 'success',
-      });
+      if (addData.id == 0) {
+        ElMessage({
+          message: '添加成功！',
+          type: 'success',
+        });
+      } else {
+        ElMessage({
+          message: '修改成功！',
+          type: 'success',
+        });
+      }
+
       dialogVisible.value = false;
     } else {
       console.log('error submit!', fields);
