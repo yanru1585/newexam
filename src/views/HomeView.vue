@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bot">
     <div class="common-layout">
       <el-container>
         <el-aside width="80px">
@@ -24,4 +24,5 @@ import LeftMenu from '../components/LeftMenu.vue';
   background-color: #ebebeb;
   height: 100vh;
 }
+
 </style>
