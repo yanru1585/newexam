@@ -86,4 +86,3 @@ export const roledel=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/role/delete',{id})
 }
 
->>>>>>> ef7550286761dc9369d3864b3f899cc1d3e24634
