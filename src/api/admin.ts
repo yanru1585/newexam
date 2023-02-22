@@ -40,7 +40,13 @@ interface Iclasses{
 export const IClasses:Iclasses=(page:number,psize:number,):Promise<AxiosResponse<any>>=>{
   return get('/classes/list',{page,psize})
 }
-
+// 阅卷抽屉
+interface Iquestion{
+  (testid:number,studentid:number):Promise<AxiosResponse<any>>
+}
+export const IQuestion:Iquestion=(testid:number,studentid:number):Promise<AxiosResponse<any>>=>{
+  return get('/question/listforstu',{testid,studentid})
+}
 export const teacherlsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/teacher/list',params)
 }//师资列表
