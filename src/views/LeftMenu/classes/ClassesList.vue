@@ -11,8 +11,8 @@
        class="demo-form-inline"
       style="display: flex"
     >
-      <el-form-item label="关键字">
-        <el-input  placeholder="请输入关键字" v-model="data.params.key"/>
+      <el-form-item label="班级名称">
+        <el-input  placeholder="请输入班级名称" v-model="data.params.key"/>
       </el-form-item>
       <el-form-item label="部门">
       <el-select placeholder="请选择">
