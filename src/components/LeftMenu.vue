@@ -72,7 +72,4 @@ const handleClose = (key: string, keyPath: string[]) => {
   font-size: 13px;
   margin-top: 8px;
 }
-.bot{
-  // position: fixed;
-}
 </style>
