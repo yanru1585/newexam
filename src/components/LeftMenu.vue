@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="bot">
     <div class="head">
       <img src="../assets/images/head.jpg" alt="" />
     </div>
     <el-menu
-      background-color="#ebebeb"
+    background-color="#ebebeb"
       class="el-menu-vertical-demo"
       default-active="test"
       :unique-opened="true"
@@ -61,6 +61,7 @@ const handleClose = (key: string, keyPath: string[]) => {
   width: 80px;
   height: 70px;
 }
+
 .el-menu-item {
   display: flex;
   flex-direction: column;
@@ -70,5 +71,8 @@ const handleClose = (key: string, keyPath: string[]) => {
   margin: auto;
   font-size: 13px;
   margin-top: 8px;
+}
+.bot{
+  position: fixed;
 }
 </style>
