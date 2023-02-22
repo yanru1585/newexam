@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div style="display: flex;justify-content: space-between;margin-top: 10px;">
-    <h3>师资管理</h3>
+    <h3>学员管理</h3>
     <div>
     <el-button>批量添加</el-button>
     <el-button type="primary" @click="Addexam">添加学生</el-button>
