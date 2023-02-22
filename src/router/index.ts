@@ -24,6 +24,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/test/TestList.vue'),
       },
       {
+        path: '/Addtest', //创建考试
+        name: 'addtest',
+        component: () => import('../views/LeftMenu/test/Addtest.vue'),
+      },
+      {
         path: '/exam', //阅卷
         name: 'Exam',
         component: () => import('../views/LeftMenu/exam/ExamList.vue'),
