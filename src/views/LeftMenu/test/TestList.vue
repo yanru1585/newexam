@@ -1,6 +1,9 @@
 <template>
   <div class="box">
+    <div style="display: flex;justify-content: space-between;margin-top: 10px;">
     <h3>考试管理</h3>
+    <el-button type="primary" @click="Addexam">创建考试</el-button>
+  </div>
     <el-form
       :inline="true"
       :model="formInline"
@@ -34,8 +37,8 @@
         />
       </div>
       <el-form-item label="状态" prop="region" style="margin-left: 10px">
-        <el-select style="width: 100px" placeholder="请选择">
-        <el-option v-for="item in  formInline.personType" :key="item.id" :label="item.type_name" :value="item.id" />
+        <el-select style="width: 100px" placeholder="请选择"  v-model="data.params.state">
+        <el-option  v-for="item in  formInline.personType" :key="item.id" :label="item.type_name" :value="item.id" />
    
         </el-select>
       </el-form-item>
@@ -102,7 +105,10 @@ import {onMounted} from 'vue'
 import { reactive } from 'vue';
 import { ref } from 'vue';
 import { list,dele } from '../../../api/admin'
+import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
+let ids = ref('')//定义多选
+const router = useRouter()//跳转路由
 const formInline:Iform = reactive({
   personType:[//访客类型列表
     {id:1,type_name:'所有'},
@@ -131,7 +137,6 @@ interface Istate{
   tableData:Array<any>
   params:Iparams
   total:Number,
-  ids:Array<any>
 }
 //数据
 interface Iform {//数据对象接口
@@ -154,7 +159,7 @@ const data = reactive<Istate>({
  },
  tableData:[],
  total:0,
- ids:[]
+
 })
 //列表请求
 const getlist =async()=>{
@@ -163,8 +168,8 @@ console.log(res);
 if(res.errCode ===10000){
   data.tableData=res.data.list
   data.total = res.data.counts
-  console.log(data.tableData);
-  console.log(res.data.list);
+  // console.log(data.tableData);
+  // console.log(res.data.list);
 }
 }
 onMounted(()=>{
@@ -177,7 +182,7 @@ getlist()
     return item.id
   })
   console.log(arr);
-  
+  ids=arr
   // istop = true
 }
 //批量删除
@@ -192,12 +197,8 @@ const deletelist = ()=>{
     }
   )
     .then(async() => {
-      const datas = {
-        ids:data.ids
-      }
-      console.log(datas);
       
-      const res:any = await dele(datas)
+      const res:any = await dele(ids)
       console.log(res);
       ElMessage({
         type: 'success',
@@ -213,6 +214,10 @@ const deletelist = ()=>{
     })
   
 }
+//创建考试
+const Addexam =()=>{
+  router.push('/Addtest')
+}
 //分页
 const pageSize2 =ref(4)
 const currentPage1= ref(1)
@@ -226,6 +231,7 @@ const handleCurrentChange=(val:number)=>{
   data.params.page=val
   getlist()
 }
+
 
 //查询
 const onSubmit=()=>{

@@ -24,6 +24,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/test/TestList.vue'),
       },
       {
+        path: '/Addtest', //创建考试
+        name: 'addtest',
+        component: () => import('../views/LeftMenu/test/Addtest.vue'),
+      },
+      {
         path: '/exam', //阅卷
         name: 'Exam',
         component: () => import('../views/LeftMenu/exam/ExamList.vue'),
@@ -42,6 +47,11 @@ const routes: any = [
         path: '/subjects', //试卷
         name: 'Subjects',
         component: () => import('../views/LeftMenu/subjects/SubjectsList.vue'),
+      },
+      {
+        path: '/SubjectsAdd', //创建试卷
+        name: 'AddSubject',
+        component: () => import('../views/LeftMenu/subjects/AddSubject.vue'),
       },
       {
         path: '/databaselist', //题库
@@ -72,6 +82,11 @@ const routes: any = [
         path: '/role', //角色
         name: 'Role',
         component: () => import('../views/LeftMenu/role/RoleList.vue'),
+      },
+      {
+        path: '/databasequestionlist', //试题列表
+        name: 'Databasequestionlist',
+        component: () => import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
     ],
   },
