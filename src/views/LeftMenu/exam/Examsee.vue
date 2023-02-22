@@ -22,14 +22,40 @@
         <el-option label="未阅卷" value="beijing" />
       </el-select>
     </el-form-item>
+    <el-form-item label="班级:" >
+      <el-select placeholder="请选择" disabled >
+      </el-select>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="reser">查询</el-button>
+    </el-form-item>
     </el-form>
+    <el-table :data="data.list" border style="width: 100%">
+    <el-table-column prop="name" label="姓名"  />
+    <el-table-column prop="depname" label="班级名称"/>
+    <el-table-column prop="scores" label="分数" />
+    <el-table-column prop="readtime" label="考试时间" />
+    <el-table-column prop="state" label="状态">
+      <template #default="scope" >
+        <span class="state">{{scope.row.state}}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作">
+      <template #default="scope" >
+                  <el-button link type="primary" size="small">
+                  <span>{{scope.row.incomplete === 0 ? '查看':'阅卷'}}</span>
+                  </el-button>
+                </template>
+    </el-table-column>
+  </el-table>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
-import { ISee } from '../../../api/admin';
+import { ISee,IClasses } from '../../../api/admin';
+
 import {
   ArrowLeft
 } from '@element-plus/icons-vue';
@@ -45,6 +71,7 @@ interface Ise {
   testid: any;
   state: string;
   key: string;
+  list:Array<any>
 }
 const data:Ise = reactive({
   page: 1,
@@ -52,10 +79,17 @@ const data:Ise = reactive({
   testid: route.query.id,       //传过来的id
   state: '',        //状态
   key: '',          //value值
+  list:[],
 });
 // 获取列表
 const getSee = async ()=>{
   const res = await ISee(data.page,data.psize,data.testid,data.state,data.key)
+  // console.log(res);
+  data.list = res.data.list
+}
+// 获取部门下拉框数据
+const getIClasses = async ()=>{
+  const res = await IClasses(data.page,data.psize)
   console.log(res);
   
 }
@@ -63,8 +97,13 @@ const getSee = async ()=>{
 const back=()=>{
   router.push('/exam')
 }
+// 查询
+const reser=()=>{
+  getSee()
+}
 onMounted(()=>{
   getSee()
+  getIClasses()
 })
 </script>
 
@@ -79,5 +118,8 @@ onMounted(()=>{
 .el-icon{
   margin-top: 16px;
   margin-right: 10px;
+}
+.state{
+  color: red;
 }
 </style>
