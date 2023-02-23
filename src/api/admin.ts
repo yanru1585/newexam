@@ -84,5 +84,22 @@ export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
 
 export const roledel=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/role/delete',{id})
+
 }
 
+
+//角色删除
+
+export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
+  return get('/menu/list',params)
+}//角色权限列表
+
+
+export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
+<<<<<<< HEAD
+  return get('/role/add',params)
+}//角色添加
+=======
+  return post('/role/add',params)
+}//角色添加
+>>>>>>> mian

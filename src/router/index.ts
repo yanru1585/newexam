@@ -57,12 +57,14 @@ const routes: any = [
       {
         path: '/databaselist', //题库
         name: 'Databaselist',
-        component: () => import('../views/LeftMenu/databaselist/DatabaseList.vue'),
+        component: () =>
+          import('../views/LeftMenu/databaselist/DatabaseList.vue'),
       },
       {
         path: '/department', //部门
         name: 'Department',
-        component: () => import('../views/LeftMenu/department/DepartmentList.vue'),
+        component: () =>
+          import('../views/LeftMenu/department/DepartmentList.vue'),
       },
       {
         path: '/teacher', //师资
@@ -87,7 +89,8 @@ const routes: any = [
       {
         path: '/databasequestionlist', //试题列表
         name: 'Databasequestionlist',
-        component: () => import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
+        component: () =>
+          import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
     ],
   },
