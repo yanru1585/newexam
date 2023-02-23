@@ -101,7 +101,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     sessionStorage.setItem('menu',JSON.stringify(res.data.menu))//存储菜单数据
     sessionStorage.setItem('model',JSON.stringify(res.data.model))//存储管理员数据
     sessionStorage.setItem('type',res.data.type)//登录类型
-    router.push('/Home')
+    router.push('/test')
   } else {
     ElMessage.error(res.errMsg);
   }

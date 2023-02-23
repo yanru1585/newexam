@@ -16,6 +16,7 @@ const routes: any = [
   {
     path: '/home',
     name: 'Home',
+    
     component: () => import('../views/HomeVIew.vue'),
     children: [
       {
