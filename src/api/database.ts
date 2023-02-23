@@ -18,10 +18,7 @@ export const databaseAdd = (params: any): Promise<AxiosResponse<any>> => {
   return post('/database/add', params);
 };
 
-// 部门列表
-export const departmentList = (): Promise<AxiosResponse<any>> => {
-  return get('/department/list');
-};
+
 
 // 获取老师信息
 export const teacherList = (params: any): Promise<AxiosResponse<any>> => {

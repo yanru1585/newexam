@@ -113,7 +113,8 @@ import {
   defineExpose,
 } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { departmentList, teacherList, databaseAdd } from '../../api/database';
+import { teacherList, databaseAdd } from '../../api/database';
+import { departmentList } from '../../api/department';
 import type { FormInstance, FormRules } from 'element-plus';
 
 const props = defineProps({

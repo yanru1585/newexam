@@ -39,7 +39,12 @@
     </el-form>
 
     <!-- 表格 -->
-    <el-table :data="tableData" style="width: 100%" @selection-change="selectionChange" size="small">
+    <el-table
+      :data="tableData"
+      style="width: 100%"
+      @selection-change="selectionChange"
+      size="small"
+    >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="title" label="题目名称" width="450">
         <template #default="scope">
@@ -52,7 +57,9 @@
       <el-table-column fixed="right" label="操作" width="110">
         <template #default="scope">
           <el-button link type="primary" size="small">编辑</el-button>
-          <el-button link type="primary" size="small" @click="del(scope.row.id)">删除</el-button>
+          <el-button link type="primary" size="small" @click="del(scope.row.id)"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -79,18 +86,20 @@
 // import {exportExcel} from '../../../utils/exportExcel'
 import { ArrowLeft } from '@element-plus/icons-vue';
 
-import { ElMessage ,ElMessageBox} from 'element-plus';
-import { reactive, toRefs, onMounted, ref,toRaw } from 'vue';
-import { databasequestionList,databasequestionDelete,databasequestionDeleteall } from '../../../api/database';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { reactive, toRefs, onMounted, ref, toRaw } from 'vue';
+import {
+  databasequestionList,
+  databasequestionDelete,
+  databasequestionDeleteall,
+} from '../../../api/database';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 
-
-
 const exportExcel = () => {
   console.log(1234544446);
-  
+
   //因为此处有分页，每页展示14条数据，在方法调用的开始，展示所有数据，导出之后再把条数更改过来
   // data.psize = state.tableData.length;
   // setTimeout(() => {
@@ -156,7 +165,7 @@ const state: any = reactive({
   obj: {},
   tableData: [],
   total: 0,
-  ids:[]
+  ids: [],
 });
 const { key, type, admin } = toRefs(data);
 const { obj, tableData, total } = toRefs(state);
@@ -183,7 +192,6 @@ const getList = async () => {
 // 查询
 const search = () => {
   console.log(data);
-
   getList();
 };
 
