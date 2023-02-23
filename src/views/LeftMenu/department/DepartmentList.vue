@@ -56,7 +56,7 @@
             </el-form-item>
             <el-form-item>
               <template #default="scope">
-                <el-button type="info">删除当前节点</el-button>
+                <el-button type="info" @click="del">删除当前节点</el-button>
                 <el-button type="success" @click="edit(ruleFormRef)"
                   >修改当前节点</el-button
                 >
@@ -74,9 +74,13 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, toRefs, ref } from 'vue';
-import { departmentList, departmentAdd } from '../../../api/department';
+import {
+  departmentList,
+  departmentAdd,
+  departmentDelete,
+} from '../../../api/department';
 
-import { ElMessage, FormInstance, FormRules } from 'element-plus';
+import { ElMessage, ElMessageBox, FormInstance, FormRules } from 'element-plus';
 
 const formSize = ref('default');
 const ruleFormRef = ref<FormInstance>();
@@ -215,8 +219,31 @@ const addEdit = async (val: any) => {
       type: 'success',
     });
   }
-
   getList();
+};
+
+// 删除当前节点
+const del = () => {
+  ElMessageBox.confirm('确定要删除该账号吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res = await departmentDelete(addData.id);
+      console.log('删除当前节点', res);
+      getList();
+      ElMessage({
+        type: 'success',
+        message: '删除成功！',
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '删除失败！',
+      });
+    });
 };
 </script>
 
