@@ -60,5 +60,5 @@ export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
 
 
 export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/role/add',params)
+  return post('/role/add',params)
 }//角色添加
