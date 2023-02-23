@@ -3,7 +3,12 @@
     <div style="display: flex;justify-content: space-between;margin-top: 10px;">
     <h3>角色管理</h3>
     <div>
-    <el-button type="primary" @click="Addexam">添加角色</el-button>
+      <!-- <el-button text @click="dialogVisible = true">
+    click to open the Dialog
+  </el-button> -->
+     <el-button text @click="Addexam">
+    添加角色
+  </el-button>
   </div>
   </div>
   
@@ -33,6 +38,10 @@
       @current-change="handleCurrentChange"
     />
   </div>
+  <!-- 添加的弹框 -->
+  <div>
+    <Role ref="roleRef"></Role>
+  </div>
   </div>
 </template>
 
@@ -43,10 +52,9 @@ import { ref } from 'vue';
 import { rolelist,roledel } from '../../../api/admin'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
-
+import Role from './Roleadd.vue'
 const router = useRouter()//跳转路由
-
-
+let roleRef =ref<any>()
 //列表数据
 interface Iparams {
   page: number; //页码 默认是1
@@ -118,9 +126,12 @@ const delId = (id:number)=>{
   
 }
 //添加教资
-const Addexam =()=>{
+
+const Addexam = () => {
+  roleRef.value.dialogVisible=true
 
 }
+
 //分页
 const pageSize2 =ref(4)
 const currentPage1= ref(1)

@@ -5,3 +5,7 @@ import {AxiosResponse} from 'axios'
 export const subjectList=(parms:any):Promise<AxiosResponse<any>>=>{
   return get('/subjects/list',parms)
 }
+// 获取题库列表
+export const databaseList=(parms?:any):Promise<AxiosResponse<any>>=>{
+  return get('/database/list',parms)
+}
