@@ -34,19 +34,36 @@ const routes: any = [
         component: () => import('../views/LeftMenu/exam/ExamList.vue'),
       },
       {
+        path: '/Examsee', //阅卷查看或阅卷
+        name: 'Examsee',
+        component: () => import('../views/LeftMenu/exam/Examsee.vue'),
+      },
+      {
+        path: '/Examdrawer', //阅卷抽屉
+        name: 'Examdrawer',
+        component: () => import('../views/LeftMenu/exam/Examdrawer.vue'),
+      },
+      {
         path: '/subjects', //试卷
         name: 'Subjects',
         component: () => import('../views/LeftMenu/subjects/SubjectsList.vue'),
       },
       {
+        path: '/SubjectsAdd', //创建试卷
+        name: 'AddSubject',
+        component: () => import('../views/LeftMenu/subjects/AddSubject.vue'),
+      },
+      {
         path: '/databaselist', //题库
         name: 'Databaselist',
-        component: () => import('../views/LeftMenu/databaselist/DatabaseList.vue'),
+        component: () =>
+          import('../views/LeftMenu/databaselist/DatabaseList.vue'),
       },
       {
         path: '/department', //部门
         name: 'Department',
-        component: () => import('../views/LeftMenu/department/DepartmentList.vue'),
+        component: () =>
+          import('../views/LeftMenu/department/DepartmentList.vue'),
       },
       {
         path: '/teacher', //师资
@@ -67,6 +84,12 @@ const routes: any = [
         path: '/role', //角色
         name: 'Role',
         component: () => import('../views/LeftMenu/role/RoleList.vue'),
+      },
+      {
+        path: '/databasequestionlist', //试题列表
+        name: 'Databasequestionlist',
+        component: () =>
+          import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
     ],
   },

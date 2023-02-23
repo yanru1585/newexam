@@ -23,6 +23,7 @@ import LeftMenu from '../components/LeftMenu.vue';
 .el-aside {
   background-color: #ebebeb;
   height: 100vh;
+  // position: fixed;
 }
 
 </style>

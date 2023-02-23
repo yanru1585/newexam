@@ -111,27 +111,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-// const Login = async () => {
-//  if(ruleForm.username === ''){
-//   ElMessage.error('请输入账号');
-// }else if(ruleForm.pass === ''){
-//   ElMessage.error('请输入密码');
-// }else{
-//   const res = await Loginteach(ruleForm.username, ruleForm.pass);
-//   console.log(res);
-//   if (res.errCode === 10000) {
-//     ElMessage({
-//       message: '登陆成功',
-//       type: 'success',
-//     });
-//     sessionStorage.setItem('token',res.data)
-//     router.push('/Home')
-//   } else {
-//     ElMessage.error(res.errMsg);
-//   }
-// }
-
-// };
 </script>
 
 

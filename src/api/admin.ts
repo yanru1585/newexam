@@ -15,6 +15,38 @@ export const list=(params:any):Promise<AxiosResponse<any>>=>{
 export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
+
+
+
+// 阅卷管理列表
+interface Iist{
+  (page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>
+}
+export const Ilist:Iist=(page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>=>{
+  return get('/test/list',{page,psize,isread,key})
+}
+// 阅卷查看
+interface Isee{
+  (page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>
+}
+export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>=>{
+  return get('/student/test',{page,psize,testid,key,state})
+}
+
+//部门数据
+interface Iclasses{
+  (page:number,psize:number,):Promise<AxiosResponse<any>>
+}
+export const IClasses:Iclasses=(page:number,psize:number,):Promise<AxiosResponse<any>>=>{
+  return get('/classes/list',{page,psize})
+}
+// 阅卷抽屉
+interface Iquestion{
+  (testid:number,studentid:number):Promise<AxiosResponse<any>>
+}
+export const IQuestion:Iquestion=(testid:number,studentid:number):Promise<AxiosResponse<any>>=>{
+  return get('/question/listforstu',{testid,studentid})
+}
 export const teacherlsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/teacher/list',params)
 }//师资列表
@@ -52,7 +84,11 @@ export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
 
 export const roledel=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/role/delete',{id})
-}//角色删除
+
+}
+
+
+//角色删除
 
 export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/menu/list',params)
@@ -60,5 +96,10 @@ export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
 
 
 export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
+<<<<<<< HEAD
+  return get('/role/add',params)
+}//角色添加
+=======
   return post('/role/add',params)
 }//角色添加
+>>>>>>> mian
