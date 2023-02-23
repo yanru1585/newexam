@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import {departmentList} from '../api/database'
+import {departmentList} from '../api/department'
 import { ref,onMounted,reactive,toRefs,defineEmits} from 'vue'
 import { ElMessageBox } from 'element-plus'
 const emit=defineEmits(['transferEmit','showEmit'])
