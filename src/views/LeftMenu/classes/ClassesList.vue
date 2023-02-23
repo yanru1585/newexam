@@ -41,6 +41,7 @@
      
     </el-table-column>
     </el-table>
+
     <div class="pigeBox">
       <el-pagination
       v-model:current-page="currentPage1"
@@ -53,7 +54,8 @@
       @current-change="handleCurrentChange"
     />
   </div>
-  </div>
+  <classdiglog ref="user"/>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -63,6 +65,8 @@ import { ref } from 'vue';
 import { classeslist,classesdele,classesdeles } from '../../../api/admin'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
+import classdiglog from '../classes/Classdialog.vue'
+
 let ids = ref('')//定义多选数据
 const router = useRouter()//跳转路由
 
@@ -99,7 +103,7 @@ const data = reactive<Istate>({
 //列表请求
 const getlist =async()=>{
 let res:any = await classeslist(data.params)
-console.log(res);
+// console.log(res);
 if(res.errCode ===10000){
   data.tableData=res.data.list
   data.total = res.data.counts
@@ -180,10 +184,12 @@ const delId = (id:number)=>{
     })
   
 }
-//创建考试
+//添加班级
+const user = ref ()
 const Addexam =()=>{
-
+  user.value.dialogTableVisible = true
 }
+
 //分页
 const pageSize2 =ref(4)
 const currentPage1= ref(1)

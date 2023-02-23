@@ -74,6 +74,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/classes/ClassesList.vue'),
       },
       {
+        path: '/clasdialog', //班级添加
+        name: 'clasdialog',
+        component: () => import('../views/LeftMenu/classes/Classdialog.vue'),
+      },
+      {
         path: '/student', //学员
         name: 'Student',
         component: () => import('../views/LeftMenu/student/StudentList.vue'),
