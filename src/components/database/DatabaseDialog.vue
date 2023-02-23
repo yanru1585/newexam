@@ -210,7 +210,7 @@ onMounted(() => {
 watch(
   [() => props.editList.title, () => props.editList.id],
   (newValue, oldValue) => {
-    console.log('person的job变化了', newValue, oldValue);
+    // console.log('person的job变化了', newValue, oldValue);
     addData.title = newValue[0];
     addData.id = newValue[1];
   },

@@ -37,3 +37,14 @@ export const databaseDelete = (id: any): Promise<AxiosResponse<any>> => {
 export const databaseDeleteall = (ids: any): Promise<AxiosResponse<any>> => {
   return post('/database/deleteall', { ids });
 };
+
+// 题库试题删除
+export const databasequestionDelete = (id: any): Promise<AxiosResponse<any>> => {
+  return get('/databasequestion/delete', { id });
+};
+
+
+// 题库试题批量删除
+export const databasequestionDeleteall = (ids: any): Promise<AxiosResponse<any>> => {
+  return post('/databasequestion/deleteall', { ids });
+};
