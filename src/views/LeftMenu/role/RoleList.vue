@@ -18,8 +18,7 @@
       <el-table-column fixed="right" label="操作" width="200">
       <template #default="scope">
     
-        <el-button link type="primary" size="small" >重置密码</el-button>
-        <el-button link type="primary" size="small">修改</el-button>
+        <el-button link type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
         <el-button link type="primary" size="small" @click="delId(scope.row.id)">删除</el-button>
   
       </template>
@@ -40,7 +39,7 @@
   </div>
   <!-- 添加的弹框 -->
   <div>
-    <Role ref="roleRef"></Role>
+    <Role ref="roleRef" :getListDialog="getlist" :editlist="editlist"></Role>
   </div>
   </div>
 </template>
@@ -48,7 +47,7 @@
 <script setup lang="ts">
 import {onMounted} from 'vue'
 import { reactive } from 'vue';
-import { ref } from 'vue';
+import { ref,toRefs} from 'vue';
 import { rolelist,roledel } from '../../../api/admin'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -78,8 +77,19 @@ const data = reactive<Istate>({
  },
  tableData:[],
  total:0,
-
 })
+//编辑
+const stats =reactive({
+  editlist:{}
+})
+
+const edit = (val: any) => {
+  // console.log('编辑', val);
+  stats.editlist = val;
+  roleRef.value.dialogVisible = true;
+  console.log(stats.editlist );
+};
+const {  editlist } = toRefs(stats);
 //列表请求
 const getlist =async()=>{
 let res:any = await rolelist(data.params)

@@ -16,8 +16,6 @@ export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
 
-
-
 // 阅卷管理列表
 interface Iist{
   (page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>
@@ -59,6 +57,13 @@ export const classeslist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/classes/list',params)
 }//班级列表
 
+interface Iclassesadd{
+  (name:string,depid:number):Promise<AxiosResponse<any>>
+}
+export const classesadd:Iclassesadd=(name:string,depid:number):Promise<AxiosResponse<any>>=>{
+  return post('/classes/add',{name,depid})
+}//班级添加
+
 export const classesdele=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/classes/delete',{id})
 }//班级删除
@@ -96,5 +101,7 @@ export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
 
 
 export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/role/add',params)
+
+  return post('/role/add',params)
 }//角色添加
+

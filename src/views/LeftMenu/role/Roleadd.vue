@@ -35,10 +35,11 @@
   </el-form-item>
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="roleAdd">
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="roleAdd(ruleFormRef)">
          确定
         </el-button>
+       
       </span>
     </template>
   </el-dialog>
@@ -48,24 +49,38 @@
 import { ElMessage } from 'element-plus';
 import { ref,onMounted} from 'vue'
 import { ElMessageBox } from 'element-plus'
-import { defineExpose } from 'vue';
+import { defineExpose} from 'vue';
 import { reactive } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus'
 import {menulsit} from '../../../api/admin'
 import {roleadd} from '../../../api/admin'
 import { useRouter } from 'vue-router';
+import {toRaw} from 'vue'
+import {watch} from 'vue'
 const router = useRouter()
 const dialogVisible = ref(false)
+const props = defineProps({
+  getListDialog: {
+    type: Function,
+    required: true,
+  },
+  editlist:{
+    type: Object,
+    required: true,
+  }
+  
+});
+
 defineExpose({
   dialogVisible
 })
-
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>();
 
 const addData: any = reactive({
+  id: 0,
   name: '',
-  menus:""
+  menus:[],
 });
 
 
@@ -102,7 +117,19 @@ console.log(res);
 
 onMounted(()=>{
 getlist()
+Object.assign(props.editlist, addData);
+console.log(props.editlist);
+
 })
+//监听
+watch(
+  [ () => props.editlist.id],
+  (newValue, oldValue) => {
+    console.log('person的job变化了', newValue, oldValue);
+ 
+  },
+  { immediate: true, deep: true }
+);
 //多选框
 const handleCheckAllChange =(index:number)=>{
   let ids = data.list[index].children.map((item:any)=>item.id);
@@ -123,30 +150,54 @@ const handleCheckedCitiesChange =(index:number)=>{
  }else{
   data.list[index].ced=false
  }
-
 }
 
 // 点击确认添加
-const roleAdd = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate(async(valid, fields) => {
-    if (valid) {
-      const res:any=await roleadd(addData).catch(()=>{})
-      console.log('添加',res);
-    //   if (res.code != 10000) {
-    //   return false;
-    //   }
-    //   ElMessage.success('添加成功')
-    //   router.push('/admin/list')
+ const roleAdd =async(ruleFormRef:any)=>{
+  console.log(toRaw(data.list));
+
+  let _list =toRaw(data.list)
+  // console.log(_list);
+ let _menus:Array<any>=[]
+  _list.forEach((element:any)=>{
+    if(element.checkedCities){
+    let ids =  element.checkedCities.map((item:any)=>({id:item}))
+
+      addData.menus=_menus.concat(ids)
+      console.log(addData.menus);
       
-    // } else {
-    //   ElMessage.error('请正确输入添加信息')
-    //   console.log('请正确输入', fields)
+      // element.checkedCities.forEach((item:any)=>{
+      // _menus.push({id:item})
+      // })
     }
   })
-}
+  console.log(addData.menus);
+  
+  const res:any=await roleadd(addData).catch(()=>{})
+      console.log('添加',res);
+      if(res.errCode!==10000){
+        return false
+      } if (addData.id == 0) {
+        ElMessage({
+          message: '添加成功！',
+          type: 'success',
+        });
+      } else {
+        ElMessage({
+          message: '修改成功！',
+          type: 'success',
+        });
+      }
+      dialogVisible.value = false;
+      props.getListDialog(); //调用父级的列表  刷新
+      ruleFormRef.resetFields(); //重置表单
 
+ }
 
+ const cancel = () => {
+  dialogVisible.value = false;
+
+};
 </script>
 <style scoped>
 .dialog-footer button:first-child {
