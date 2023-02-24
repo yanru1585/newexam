@@ -108,7 +108,7 @@
       <el-form-item>
         <div class="footer">
           <el-button type="primary" >提交</el-button>
-          <el-button>取消</el-button>
+          <el-button >取消</el-button>
         </div>
     </el-form-item>
     </el-form>
@@ -125,10 +125,15 @@ import Transfer from '../../../components/TransferDialog.vue'
 import { reactive, toRefs,onMounted,ref } from 'vue';
 import{databaseList} from "../../../api/subjects"
 
+import { fa } from 'element-plus/es/locale';
+const drawerRef=ref<any>() 
+
+
 const drawerShow=ref<any>(false) //控制抽屉显示隐藏
 const tranferShow=ref<any>(false) //控制弹框显示隐藏
 // const drawerRef=ref<any>() 
 const transferRef=ref()
+
 interface Iadd {
   name: string;
   selectValue:string
