@@ -2,7 +2,6 @@
   <div>
     <el-drawer
       v-model="drawer"
-      title="I am the title"
       size="50%"
       :with-header="false"
       :close-on-click-modal="false"
@@ -39,8 +38,8 @@
         <el-form-item label="选项" v-if="addForm.type === '单选题'||addForm.type === '多选题'" >
           <div class="option">
             <div class="item" v-for="(item, index) in addForm.answers" :key="index">
-              <span>{{ item.tit }}:</span>
-              <el-input v-model="item.center" type="textarea" />
+              <span>{{ item.answerno }}:</span>
+              <el-input  v-model="item.content" type="textarea" />
               <el-icon size="26px" @click="dele"><CircleClose /></el-icon>
             </div>
           </div>
@@ -48,13 +47,13 @@
         </el-form-item>
         <el-form-item label="正确答案" v-if="addForm.type !== '填空题'&&addForm.type !== '问答题'">
           <el-radio-group
-            v-model="addForm.trueradio"
+            v-model="addForm.answer"
             v-if="addForm.type === '单选题'"
           >
             <el-radio
               v-for="(item, index) in addForm.answers"
               :key="index"
-              :label="item.tit"
+              :label="item.answerno"
             />
           </el-radio-group>
           <el-checkbox-group
@@ -64,7 +63,7 @@
             <el-checkbox
               v-for="(item, index) in addForm.answers"
               :key="index"
-              :label="item.tit"
+              :label="item.answerno"
             />
           </el-checkbox-group>
           <el-radio-group v-model="addForm.judge" v-if="addForm.type === '判断题'">
@@ -95,7 +94,6 @@ import {
   ref,
   shallowRef,
   onMounted,
-  defineExpose,
   reactive,
   toRefs,
   defineEmits
@@ -103,12 +101,12 @@ import {
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { ElMessage, FormInstance, FormRules } from 'element-plus'
 const ruleFormRef = ref<FormInstance>()
-const drawer = ref(true);
+// const drawer = ref(true);
 const emit=defineEmits(['drawerEmit','showEmit'])
 interface IaddForm {
   scores: string;
   radio: string;
-  trueradio: string;
+  answer: string;
   checkList: Array<any>;
   judge: string;
   title:string;
@@ -119,26 +117,29 @@ interface IaddForm {
 }
 interface Idata {
   addForm: IaddForm;
+
+  drawer:string
 }
 const data: Idata = reactive({
+  drawer:'',
   addForm: {
     type:'单选题',//题型
     scores: '',//分值
     radio: '1', //题型单选
-    trueradio: '', //单选框答案
+    answer: '', //单选框答案
     checkList: [], //复选框答案
     judge: '', //判断
     title:'<p>hello</p>',//富文本数据，题干
     answers: [//选项数组数据数组
-    {tit:'A',center:''},
-    {tit:'B',center:''},
-    {tit:'C',center:''},
-    {tit:'D',center:''},
+    {answerno:'A',content:''},
+    {answerno:'B',content:''},
+    {answerno:'C',content:''},
+    {answerno:'D',content:''},
   ],
   analysis:'',//解析
   },
 });
-const { addForm } = toRefs(data);
+const { addForm ,drawer} = toRefs(data);
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 
@@ -146,7 +147,7 @@ const editorRef = shallowRef();
 onMounted(() => {
   setTimeout(() => {
     addForm.value.title = '<p></p>';
-  }, 1500);
+  }, 500);
 });
 
 const toolbarConfig = {};
@@ -166,7 +167,6 @@ const handleCreated = (editor: any) => {
 const rules = reactive<FormRules>({
   scores: [
   {
-      // type: 'number',
       required: true,
       message: '请输入分值',
       trigger: 'blur',
@@ -180,8 +180,8 @@ const add = () => {
   console.log(555,num);
   let optionData={
     
-    tit:String.fromCharCode(num++),
-    center:''
+    answerno:String.fromCharCode(num++),
+    content:''
   }
   addForm.value.answers.push(optionData);
 };
@@ -191,8 +191,7 @@ const dele = () => {
 };
 // 点击取消
 const cancelForm=()=>{
-  console.log(33,addForm.value);
-  // drawer.value=false
+  emit('showEmit',false)
 }
 // 点击保存
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -202,7 +201,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       console.log('submit!')
       if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
         addForm.value.answers.forEach(item=>{
-          if(!item.center){
+          if(!item.content){
             ElMessage.error('选项内容必填')
             return false
           }
@@ -210,7 +209,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         
       }
        if(addForm.value.type==='单选题'){
-        if(!addForm.value.trueradio){
+        if(!addForm.value.answer){
             ElMessage.error('正确答案必填')
             return false
           }
