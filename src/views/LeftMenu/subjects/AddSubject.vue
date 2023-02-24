@@ -65,7 +65,7 @@
                     <el-input v-model="item.scores"></el-input>
                   </div>
                   <div class="tit_right">
-                    <el-icon size="25px"><EditPen /></el-icon>
+                    <el-icon size="25px" @click="compile(item,index)"><EditPen /></el-icon>
                     <el-icon size="25px" @click="itemDel(index)"><Delete /></el-icon>
                   </div>
                 </div>
@@ -129,7 +129,7 @@
               :value="item.id"
             />
           </el-select>
-          <el-button>+创建试题库</el-button>
+          <el-button @click="establish">+创建试题库</el-button>
         </div>
       </el-form-item>
       <el-form-item>
@@ -148,10 +148,8 @@
       </el-form-item>
       <el-form-item>
         <div class="footer">
-
           <el-button type="primary" @click="submit">提交</el-button>
           <el-button>取消</el-button>
-
         </div>
       </el-form-item>
     </el-form>
@@ -162,6 +160,7 @@
       v-if="drawerShow"
       @drawerEmit="drawerEmit"
       @showEmit="showEmit"
+      :compileData="compileData"
     ></Drawer>
     <!-- 可见老师穿梭框 -->
     <Transfer
@@ -171,17 +170,22 @@
     ></Transfer>
     <!-- 批量导入 -->
     <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
+    <!-- 创建试题库 -->
+    <!-- <Database  ref="dialogRef" ></Database> -->
 </template>
 
 <script lang="ts" setup>
-import Import from '../../../components/subject/ImporDialog.vue'
-import Drawer from '../../../components/subject/SubjectDrawer.vue';
-import Transfer from '../../../components/subject/TransferDialog.vue';
+// import Database from '../../../components/database/DatabaseDialog.vue'
+import Import from '../../../components/subject/ImporDialog.vue'//批量导入
+import Drawer from '../../../components/subject/SubjectDrawer.vue';//创建试卷
+import Transfer from '../../../components/subject/TransferDialog.vue';//可见老师+选择
 import { reactive, toRefs, onMounted, computed,watch,toRaw } from 'vue';
-import { useRouter } from 'vue-router';
-import { databaseList,AddSubject } from '../../../api/subjects';
+import { useRouter,useRoute } from 'vue-router';
+import { databaseList,AddSubject,oneSubject } from '../../../api/subjects';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { stringify } from 'querystring';
+const route=useRoute()
+
+console.log('添加试卷接收id',route.query.id);
 
 const router=useRouter()
 interface Ishow{
@@ -224,6 +228,7 @@ interface Idata {
   scores: number;
   itemType: Array<any>;
   questionsType:Array<any>
+  compileData:any
 }
 const data: Idata = reactive({
   // 添加数据
@@ -251,13 +256,13 @@ const data: Idata = reactive({
   },
   selectValue: '', //下拉框
   baseList: [], //题库列表
-  
+  compileData:{},//编辑数据详情
   
   scores: 0, //总分
   itemType:[],//左侧展示题目类型，题量
   questionsType:[{type:'单选题',const:0},{type:'多选题',const:0},{type:'判断题',const:0},{type:'填空题',const:0},{type:'问答题',const:0}]
 });
-const { addFrom, baseList,itemType,questionsType,selectValue } = toRefs(data);
+const { addFrom, baseList,itemType,questionsType,selectValue,compileData } = toRefs(data);
 // 点击添加题目
 const addSubject = () => {
   drawerShow.value = true;
@@ -302,12 +307,19 @@ const showEmit = (data: any) => {
   inportShow.value = data;
 
 };
+// 点击事件编辑
+const compile=(data:any,index:number)=>{
+  console.log('点击编辑',data,index);
+  compileData.value=data
+  drawerShow.value=true
+  
+console.log(2222,compileData.value);
+
+}
 // 触发自定义事件接收批量导入试卷列表
 const subjectEmit=(obj: any)=>{
   addFrom.value.questions=JSON.parse(JSON.stringify(obj))
   console.log('接受批量导入',addFrom.value.questions);
-  
-
 }
 
 // 点击选择显示老师可见弹框
@@ -376,9 +388,26 @@ const bulkImport=()=>{
 }
 onMounted(() => {
   getDatabaseList();
- getQuseType()
+  getQuseType()
+  getOneData()
 
 });
+// 获取单条数据详情
+const getOneData=async()=>{
+  if(route.query.id){
+    console.log(111111111);
+    const res:any=await oneSubject({id:route.query.id}).catch(()=>{})
+    console.log('单条数据试卷详情',res);
+    if(res.errCode!==10000){
+      return false
+    }
+    Object.assign(addFrom.value,res.data)  
+  }
+}
+// 点击创建试题库
+const establish=()=>{
+
+}
 </script>
 
 <style lang="less" scoped>

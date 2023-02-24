@@ -17,13 +17,17 @@
           <el-col :span="15">开放时间</el-col>
         </el-row>
         <el-row>
-          <el-col :span="3">{{getTestData.scores}}</el-col>
-          <el-col :span="3">{{getTestData.pastscores}}</el-col>
-          <el-col :span="3">{{getTestData.limittime==0?'不限时':getTestData.limittime}}</el-col>
+          <el-col :span="3">{{ getTestData.scores }}</el-col>
+          <el-col :span="3">{{ getTestData.pastscores }}</el-col>
+          <el-col :span="3">{{
+            getTestData.limittime == 0 ? '不限时' : getTestData.limittime
+          }}</el-col>
           <el-col :span="15">
-            <span v-if="getTestData.begintime&&getTestData.endtime">{{getTestData.begintime}}至{{getTestData.endtime}}</span>
+            <span v-if="getTestData.begintime && getTestData.endtime"
+              >{{ getTestData.begintime }}至{{ getTestData.endtime }}</span
+            >
             <span v-else>时间不限</span>
-            </el-col>
+          </el-col>
         </el-row>
       </div>
       <div>
@@ -41,15 +45,24 @@
         style="font-size: 15px; padding: 0 15px"
       >
         <div style="display: flex; margin-top: 20px">
-          <p style="margin-right: 20px"><span>{{index+1}}.</span>{{ item.type }}</p>
+          <p style="margin-right: 20px">
+            <span>{{ index + 1 }}.</span>{{ item.type }}
+          </p>
           <p>
             分值：<span>{{ item.scores }}</span>
           </p>
         </div>
         <p style="color: #909090; padding: 10px 0" v-html="item.title"></p>
-        <div style="display: flex;flex-direction: column;" v-if="item.type=='单选题'||item.type=='多选题'">
+        <div
+          style="display: flex; flex-direction: column"
+          v-if="item.type == '单选题' || item.type == '多选题'"
+        >
           <el-radio
-          :style="item.answer.includes(item1.answerno)?'background-color: #eefaf6;padding: 0 15px;margin-bottom:10px':'padding: 0 15px;margin-bottom:10px'"
+            :style="
+              item.answer.includes(item1.answerno)
+                ? 'background-color: #eefaf6;padding: 0 15px;margin-bottom:10px'
+                : 'padding: 0 15px;margin-bottom:10px'
+            "
             :label="1"
             size="large"
             v-for="(item1, index1) in item.answers"
@@ -58,13 +71,31 @@
             >:<span>{{ item1.content }}</span></el-radio
           >
         </div>
-        <p v-else-if="item.type=='判断题'" style="color: #70d3b2;background-color: #eefaf6;padding: 13px;">正确答案&nbsp;&nbsp;&nbsp;{{ item.answer }}</p>
-        <div v-else-if="item.type=='填空题'">
-          <p style="color: #70d3b2;background-color: #eefaf6;padding: 13px;margin-bottom: 10px;">正确答案&nbsp;&nbsp;&nbsp;{{ item.answer }}</p>
-          <p style="color: #9dadbc;background-color: #f5faff;padding: 13px;">答案解析&nbsp;&nbsp;&nbsp;{{ item.explains }}</p>
+        <p
+          v-else-if="item.type == '判断题'"
+          style="color: #70d3b2; background-color: #eefaf6; padding: 13px"
+        >
+          正确答案&nbsp;&nbsp;&nbsp;{{ item.answer }}
+        </p>
+        <div v-else-if="item.type == '填空题'">
+          <p
+            style="
+              color: #70d3b2;
+              background-color: #eefaf6;
+              padding: 13px;
+              margin-bottom: 10px;
+            "
+          >
+            正确答案&nbsp;&nbsp;&nbsp;{{ item.answer }}
+          </p>
+          <p style="color: #9dadbc; background-color: #f5faff; padding: 13px">
+            答案解析&nbsp;&nbsp;&nbsp;{{ item.explains }}
+          </p>
         </div>
-        <div v-else-if="item.type=='问答题'">
-          <p style="color: #9dadbc;background-color: #f5faff;padding: 13px;">答案解析&nbsp;&nbsp;&nbsp;{{ item.explains }}</p>
+        <div v-else-if="item.type == '问答题'">
+          <p style="color: #9dadbc; background-color: #f5faff; padding: 13px">
+            答案解析&nbsp;&nbsp;&nbsp;{{ item.explains }}
+          </p>
         </div>
       </div>
     </div>
@@ -82,12 +113,13 @@ import {
 } from 'vue';
 import { ElMessageBox } from 'element-plus';
 import { testGet } from '../../api/admin';
+import  {oneSubject}  from '../../api/subjects';
 
 const dialogVisible = ref(true);
 
 const props = defineProps({
-  getId: {
-    type: Number,
+  getData: {
+    type: Object,
     required: true,
   },
 });
@@ -108,14 +140,29 @@ onMounted(() => {
 });
 
 const getTestInfo = async () => {
-  let res: any = await testGet(props.getId);
-  console.log('根据id获取单个考试信息', res);
-  if (res.errCode !== 10000) {
-    return false;
+  console.log('详情id', props.getData);
+  if (props.getData.type === '考试') {
+    const res: any = await testGet(props.getData.getId);
+    console.log('根据id获取单个考试信息', res);
+    if (res.errCode !== 10000) {
+      return false;
+    }
+    data.getTestData = res.data;
+    data.questionsList = res.data.questions;
+    console.log(data.getTestData);
+    return false
   }
-  data.getTestData = res.data;
-  data.questionsList = res.data.questions;
-  console.log(data.getTestData);
+  if(props.getData.type ==='试卷') {
+    console.log(9999999999);
+    const subjectres:any =await  oneSubject({id:props.getData.getId}).catch(()=>{});
+    console.log('试卷详情', subjectres);
+    if (subjectres.errCode !== 10000) {
+      return false;
+    }
+    data.getTestData = subjectres.data;
+    data.questionsList = subjectres.data.questions;
+    console.log(data.getTestData);
+  }
 };
 
 const emits = defineEmits(['isshowDialog']);

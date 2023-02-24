@@ -122,7 +122,7 @@
     style="margin-top: 18px"
     v-if="isShowGet"
     @isshowDialog="isshowDialog"
-    :getId="getId"
+    :getData="getData"
   />
 </template>
 
@@ -168,12 +168,17 @@ interface Iparams {
   isread: string; //1考试列表（判卷）
   result: string; //学生考试结果 “已通过”，”未通过”，”待阅卷”，”未考试”
 }
+interface Igetdata{
+  getId:number,
+  type:string
+}
 //定义表格
 interface Istate {
   tableData: Array<any>;
   params: Iparams;
   total: Number;
-  getId: number;
+  // getId: number;
+  getData:Igetdata
 }
 //数据
 interface Iform {
@@ -197,14 +202,19 @@ const data = reactive<Istate>({
   },
   tableData: [],
   total: 0,
-  getId: 0,
+  // getId: 0,
+  getData:{
+    getId:0,
+    type:'考试'
+  }
 });
-const { getId } = toRefs(data);
+const { getData } = toRefs(data);
 
 const getTestInfo = async (val: any) => {
   // console.log('获取单个考试信息的id',val);
   isShowGet.value = true;
-  data.getId = val;
+  getData.value.getId = val;
+
 };
 
 //列表请求
