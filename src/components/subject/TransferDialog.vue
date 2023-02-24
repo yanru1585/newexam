@@ -21,7 +21,7 @@
   <el-transfer v-model="value" :data="data" :titles="['未选','全选']" :props="props"/>
     <template #footer>
       <span class="dialog-footer">
-        <el-button >取消</el-button>
+        <el-button @click="cancelForm">取消</el-button>
         <el-button type="primary" @click="confirm">
           确定
         </el-button>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import {departmentList} from '../api/department'
+import {departmentList} from '../../api/department'
 import { ref,onMounted,reactive,toRefs,defineEmits} from 'vue'
 import { ElMessageBox } from 'element-plus'
 const emit=defineEmits(['transferEmit','showEmit'])
@@ -51,7 +51,6 @@ const dialogData:Idata=reactive({
   props:{
     key:'id',
     label:'name'
-
   }
 })
 // 穿梭框数据
@@ -96,7 +95,10 @@ onMounted(()=>{
 const confirm=()=>{
   console.log('确定',value.value);
   emit('transferEmit',value.value)
-  // dialogVisible.value=false
+  emit('showEmit',false)
+}
+// 点击取消
+const cancelForm=()=>{
   emit('showEmit',false)
 }
 

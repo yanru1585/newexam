@@ -22,10 +22,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="部门:">
-        <el-select placeholder="请选择">
-          <el-option label="已阅卷" value="shanghai" />
-          <el-option label="未阅卷" value="beijing" />
-        </el-select>
+        <el-cascader :options="data.options" :props="props1" clearable />
       </el-form-item>
       <el-form-item label="班级:">
         <el-select placeholder="请选择" disabled> </el-select>
@@ -54,11 +51,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <drawerr
-      v-if="user"
-      v-model="user"
-      :dda="data1.list"
-    />
+    <drawerr v-if="user" v-model="user" :dda="data1.list" :carr="father" />
   </div>
 </template>
 
@@ -82,6 +75,7 @@ interface Ise {
   state: string;
   key: string;
   list: Array<any>;
+  options: Array<any>;
 }
 const data: Ise = reactive({
   page: 1,
@@ -90,6 +84,7 @@ const data: Ise = reactive({
   state: '', //状态
   key: '', //value值
   list: [],
+  options: [],
 });
 // 获取列表
 const getSee = async () => {
@@ -104,9 +99,16 @@ const getSee = async () => {
   data.list = res.data.list;
 };
 // 获取部门下拉框数据
+const props1 = {
+  checkStrictly: true,
+  value: 'id',
+  label: 'depname',
+  children: 'children',
+};
 const getIClasses = async () => {
-  const res = await IClasses(data.page, data.psize);
-  // console.log(res);
+  const res = await IClasses({});
+  console.log(res);
+  data.options = res.data.list;
 };
 // 返回
 const back = () => {
@@ -120,17 +122,21 @@ const reser = () => {
 const user = ref();
 // console.log(user.value);
 const data1 = reactive({
-  list:{
-    id:route.query.id,
-    ids:0,
-    name:''
-  }
-}) 
+  list: {
+    id: route.query.id,
+    ids: 0,
+    name: '',
+  },
+});
 const drawer = (row: any) => {
+  // console.log(row);
+
   // let ids = [row.id,route.query.id]
-  data1.list.ids = row.id
-  data1.list.name = row.name
-  // console.log(data1.list);
+  // console.log(ids);
+
+  data1.list.ids = row.id;
+  data1.list.name = row.name;
+  console.log(data1.list);
   user.value = true;
 };
 
@@ -138,6 +144,10 @@ onMounted(() => {
   getSee();
   getIClasses();
 });
+const father = () => {
+  user.value = false;
+  getSee();
+};
 </script>
 
 <style scoped>
