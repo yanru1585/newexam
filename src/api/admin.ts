@@ -105,3 +105,7 @@ export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/role/add',params)
 }//角色添加
 
+// 根据id获取单个考试信息
+export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/get',{id})
+}

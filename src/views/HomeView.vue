@@ -3,10 +3,10 @@
     <div class="common-layout">
       <el-container>
         <el-aside width="80px">
-          <LeftMenu />
+          <LeftMenu ref="infoRef"/>
         </el-aside>
         <el-container>
-          <el-main>
+          <el-main @click="clickFn">
             <router-view></router-view>
           </el-main>
         </el-container>
@@ -17,6 +17,14 @@
 
 <script lang="ts" setup>
 import LeftMenu from '../components/LeftMenu.vue';
+import {ref} from 'vue'
+
+const infoRef=ref<any>()
+
+const clickFn=()=>{
+  console.log(123456);
+  infoRef.value.isShow=false //关闭个人信息的弹框
+}
 </script>
 
 <style lang="less" scoped>
