@@ -73,7 +73,7 @@
       <el-form-item>
         <div class="footer">
           <el-button type="primary" >提交</el-button>
-          <el-button>取消</el-button>
+          <el-button >取消</el-button>
         </div>
     </el-form-item>
     </el-form>
@@ -86,6 +86,7 @@
 import  Drawer from '../../../components/SubjectDrawer.vue'
 import { reactive, toRefs,onMounted,ref } from 'vue';
 import{databaseList} from "../../../api/subjects"
+import { fa } from 'element-plus/es/locale';
 const drawerRef=ref<any>() 
 interface Iadd {
   name: String;

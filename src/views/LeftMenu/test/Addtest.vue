@@ -37,10 +37,10 @@
      </div>
     </div>
     <div class="buttons">
-      <button type="button" style="width: 120px;color: #606266;margin: 0px 10px;background-color: #fff;border: 1px solid #dcdfe6;border-radius: 4px;line-height: 30px;"><span>添加题目</span></button>
-      <button type="button" style="width: 120px;color: #606266;margin: 0px 10px;background-color: #fff;border: 1px solid #dcdfe6;border-radius: 4px;line-height: 30px;"><span>批量导入</span></button>
-      <button type="button" style="width: 120px;color: #606266;margin: 0px 10px;background-color: #fff;border: 1px solid #dcdfe6;border-radius: 4px;line-height: 30px;"><span>从题库导入</span></button>
-      <button type="button" style="width: 120px;color: #606266;margin: 0px 10px;background-color: #fff;border: 1px solid #dcdfe6;border-radius: 4px;line-height: 30px;"><span>选择已有试卷</span></button>
+      <button  class="butm" ><span class="buto">添加题目</span></button>
+      <button class="butm"><span class="buto">批量导入</span></button>
+      <button class="butm"><span class="buto">从题库导入</span></button>
+      <button class="butm"><span class="buto">选择已有试卷</span></button>
     </div>
     </div>
     </div>
@@ -53,7 +53,7 @@
       </el-select>
     </el-form-item>
     <div>
-      <button type="button"  style="width: 120px;color: #606266;margin: 0px 10px;background-color: #fff;border: 1px solid #dcdfe6;border-radius: 4px;line-height: 30px;"><span>+创建试题库</span></button>
+      <button class="butm"><span class="buto">+创建试题库</span></button>
     </div>
   </div>
   <!-- 考试设置 -->
@@ -178,6 +178,7 @@ const form = reactive({
   resource: '',
   desc: '',
 })
+
 //单选框
 const radio = ref(3)
 //多选框
@@ -337,5 +338,15 @@ border-radius: 4px;
   margin: 20px;
   margin-left: 200px;
 }
-
+.butm{
+  width: 100px;
+  color: #606266;
+  margin: 0px 10px;
+  background-color: #fff;border: 1px solid #dcdfe6;
+  border-radius: 4px;line-height: 30px;
+  
+}
+.buto{
+  font-size: 13px;
+}
 </style>
