@@ -22,7 +22,7 @@ import {ref} from 'vue'
 const infoRef=ref<any>()
 
 const clickFn=()=>{
-  console.log(123456);
+  console.log('123456');
   infoRef.value.isShow=false //关闭个人信息的弹框
 }
 </script>
