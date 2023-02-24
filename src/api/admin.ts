@@ -32,11 +32,8 @@ export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:
 }
 
 //部门数据
-interface Iclasses{
-  (page:number,psize:number,):Promise<AxiosResponse<any>>
-}
-export const IClasses:Iclasses=(page:number,psize:number,):Promise<AxiosResponse<any>>=>{
-  return get('/classes/list',{page,psize})
+export const IClasses=(params:any):Promise<AxiosResponse<any>>=>{
+  return get('/classes/list',params)
 }
 // 阅卷抽屉
 interface Iquestion{
@@ -45,6 +42,13 @@ interface Iquestion{
 export const IQuestion:Iquestion=(testid:number,studentid:number):Promise<AxiosResponse<any>>=>{
   return get('/question/listforstu',{testid,studentid})
 }
+
+// 阅卷完毕按钮
+export const IButton=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/studentanswer/update',params)
+}
+
+
 export const teacherlsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/teacher/list',params)
 }//师资列表

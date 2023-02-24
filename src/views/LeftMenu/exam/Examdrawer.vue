@@ -1,6 +1,14 @@
 <template>
-  <el-drawer v-model="drawer" :title="data.name" size="50%">
-    <div class="box" v-for="(item,index) in data.list" :key="index">
+  <el-drawer :title="data.name" size="50%">
+    <el-form
+          ref="ruleFormRef"
+          :model="data"
+          label-width="70px"
+          class="demo-ruleForm"
+          :size="formSize"
+          status-icon
+        >
+    <div class="box" v-for="(item, index) in data.list" :key="index">
       <div class="top">
         <span>1.{{ item.type }}</span>
         <span>分值：{{ item.scores }}</span>
@@ -15,82 +23,71 @@
         <span>{{ item.studentanswer }}</span>
       </div>
       <div class="isNum">
-        <el-form
-          ref="ruleFormRef"
-          :model="data"
-          :rules="rules"
-          label-width="70px"
-          class="demo-ruleForm"
-          :size="formSize"
-          status-icon
-        >
-          <el-form-item :rules="rules.name"  label="打分" :prop="'data.list'+index+'studentscores'">
+
+          <el-form-item
+            :rules="studentscores(item.scores)"
+            label="打分"
+            :prop="'list.' + index + '.studentscores'"
+          >
             <el-input class="elinput" v-model="item.studentscores" />
           </el-form-item>
           <el-form-item label="批注">
             <el-input v-model="item.comments" type="textarea" />
           </el-form-item>
-        </el-form>
       </div>
-
     </div>
     <div class="elbutton">
-        <el-button type="primary" @click="submitForm(ruleFormRef)">阅卷完毕</el-button>
-        <el-button>取消</el-button>
-      </div>
+      <el-button type="primary" @click="submitForm(ruleFormRef)">阅卷完毕</el-button>
+      <el-button @click="cancel">取消</el-button>
+    </div>
+  </el-form>
   </el-drawer>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onMounted, defineProps } from 'vue';
-import { IQuestion } from '../../../api/admin';
+import { IQuestion, IButton } from '../../../api/admin';
 
-import type { FormInstance, FormRules } from 'element-plus';
+import type { FormInstance,  } from 'element-plus';
+import { ElMessage } from 'element-plus';
 
 const formSize = ref('default');
 const ruleFormRef = ref<FormInstance>();
 // 动态校验
-// const scopeValidator = (rule: any, value: any, callback: any) => {
 
-//   let max = 9
-//   //  console.log('value',value);
-//   //  if(!value){
-//   //    callback(new Error('请输入分数'))
-//   //  }else if(value<0 || value>max){
-//   callback(new Error(`分数大于0小于${max}`))
-//   //  }else{
-//   //    callback()
-//   //  }
-// }
-const scopeValidator = (rule: any, value: any, callback: any) => {
-  let max = 9
-  callback(new Error(`分数必须大于0小于${max}`))
-}
-const rules = reactive({
-  name: [
-    { validator:scopeValidator, trigger: 'blur' },
-  ],
-});
-// 点击阅卷完毕
-const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.validate((valid) => {
-    if (valid) {
-      console.log('submit!')
-    } else {
-      console.log('error submit!')
-      return false
-    }
-  })
-}
+const scopevalidator = (val: number, rule: any, value: any, callback: any) => {
+  // console.log('value',value);
+  if (isNaN(value)) {
+    callback(new Error('请输入数字'));
+  } else if (value === null || value === '') {
+    callback(new Error('请输入分数'));
+  } else if (value < 0 || value > val) {
+    callback(new Error(`分数大于0小于${val}`));
+  } else {
+    callback();
+  }
+};
+// const rules = reactive({
+//   studentscores: [{ validator: scopevalidator.bind(this,), trigger: 'blur' },],
+// });
+
+const studentscores = (scope: number) => {
+  return [{ validator: scopevalidator.bind(this, scope), trigger: 'blur' }];
+};
+
 // 抽屉
+
 const a = defineProps({
   dda: {
     type: Object,
     required: true,
   },
+  carr: {
+    type: Function,
+    required: true,
+  },
 });
-const drawer = ref(true);
+// console.log(a.dda);
 
 // 渲染数据
 interface Iquestion {
@@ -114,7 +111,38 @@ const getIQuestion = async () => {
 onMounted(() => {
   getIQuestion();
 });
-
+// 点击阅卷完毕
+const submitForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.validate(async(valid) => {
+    if (valid) {
+         let dat = data.list.map((item: any) => {
+     return {
+       answerid: item.answerid,
+       scores: item.studentscores,
+       comments: item.comments,
+     };
+   });
+   let res: any = await IButton(dat);
+   // console.log(res);
+   if (res.errCode === 10000) {
+     ElMessage({
+       message: '阅卷完毕',
+       type: 'success',
+     });
+  
+   a.carr()
+   }
+    } else {
+      ElMessage.error('有错误')
+    }
+  })
+}
+// 点击取消
+const cancel=()=>{
+  ElMessage.error('取消阅卷了')
+  a.carr()
+}
 </script>
 
 <style scoped>
@@ -152,10 +180,10 @@ onMounted(() => {
   border-bottom: #c7c2b1 1px solid;
 }
 /* 打分的输入框 */
-.elinput{
+.elinput {
   width: 30%;
 }
-.elbutton{
+.elbutton {
   margin-top: 20px;
 }
 </style>
