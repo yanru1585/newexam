@@ -124,16 +124,16 @@ import  Drawer from '../../../components/SubjectDrawer.vue'
 import Transfer from '../../../components/TransferDialog.vue'
 import { reactive, toRefs,onMounted,ref } from 'vue';
 import{databaseList} from "../../../api/subjects"
-<<<<<<< HEAD
+
 import { fa } from 'element-plus/es/locale';
 const drawerRef=ref<any>() 
-=======
+
 
 const drawerShow=ref<any>(false) //控制抽屉显示隐藏
 const tranferShow=ref<any>(false) //控制弹框显示隐藏
 // const drawerRef=ref<any>() 
 const transferRef=ref()
->>>>>>> 48551c6ec7eecaa5a8425779574c5e191d1534b0
+
 interface Iadd {
   name: string;
   selectValue:string
