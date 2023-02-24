@@ -1,13 +1,7 @@
 <template>
   <div class="bot">
     <div class="head">
-      <!-- <el-popover placement="right" :width="400" trigger="click">
-        <template #reference>
-          <img src="../assets/images/head.jpg" alt="" />
-        </template>
-          <div class="popoverTop"></div>
-      </el-popover> -->
-      <img src="../assets/images/head.jpg" alt="" @click="isShow=!isShow"/>
+      <img src="../assets/images/head.jpg" alt="" @click="isShow = !isShow" />
       <div class="personBox" v-if="isShow">
         <div class="personTop"></div>
         <div class="headImg">
@@ -38,7 +32,7 @@
               </div>
               <span>密码</span>
             </div>
-            <p class="personItem_right" style="color: #59a0ff">设置</p>
+            <p class="personItem_right" style="color: #59a0ff" @click="getPass(info.pass)">设置</p>
           </div>
           <div class="personItem">
             <div class="personItem_left">
@@ -82,14 +76,18 @@ import {
   Location,
   Setting,
 } from '@element-plus/icons-vue';
-import { onMounted, ref, reactive, toRefs,defineExpose } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import { onMounted, ref, reactive, toRefs, defineExpose } from 'vue';
+import { useRouter } from 'vue-router';
 
-const isShow=ref(false)
+const router = useRouter()
+
+const isShow = ref(false);
 // console.log(isShow.value);
 
 defineExpose({
-  isShow
-})
+  isShow,
+});
 
 const data: any = reactive({
   info: {},
@@ -116,8 +114,32 @@ const handleClose = (key: string, keyPath: string[]) => {
 };
 
 // 退出登录
-const leaveLogin=()=>{
-  
+const leaveLogin = () => {
+  ElMessageBox.confirm('你确定要退出登录吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      sessionStorage.clear();
+      router.push('/')
+      ElMessage({
+        type: 'success',
+        message: '退出登录成功！',
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '退出登录失败！',
+      });
+    });
+};
+
+// 点击跳转到修改密码页面
+const getPass=(val:any)=>{
+router.push('set')
+isShow.value=false
 }
 </script>
 

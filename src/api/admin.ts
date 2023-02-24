@@ -109,3 +109,8 @@ export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
 export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/test/get',{id})
 }
+
+// 老师修改密码
+export const teacherChangePass=(oldpass:string,pass:string):Promise<AxiosResponse<any>>=>{
+  return post('/teacher/changePass',{oldpass,pass})
+}
