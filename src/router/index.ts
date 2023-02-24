@@ -16,6 +16,7 @@ const routes: any = [
   {
     path: '/home',
     name: 'Home',
+    
     component: () => import('../views/HomeVIew.vue'),
     children: [
       {
@@ -74,6 +75,11 @@ const routes: any = [
         path: '/classes', //班级
         name: 'Classes',
         component: () => import('../views/LeftMenu/classes/ClassesList.vue'),
+      },
+      {
+        path: '/clasdialog', //班级添加
+        name: 'clasdialog',
+        component: () => import('../views/LeftMenu/classes/Classdialog.vue'),
       },
       {
         path: '/student', //学员
