@@ -148,8 +148,10 @@
       </el-form-item>
       <el-form-item>
         <div class="footer">
+
           <el-button type="primary" @click="submit">提交</el-button>
           <el-button>取消</el-button>
+
         </div>
       </el-form-item>
     </el-form>
@@ -193,6 +195,7 @@ const show:Ishow=reactive({
   inportShow:false,//控制批量导入隐藏
 })
 const {drawerShow,tranferShow,inportShow}=toRefs(show)
+
 interface Iadd {
 	admin:string;
   answershow:number;
