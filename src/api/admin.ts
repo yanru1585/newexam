@@ -76,6 +76,9 @@ export const classesdeles=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/classes/deleteall',{ids})
 }//班级批量删除
 
+export const classesad=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/student/add',params)
+}//添加学生
 export const studentlist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/list',params)
 }//学员列表

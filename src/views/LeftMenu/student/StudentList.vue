@@ -6,7 +6,7 @@
       <h3>学员管理</h3>
       <div>
         <el-button>批量添加</el-button>
-        <el-button type="primary" @click="Addexam">添加学生</el-button>
+        <el-button type="primary" @click="Addstudent">添加学生</el-button>
       </div>
     </div>
     <el-form
@@ -71,12 +71,12 @@
       <el-table-column prop="remarks" label="备注"> </el-table-column>
       <el-table-column prop="depname" label="所属部门"> </el-table-column>
       <el-table-column prop="classname" label="所在班级"> </el-table-column>
-      <el-table-column prop="mobile" label="账号"> </el-table-column>
+      <el-table-column prop="username" label="账号"> </el-table-column>
       <el-table-column prop="addtime" label="添加时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
           <el-button link type="primary" size="small">重置密码</el-button>
-          <el-button link type="primary" size="small">修改</el-button>
+          <el-button link type="primary" size="small" @click="edit(scope.row)">修改</el-button>
           <el-button
             link
             type="primary"
@@ -99,6 +99,9 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <div>
+      <Addstu ref="studentref" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
+    </div>
   </div>
 </template>
 
@@ -106,6 +109,7 @@
 import { onMounted } from 'vue';
 import { reactive, toRefs } from 'vue';
 import { ref } from 'vue';
+import Addstu from './Addstuden.vue'
 import {
   studentlist,
   studentdele,
@@ -118,6 +122,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据
+let studentref =ref<any>()
 const formInline: Iform = reactive({
   personType: [
     //访客类型列表
@@ -279,7 +284,22 @@ const delId = (id: number) => {
     });
 };
 //添加学生
-const Addexam = () => {};
+const Addstudent = () => {
+  studentref.value.dialogVisible=true
+};
+//修改
+const stats =reactive({
+  stuentlist:{}
+})
+
+const edit = (val: any) => {
+  
+  console.log('编辑', val);
+  stats.stuentlist = val;
+  studentref.value.dialogVisible = true;
+  console.log(stats.stuentlist );
+};
+const {  stuentlist } = toRefs(stats);
 //分页
 const pageSize2 = ref(4);
 const currentPage1 = ref(1);
