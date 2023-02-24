@@ -81,7 +81,7 @@
         <el-form-item>
           <el-button type="primary">保存</el-button>
           <el-button>保存并继续</el-button>
-          <el-button>取消</el-button>
+          <el-button >取消</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>
