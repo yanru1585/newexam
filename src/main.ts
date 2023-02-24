@@ -19,11 +19,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
 
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> 71a5a410544d1a7ae71fe78da0f2e50ee932db16
 
