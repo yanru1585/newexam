@@ -80,9 +80,6 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
           <el-button>保存并继续</el-button>
-
-          <el-button >取消</el-button>
-
           <el-button  @click="cancelForm">取消</el-button>
 
         </el-form-item>
@@ -100,11 +97,19 @@ import {
   onMounted,
   reactive,
   toRefs,
-  defineEmits
+  defineEmits,
+  defineProps,
+  watch
 } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { ElMessage, FormInstance, FormRules } from 'element-plus'
+
 const ruleFormRef = ref<FormInstance>()
+const props=defineProps({
+  compileData:{
+    type:Object,
+  }
+})
 // const drawer = ref(true);
 const emit=defineEmits(['drawerEmit','showEmit'])
 interface IaddForm {
@@ -133,7 +138,7 @@ const data: Idata = reactive({
     answer: '', //单选框答案
     checkList: [], //复选框答案
     judge: '', //判断
-    title:'<p>hello</p>',//富文本数据，题干
+    title:'<p></p>',//富文本数据，题干
     answers: [//选项数组数据数组
     {answerno:'A',content:''},
     {answerno:'B',content:''},
@@ -149,9 +154,9 @@ const editorRef = shallowRef();
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
-  setTimeout(() => {
-    addForm.value.title = '<p></p>';
-  }, 500);
+  // setTimeout(() => {
+  //   addForm.value.title = '<p></p>';
+  // }, 500);
 });
 
 const toolbarConfig = {};
@@ -178,6 +183,8 @@ const rules = reactive<FormRules>({
   ],
 
 })
+console.log(777,props.compileData);
+
 // 点击添加选项数据
 const add = () => {
   let num=65+addForm.value.answers.length
@@ -238,6 +245,19 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
+watch(
+  [ () => props.compileData],
+  (newValue, oldValue) => {
+    console.log('变化了', newValue);
+    Object.assign(addForm.value,newValue[0])
+    console.log('变化了', addForm.value);
+ 
+  },
+  { immediate: true, deep: true }
+);
+// watch(props.compileData.type,(new,old)=>{
+
+// },{immediate:true})
 </script>
 
 <style lang="less" scoped>

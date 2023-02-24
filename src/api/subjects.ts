@@ -17,3 +17,7 @@ export const AddSubject=(parms?:any):Promise<AxiosResponse<any>>=>{
 export const DelSubject=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/subjects/delete',id)
 }
+// 单条试卷详情
+export const oneSubject=(id:any):Promise<AxiosResponse<any>>=>{
+  return get('/subjects/get',id)
+}

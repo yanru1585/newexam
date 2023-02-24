@@ -1,6 +1,6 @@
 <template>
   <div class="bot">
-    <div class="head">
+    <div class="head" >
       <img src="../assets/images/head.jpg" alt="" @click="isShow = !isShow" />
       <div class="personBox" v-if="isShow">
         <div class="personTop"></div>
