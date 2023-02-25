@@ -171,11 +171,11 @@
     <!-- 批量导入 -->
     <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
     <!-- 创建试题库 -->
-    <!-- <Database  ref="dialogRef" ></Database> -->
+    <Database  v-if="databaseShow" @showEmit="showEmit"></Database>
 </template>
 
 <script lang="ts" setup>
-// import Database from '../../../components/database/DatabaseDialog.vue'
+import Database from '../../../components/subject/SubDatabaseDialog.vue'
 import Import from '../../../components/subject/ImporDialog.vue'//批量导入
 import Drawer from '../../../components/subject/SubjectDrawer.vue';//创建试卷
 import Transfer from '../../../components/subject/TransferDialog.vue';//可见老师+选择
@@ -191,16 +191,20 @@ const router=useRouter()
 interface Ishow{
   drawerShow:boolean,
   tranferShow:boolean,
-  inportShow:boolean
+  inportShow:boolean,
+  databaseShow:boolean,
 }
 const show:Ishow=reactive({
   drawerShow:false, //控制抽屉显示隐藏
   tranferShow:false,//控制弹框显示隐藏
   inportShow:false,//控制批量导入隐藏
+  databaseShow:false,//控制创建试题库显示隐藏
 })
-const {drawerShow,tranferShow,inportShow}=toRefs(show)
+const {drawerShow,tranferShow,inportShow,databaseShow}=toRefs(show)
 
 interface Iadd {
+ 
+
 	admin:string;
   answershow:number;
   aorder:number;
@@ -222,6 +226,7 @@ interface Iadd {
   
 }
 interface Idata {
+  oneIndex:number
   addFrom: Iadd;
   baseList: Array<any>;
   selectValue: string;
@@ -257,7 +262,7 @@ const data: Idata = reactive({
   selectValue: '', //下拉框
   baseList: [], //题库列表
   compileData:{},//编辑数据详情
-  
+  oneIndex:0,//单条编辑下标
   scores: 0, //总分
   itemType:[],//左侧展示题目类型，题量
   questionsType:[{type:'单选题',const:0},{type:'多选题',const:0},{type:'判断题',const:0},{type:'填空题',const:0},{type:'问答题',const:0}]
@@ -271,10 +276,8 @@ const addSubject = () => {
 const getQuseType=()=>{
   questionsType.value.forEach(item=>{
   item.const= addFrom.value.questions.filter(it=>it.type===item.type).length
-
   })
-  console.log(222,questionsType.value);
-  
+  console.log(222,questionsType.value); 
 }
 watch(() =>addFrom.value.questions ,(newVal,oldVal)=>{
   getQuseType()
@@ -295,22 +298,29 @@ const drawerEmit = (data: any) => {
     data.answer=data.checkList.join('|')
   }
   console.log(data);
+  if(data.oneIndex===-1){
+    addFrom.value.questions.push(data);
+  }else{
+    addFrom.value.questions[data.oneIndex]=data
+  }
   
-  addFrom.value.questions.push(data);
 
   console.log('接收题目数据', addFrom.value.questions);
 };
-// 接收子组件数据控制组件销毁
+// 接收子组件数据控制组件显示隐藏
 const showEmit = (data: any) => {  
   tranferShow.value = data;
   drawerShow.value = data;
   inportShow.value = data;
+  databaseShow.value=data
 
 };
-// 点击事件编辑
+// 点击事件单条编辑
 const compile=(data:any,index:number)=>{
   console.log('点击编辑',data,index);
-  compileData.value=data
+  compileData.value={...data,oneIndex:index}
+  console.log('单条编辑',compileData.value);
+  
   drawerShow.value=true
   
 console.log(2222,compileData.value);
@@ -318,7 +328,7 @@ console.log(2222,compileData.value);
 }
 // 触发自定义事件接收批量导入试卷列表
 const subjectEmit=(obj: any)=>{
-  addFrom.value.questions=JSON.parse(JSON.stringify(obj))
+  addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(obj))]
   console.log('接受批量导入',addFrom.value.questions);
 }
 
@@ -406,6 +416,9 @@ const getOneData=async()=>{
 }
 // 点击创建试题库
 const establish=()=>{
+  console.log(111);
+  
+  databaseShow.value=true
 
 }
 </script>

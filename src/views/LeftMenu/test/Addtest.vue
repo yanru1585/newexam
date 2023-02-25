@@ -13,7 +13,7 @@
     <el-form-item label="考试说明:" style="margin-left: 60px;">
       <el-input v-model="form.desc" type="textarea" style="width: 300px;"/>
     </el-form-item>
-    </el-form>
+    <!-- </el-form> -->
     <!-- 内容设置 -->
     <div class="box">
       <p class="first">2</p>
@@ -37,7 +37,7 @@
      </div>
     </div>
     <div class="buttons">
-      <button  class="butm" ><span class="buto">添加题目</span></button>
+      <button  class="butm"  @click="addSubject"><span class="buto">添加题目</span></button>
       <button class="butm"><span class="buto">批量导入</span></button>
       <button class="butm"><span class="buto">从题库导入</span></button>
       <button class="butm"><span class="buto">选择已有试卷</span></button>
@@ -161,11 +161,14 @@
     <el-button>发布</el-button>
     <el-button type="primary">保存(不发布)</el-button>
     <el-button>取消</el-button>
+
       </div>
+    </el-form>
   </div>
 </template>
 
 <script setup lang="ts">
+
 import { reactive } from 'vue'
 import { ref } from 'vue'
 const form = reactive({
@@ -219,6 +222,10 @@ const shortcuts = [
     },
   },
 ]
+// 点击天机题目
+const addSubject=()=>{
+  
+}
 </script>
 
 <style lang="less" scoped>

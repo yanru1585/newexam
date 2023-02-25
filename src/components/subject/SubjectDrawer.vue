@@ -113,6 +113,7 @@ const props=defineProps({
 // const drawer = ref(true);
 const emit=defineEmits(['drawerEmit','showEmit'])
 interface IaddForm {
+  oneIndex:number;
   scores: string;
   radio: string;
   answer: string;
@@ -132,6 +133,7 @@ interface Idata {
 const data: Idata = reactive({
   drawer:'',
   addForm: {
+    oneIndex:-1,
     type:'单选题',//题型
     scores: '',//分值
     radio: '1', //题型单选
