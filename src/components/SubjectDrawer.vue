@@ -8,17 +8,17 @@
       :close-on-click-modal="false"
     >
       <span class="title">试题添加</span>
-      <el-form :model="addForm" label-width="120px" ref="ruleFormRef" :rules="rules">
+      <el-form :model="addForm" label-width="120px">
         <el-form-item>
-          <el-radio-group v-model="addForm.type">
-            <el-radio label="单选题">单选题</el-radio>
-            <el-radio label="多选题">多选题</el-radio>
-            <el-radio label="判断题">判断题</el-radio>
-            <el-radio label="填空题">填空题</el-radio>
-            <el-radio label="问答题">问答题</el-radio>
+          <el-radio-group v-model="addForm.radio">
+            <el-radio label="1">单选题</el-radio>
+            <el-radio label="2">多选题</el-radio>
+            <el-radio label="3">判断题</el-radio>
+            <el-radio label="4">填空题</el-radio>
+            <el-radio label="5">问答题</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="题干" >
+        <el-form-item label="题干">
           <!-- 富文本编辑器 -->
           <div style="border: 1px solid #ccc">
             <Toolbar
@@ -29,63 +29,59 @@
             />
             <Editor
               style="height: 300px; overflow-y: hidden"
-              v-model="addForm.title"
+              v-model="valueHtml"
               :defaultConfig="editorConfig"
               mode="default"
               @onCreated="handleCreated"
             />
           </div>
         </el-form-item>
-        <el-form-item label="选项" v-if="addForm.type === '单选题'||addForm.type === '多选题'" >
+        <el-form-item label="选项" v-if="addForm.radio < '3'">
           <div class="option">
-            <div class="item" v-for="(item, index) in addForm.answers" :key="index">
-              <span>{{ item.tit }}:</span>
-              <el-input v-model="item.center" type="textarea" />
+            <div class="item" v-for="(item, index) in optionArr" :key="index">
+              <span>{{ item }}:</span>
+              <el-input v-model="addForm.desc" type="textarea" />
               <el-icon size="26px" @click="dele"><CircleClose /></el-icon>
             </div>
           </div>
           <el-icon class="add" @click="add"><CirclePlus /></el-icon>
         </el-form-item>
-        <el-form-item label="正确答案" v-if="addForm.type !== '填空题'&&addForm.type !== '问答题'">
+        <el-form-item label="正确答案" v-if="addForm.radio < '4'">
           <el-radio-group
             v-model="addForm.trueradio"
-            v-if="addForm.type === '单选题'"
+            v-if="addForm.radio === '1'"
           >
             <el-radio
-              v-for="(item, index) in addForm.answers"
+              v-for="(item, index) in optionArr"
               :key="index"
-              :label="item.tit"
+              :label="item"
             />
           </el-radio-group>
           <el-checkbox-group
             v-model="addForm.checkList"
-            v-if="addForm.type === '多选题'"
+            v-if="addForm.radio === '2'"
           >
             <el-checkbox
-              v-for="(item, index) in addForm.answers"
+              v-for="(item, index) in optionArr"
               :key="index"
-              :label="item.tit"
+              :label="item"
             />
           </el-checkbox-group>
-          <el-radio-group v-model="addForm.judge" v-if="addForm.type === '判断题'">
+          <el-radio-group v-model="addForm.judge" v-if="addForm.radio === '3'">
             <el-radio-button label="正确" />
             <el-radio-button label="错误" />
           </el-radio-group>
-        </el-form-item> 
-        <el-form-item label="解析"  v-if="addForm.type ==='填空题' || addForm.type ==='问答题'">
-          <el-input type="textarea" style="width: 100%" v-model="addForm.analysis"  />
         </el-form-item>
-        <el-form-item label="分值" prop="scores">
-          <el-input style="width: 100px" v-model="addForm.scores" />
+        <el-form-item label="解析"  v-if="addForm.radio >'3'">
+          <el-input type="textarea" style="width: 100%" v-model="addForm.name"  />
+        </el-form-item>
+        <el-form-item label="分值">
+          <el-input style="width: 100px" v-model="addForm.name" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
+          <el-button type="primary">保存</el-button>
           <el-button>保存并继续</el-button>
-
           <el-button >取消</el-button>
-
-          <el-button  @click="cancelForm">取消</el-button>
-
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -102,54 +98,49 @@ import {
   defineExpose,
   reactive,
   toRefs,
-  defineEmits
 } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-import { ElMessage, FormInstance, FormRules } from 'element-plus'
-const ruleFormRef = ref<FormInstance>()
-const drawer = ref(true);
-const emit=defineEmits(['drawerEmit','showEmit'])
-interface IaddForm {
-  scores: string;
-  radio: string;
-  trueradio: string;
-  checkList: Array<any>;
-  judge: string;
-  title:string;
-  answers:Array<any>
-  type:string;
-  analysis:string
 
+const drawer = ref(true);
+defineExpose({
+  drawer,
+});
+interface IaddForm {
+  name: String;
+  radio: String;
+  desc: String;
+  trueradio: String;
+  checkList: Array<any>;
+  judge: String;
 }
 interface Idata {
   addForm: IaddForm;
+  optionArr: Array<any>;
+  num: any;
 }
 const data: Idata = reactive({
   addForm: {
-    type:'单选题',//题型
-    scores: '',//分值
+    name: '',
     radio: '1', //题型单选
+    desc: '', //
     trueradio: '', //单选框答案
     checkList: [], //复选框答案
     judge: '', //判断
-    title:'<p>hello</p>',//富文本数据，题干
-    answers: [//选项数组数据数组
-    {tit:'A',center:''},
-    {tit:'B',center:''},
-    {tit:'C',center:''},
-    {tit:'D',center:''},
-  ],
-  analysis:'',//解析
   },
+  optionArr: ['A', 'B', 'C', 'D'],
+  num: 69,
 });
-const { addForm } = toRefs(data);
+const { addForm, optionArr } = toRefs(data);
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
+
+// 内容 HTML
+const valueHtml = ref('<p>hello</p>');
 
 // 模拟 ajax 异步获取内容
 onMounted(() => {
   setTimeout(() => {
-    addForm.value.title = '<p></p>';
+    valueHtml.value = '<p>模拟 Ajax 异步设置内容</p>';
   }, 1500);
 });
 
@@ -166,79 +157,16 @@ onBeforeUnmount(() => {
 const handleCreated = (editor: any) => {
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
-//验证
-const rules = reactive<FormRules>({
-  scores: [
-  {
-      // type: 'number',
-      required: true,
-      message: '请输入分值',
-      trigger: 'blur',
-    },
-  ],
 
-})
 // 点击添加选项数据
 const add = () => {
-  let num=65+addForm.value.answers.length
-  console.log(555,num);
-  let optionData={
-    
-    tit:String.fromCharCode(num++),
-    center:''
-  }
-  addForm.value.answers.push(optionData);
+  optionArr.value.push(String.fromCharCode(data.num++));
+  // console.log(String.fromCharCode(65));
 };
 // 点击删除选项
 const dele = () => {
-  addForm.value.answers.pop();
+  optionArr.value.pop();
 };
-// 点击取消
-const cancelForm=()=>{
-  console.log(33,addForm.value);
-  // drawer.value=false
-}
-// 点击保存
-const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
-      console.log('submit!')
-      if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
-        addForm.value.answers.forEach(item=>{
-          if(!item.center){
-            ElMessage.error('选项内容必填')
-            return false
-          }
-        })
-        
-      }
-       if(addForm.value.type==='单选题'){
-        if(!addForm.value.trueradio){
-            ElMessage.error('正确答案必填')
-            return false
-          }
-      }
-       if(addForm.value.type==='多选题'){
-        if(addForm.value.checkList.length===0){
-            ElMessage.error('正确答案必填')
-            return false
-          }
-      }
-      if(addForm.value.type==='判断题'){
-        if(!addForm.value.judge){
-            ElMessage.error('正确答案必填')
-            return false
-          }
-      }
-      emit('drawerEmit',{...addForm.value})
-      emit('showEmit',false)
-      // drawer.value=false
-    } else {
-      console.log('error submit!', fields)
-    }
-  })
-}
 </script>
 
 <style lang="less" scoped>
@@ -256,7 +184,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   line-height: 50px;
   margin-top: 10px;
   span {
-    color: rgb(97, 97, 97);
     font-size: 20px;
     display: block;
     width: 20px;

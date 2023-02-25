@@ -22,8 +22,6 @@ import {ref} from 'vue'
 const infoRef=ref<any>()
 
 const clickFn=()=>{
-  console.log("kkkk");
-  
   infoRef.value.isShow=false //关闭个人信息的弹框
 }
 </script>

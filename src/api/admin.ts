@@ -30,13 +30,9 @@ interface Isee{
 export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>=>{
   return get('/student/test',{page,psize,testid,key,state})
 }
-
 //部门数据
-interface Iclasses{
-  (page:number,psize:number,):Promise<AxiosResponse<any>>
-}
-export const IClasses:Iclasses=(page:number,psize:number,):Promise<AxiosResponse<any>>=>{
-  return get('/classes/list',{page,psize})
+export const IClasses=(params:any):Promise<AxiosResponse<any>>=>{
+  return get('/department/list',params)
 }
 // 阅卷抽屉
 interface Iquestion{
@@ -45,6 +41,13 @@ interface Iquestion{
 export const IQuestion:Iquestion=(testid:number,studentid:number):Promise<AxiosResponse<any>>=>{
   return get('/question/listforstu',{testid,studentid})
 }
+
+// 阅卷完毕按钮
+export const IButton=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/studentanswer/update',params)
+}
+
+
 export const teacherlsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/teacher/list',params)
 }//师资列表
@@ -72,6 +75,9 @@ export const classesdeles=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/classes/deleteall',{ids})
 }//班级批量删除
 
+export const classesad=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/student/add',params)
+}//添加学生
 export const studentlist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/list',params)
 }//学员列表
