@@ -212,7 +212,6 @@ const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-
       let res: any = await classesad(AddForm.value);
       console.log('添加学生', res);
       if (res.errCode !== 10000) {
@@ -222,7 +221,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
         return false;
       }
-      if (AddForm.value.id == 0) {
+      if (AddForm.value.id === 0) {
         ElMessage({
           message: '添加成功！',
           type: 'success',

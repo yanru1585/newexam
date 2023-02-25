@@ -89,6 +89,9 @@ export const studentall=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/student/deleteall',{ids})
 }//学员批量删除
 
+export const studentcs=(ids:any):Promise<AxiosResponse<any>>=>{
+  return post('/student/changepass',{ids})
+}//学员重置密码
 export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/role/list',params)
 }//角色列表
