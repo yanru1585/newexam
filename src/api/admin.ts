@@ -30,10 +30,9 @@ interface Isee{
 export const ISee:Isee=(page:number,psize:number,testid:number,state:string,key:string):Promise<AxiosResponse<any>>=>{
   return get('/student/test',{page,psize,testid,key,state})
 }
-
 //部门数据
 export const IClasses=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/classes/list',params)
+  return get('/department/list',params)
 }
 // 阅卷抽屉
 interface Iquestion{
