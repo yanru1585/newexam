@@ -102,7 +102,7 @@ const getSee = async () => {
 const props1 = {
   checkStrictly: true,
   value: 'id',
-  label: 'depname',
+  label: 'name',
   children: 'children',
 };
 const getIClasses = async () => {

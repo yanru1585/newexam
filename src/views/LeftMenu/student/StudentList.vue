@@ -120,6 +120,7 @@ import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
+
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据
 let studentref =ref<any>()
