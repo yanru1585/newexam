@@ -205,7 +205,7 @@ const { list, teacherArr, teacherData } = toRefs(data);
 
 onMounted(() => {
   getList();
-  Object.assign(props.editList, addData);
+  // Object.assign(props.editList, addData);
 });
 // 编辑回显
 watch(

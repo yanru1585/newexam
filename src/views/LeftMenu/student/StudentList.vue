@@ -76,7 +76,7 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
           <el-button link type="primary" size="small">重置密码</el-button>
-          <el-button link type="primary" size="small">修改</el-button>
+          <el-button link type="primary" size="small" @click="edit(scope.row)">修改</el-button>
           <el-button
             link
             type="primary"
@@ -115,6 +115,11 @@ import {
 import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
+
+const edit=(val:any)=>{
+  console.log(val);
+  
+}
 
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据
