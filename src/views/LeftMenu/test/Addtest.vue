@@ -17,6 +17,8 @@
         <el-input v-model="form.desc" type="textarea" style="width: 300px" />
       </el-form-item>
     </el-form>
+    <!-- </el-form> -->
+
     <!-- 内容设置 -->
     <div class="box">
       <p class="first">2</p>
@@ -146,6 +148,7 @@
       <p class="information">协同设置</p>
     </div>
     <div class="examss">
+
       <div class="hour">阅卷老师:</div>
 
       <el-badge :value="0" class="item" type="primary">
@@ -218,7 +221,14 @@ const shortcuts = [
       return [start, end];
     },
   },
+
 ];
+
+
+// 点击天机题目
+const addSubject=()=>{
+  
+}
 </script>
 
 <style lang="less" scoped>

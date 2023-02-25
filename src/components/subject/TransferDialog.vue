@@ -32,6 +32,7 @@
 </template>
 
 <script setup lang="ts">
+import  {teacherlsit} from '../../api/admin'
 import {departmentList} from '../../api/department'
 import { ref,onMounted,reactive,toRefs,defineEmits} from 'vue'
 import { ElMessageBox } from 'element-plus'
@@ -78,15 +79,22 @@ const getList= async()=>{
     return false
   }
   options.value=res.data.list
+  console.log(options.value);
+  
 }
 // 下拉框点击事件
-const selectChang=(val: any)=>{
-  options.value.forEach(item=>{
-    if(item.id===val){
-      item.children==null?data.value=[]:data.value=[...item.children]  
-    }
-  })
-
+const selectChang= async(val: any)=>{
+  // options.value.forEach(item=>{
+    // if(item.id===val){
+    //   item.children==null?data.value=[]:data.value=[...item.children]  
+    // }
+  // })
+  const res:any=await teacherlsit({depid:val}).catch(()=>{})
+console.log('可见老师',res);
+if(res.errCode!==10000){
+  return false
+}
+data.value=res.data.list
 }
 onMounted(()=>{
   getList()

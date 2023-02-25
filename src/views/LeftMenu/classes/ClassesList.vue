@@ -206,12 +206,14 @@ const daa = reactive({
   ar: {
     name: '',
     ids: '',
+    id:0
   },
 });
 const reser = (row: any) => {
   // console.log(row);
   daa.ar.name = row.name; //名称
   daa.ar.ids = row.depid; //部门id
+  daa.ar.id = row.id
   user.value = true;
 };
 const father = () => {
