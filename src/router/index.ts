@@ -97,12 +97,6 @@ const routes: any = [
         component: () =>
           import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
-      {
-        path: '/set', //老师修改密码
-        name: 'Set',
-        component: () =>
-          import('../views/LeftMenu/set/ChangePass.vue'),
-      },
     ],
   },
 ];

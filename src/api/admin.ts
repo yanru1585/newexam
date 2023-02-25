@@ -61,10 +61,10 @@ export const classeslist=(params:any):Promise<AxiosResponse<any>>=>{
 }//班级列表
 
 interface Iclassesadd{
-  (name:string,depid:number):Promise<AxiosResponse<any>>
+  (name:string,depid:number,id:number):Promise<AxiosResponse<any>>
 }
-export const classesadd:Iclassesadd=(name:string,depid:number):Promise<AxiosResponse<any>>=>{
-  return post('/classes/add',{name,depid})
+export const classesadd:Iclassesadd=(name:string,depid:number,id:number):Promise<AxiosResponse<any>>=>{
+  return post('/classes/add',{name,depid,id})
 }//班级添加
 
 export const classesdele=(id:any):Promise<AxiosResponse<any>>=>{
@@ -76,7 +76,7 @@ export const classesdeles=(ids:any):Promise<AxiosResponse<any>>=>{
 }//班级批量删除
 
 export const classesad=(params:any):Promise<AxiosResponse<any>>=>{
-  return post('/student/add',params)
+  return post('/student/add',params)
 }//添加学生
 export const studentlist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/list',params)
@@ -96,8 +96,13 @@ export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
 export const roledel=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/role/delete',{id})
 
-}//角色删除
+}
 
+// 根据id获取单个考试信息
+export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
+   return get('/test/get',{id})
+  }
+//角色删除
 
 export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/menu/list',params)
@@ -109,13 +114,3 @@ export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/role/add',params)
 }//角色添加
 
-
-// 根据id获取单个考试信息
-export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
-  return get('/test/get',{id})
-}
-
-// 老师修改密码
-export const teacherChangePass=(oldpass:string,pass:string):Promise<AxiosResponse<any>>=>{
-  return post('/teacher/changePass',{oldpass,pass})
-}
