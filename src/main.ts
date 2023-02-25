@@ -9,6 +9,7 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'vant/lib/index.css'
 import './assets/css/iconfont.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import Vant from './utils/vantui'
 const app = createApp(App)
 app.use(router).use(Vant).use(ElementPlus, {
   locale: zhCn,
