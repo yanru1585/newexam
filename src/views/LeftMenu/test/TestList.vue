@@ -97,9 +97,9 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default>
           <p>
-            <el-button link type="primary" size="small">学生</el-button>
-            <el-button link type="primary" size="small">可见</el-button>
-            <el-button link type="primary" size="small">阅卷老师</el-button>
+            <el-button link type="primary" size="small" @click="studentDialog">学生</el-button>
+            <el-button link type="primary" size="small" @click="teacherDialog">可见</el-button>
+            <el-button link type="primary" size="small" @click="readTeacherDialog">阅卷老师</el-button>
           </p>
           <p>
             <el-button link type="primary" size="small">分析</el-button>
@@ -130,10 +130,13 @@
     @isshowDialog="isshowDialog"
     :getData="getData"
   />
+
+  <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> <!-- 可见老师 -->
 </template>
 
 <script setup lang="ts">
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
+import TransferDialog from '../../../components/subject/TransferDialog.vue';
 import { onMounted, defineProps, toRefs, toRaw } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
@@ -142,6 +145,30 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const isShowGet = ref(false);
+
+
+const title=ref() //弹框的标题
+const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
+
+const studentDialog=()=>{//学生
+  teacherDialogisShow.value=true
+  title.value='学生考试列表'
+}
+
+const teacherDialog=()=>{//可见老师
+  teacherDialogisShow.value=true
+  title.value='可见老师'
+}
+
+const readTeacherDialog=()=>{//阅卷老师
+  teacherDialogisShow.value=true
+  title.value='阅卷老师'
+}
+
+// 接收子组件传来的  关闭TransferDialog弹窗
+const showEmit=(val:any)=>{
+  teacherDialogisShow.value=val
+}
 
 // 接收子组件传来的  关闭弹窗
 const isshowDialog = (val: any) => {

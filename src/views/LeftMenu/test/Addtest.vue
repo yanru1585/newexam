@@ -129,7 +129,7 @@
       <div class="hour">可见老师:</div>
 
       <el-badge :value="0" class="item" type="primary">
-        <el-button style="margin-left: 10px; margin-top: 10px">+选择</el-button>
+        <el-button style="margin-left: 10px; margin-top: 10px" @click="teacherDialog">+选择</el-button>
       </el-badge>
     </div>
     <div class="box">
@@ -140,7 +140,7 @@
       <div class="hour">考试范围:</div>
 
       <el-badge :value="0" class="item" type="primary">
-        <el-button style="margin-left: 10px; margin-top: 10px">+选择</el-button>
+        <el-button style="margin-left: 10px; margin-top: 10px" @click="studentDialog">+选择</el-button>
       </el-badge>
     </div>
     <div class="box">
@@ -152,7 +152,7 @@
       <div class="hour">阅卷老师:</div>
 
       <el-badge :value="0" class="item" type="primary">
-        <el-button style="margin-left: 10px; margin-top: 10px">+选择</el-button>
+        <el-button style="margin-left: 10px; margin-top: 10px" @click="readTeacherDialog">+选择</el-button>
       </el-badge>
     </div>
     <div class="buoot">
@@ -163,9 +163,11 @@
   </div>
 
   <SubjectDrawer v-if="isShowDrawer"/>
+  <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> <!-- 可见老师 -->
 </template>
 
 <script setup lang="ts">
+import TransferDialog from '../../../components/subject/TransferDialog.vue';
 import SubjectDrawer from '../../../components/SubjectDrawer.vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
@@ -181,6 +183,29 @@ const form = reactive({
 });
 
 const isShowDrawer=ref(false)
+
+const title=ref() //弹框的标题
+const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
+
+const studentDialog=()=>{//学生
+  teacherDialogisShow.value=true
+  title.value='学生考试列表'
+}
+
+const teacherDialog=()=>{//可见老师
+  teacherDialogisShow.value=true
+  title.value='可见老师'
+}
+
+const readTeacherDialog=()=>{//阅卷老师
+  teacherDialogisShow.value=true
+  title.value='阅卷老师'
+}
+
+// 接收子组件传来的  关闭TransferDialog弹窗
+const showEmit=(val:any)=>{
+  teacherDialogisShow.value=val
+}
 
 //单选框
 const radio = ref(3);
