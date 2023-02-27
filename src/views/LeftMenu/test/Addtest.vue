@@ -120,7 +120,7 @@
             <el-button @click="addSubject" style="margin: 10px">添加题目</el-button >
             <el-button  style="margin: 10px" @click="bulkImport">批量导入</el-button>
             <el-button  style="margin: 10px" @click="importDatabase">从题库导入</el-button>
-            <el-button  style="margin: 10px">选择已有试卷</el-button>
+            <el-button  style="margin: 10px" @click="checkSubject">选择已有试卷</el-button>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
           </el-select>
         </el-form-item>
         <div>
-          <el-button @click="establish" style="margin-left: 10px;">+创建试题库</el-button>
+          <el-button @click="establish" style="margin-left: 10px;" >+创建试题库</el-button>
         </div>
       </div>
       <!-- 考试设置 -->
@@ -236,7 +236,6 @@
       </div>
       <div class="examss">
         <div class="hour">阅卷老师:</div>
-
         <el-badge :value="addFrom.markteachers.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="readTeacherDialog">+选择</el-button>
         </el-badge>
@@ -265,10 +264,13 @@
      <Question v-if="questionShow" :databaseData="databaseData" @questionsEmit="questionsEmit" @qushowEmit="qushowEmit"></Question>
      <!-- 可见老师 -->
      <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" @transferEmit="transferEmit" :title="title"/> 
+     <!-- 从题库中导入 -->
+     <SubjectList v-if="subjectListShow" @showEmit="showEmit" @questionsEmit="questionsEmit"></SubjectList>
 </template>
 
 <script setup lang="ts">
 import {AddText} from '../../../api/admin'
+import SubjectList from '../../../components/subject/SubjectListDialog.vue'//从题库中导入
 import TransferDialog from '../../../components/subject/TransferDialog.vue';//可见老师
 import Question from '../../../components/subject/QuestionDialog.vue'//题目列表
 import DatabaseTab from '../../../components/database/DatabaseTabDialog.vue'//从题库引入
@@ -286,7 +288,8 @@ interface Ishow {
   inportShow: boolean;
   databaseShow: boolean;
   databaseTabShow:boolean,
-  questionShow:boolean
+  questionShow:boolean,
+  subjectListShow:boolean
 }
 interface Iadd {
   admin: string;
@@ -354,8 +357,9 @@ const show: Ishow = reactive({
   databaseShow: false, //控制创建试题库显示隐藏
   databaseTabShow:false,//控制题库列表显示隐藏
   questionShow:false,//控制题目列表显示隐藏
-});
-const { drawerShow, tranferShow, inportShow, databaseShow,databaseTabShow,questionShow } = toRefs(show);
+  subjectListShow:false,//控制题库显示隐藏
+})
+const { drawerShow, tranferShow, inportShow, databaseShow,databaseTabShow,questionShow ,subjectListShow} = toRefs(show);
 const form = reactive({
   name: '',
   region: '',
@@ -462,6 +466,7 @@ const showEmit = (data: any) => {
   databaseShow.value = data;
   databaseTabShow.value=data
   teacherDialogisShow.value=data
+  subjectListShow.value=data
 };
 // 题目组件自定义事件传控制显示隐藏
 const qushowEmit=(data: any)=>{
@@ -569,8 +574,8 @@ const datetimerangeChange=(data:any)=>{
 onMounted(()=>{
   getDatabaseList()
 })
-const getIssue=async()=>{
-  
+// 点击发布
+const getIssue=async()=>{  
   console.log('发布',addFrom.value);
   const res:any=await AddText(addFrom.value).catch(()=>{})
   console.log('点击发布',res);
@@ -589,6 +594,11 @@ const getPublish=()=>{
 const keepUnpublished=()=>{
   addFrom.value.state=0
   getIssue()
+
+}
+// 选择已有试卷导入
+const checkSubject=()=>{
+  subjectListShow.value=true
 
 }
 </script>
