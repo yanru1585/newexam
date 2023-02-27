@@ -135,7 +135,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         return false
       }
       ElMessage.success('添加成功')
-      
+      emit('showEmit',false)
 
     } else {
       console.log('error submit!', fields)

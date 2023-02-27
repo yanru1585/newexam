@@ -16,7 +16,6 @@
           <el-step title="上传填写好的试题表" />
         </el-steps>
       </div>
-      <!-- <el-button type="primary" style="margin-left: 10%;">点击上传文件</el-button> -->
       <el-upload
         v-model:file-list="fileList"
         class="upload-demo"

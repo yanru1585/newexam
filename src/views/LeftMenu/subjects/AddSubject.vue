@@ -110,7 +110,7 @@
             <div class="btn">
               <el-button @click="addSubject">添加题目</el-button>
               <el-button @click="bulkImport">批量导入</el-button>
-              <el-button>从题库中导入</el-button>
+              <el-button @click="importDatabase">从题库中导入</el-button>
             </div>
           </div>
         </div>
@@ -172,10 +172,16 @@
     <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
     <!-- 创建试题库 -->
     <Database  v-if="databaseShow" @showEmit="showEmit"></Database>
+    <!-- 从题库中引入 -->
+    <DatabaseTab v-if="databaseTabShow"  @showEmit="showEmit" @questionList="questionList"></DatabaseTab>
+    <!-- 题目列表 -->
+    <Question v-if="questionShow" :databaseData="databaseData" @questionsEmit="questionsEmit" @qushowEmit="qushowEmit"></Question>
 </template>
 
 <script lang="ts" setup>
-import Database from '../../../components/subject/SubDatabaseDialog.vue'
+import Question from '../../../components/subject/QuestionDialog.vue'//题目列表
+import DatabaseTab from '../../../components/database/DatabaseTabDialog.vue'//从题库引入
+import Database from '../../../components/subject/SubDatabaseDialog.vue'//创建题库
 import Import from '../../../components/subject/ImporDialog.vue'//批量导入
 import Drawer from '../../../components/subject/SubjectDrawer.vue';//创建试卷
 import Transfer from '../../../components/subject/TransferDialog.vue';//可见老师+选择
@@ -185,7 +191,7 @@ import { databaseList,AddSubject,oneSubject } from '../../../api/subjects';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const route=useRoute()
 
-console.log('添加试卷接收id',route.query.id);
+// console.log('添加试卷接收id',route.query.id);
 
 const router=useRouter()
 interface Ishow{
@@ -193,19 +199,21 @@ interface Ishow{
   tranferShow:boolean,
   inportShow:boolean,
   databaseShow:boolean,
+  databaseTabShow:boolean,
+  questionShow:boolean
 }
 const show:Ishow=reactive({
   drawerShow:false, //控制抽屉显示隐藏
   tranferShow:false,//控制弹框显示隐藏
   inportShow:false,//控制批量导入隐藏
   databaseShow:false,//控制创建试题库显示隐藏
+  databaseTabShow:false,//控制题库列表显示隐藏
+  questionShow:false,//控制题目列表显示隐藏
 })
-const {drawerShow,tranferShow,inportShow,databaseShow}=toRefs(show)
+const {drawerShow,tranferShow,inportShow,databaseShow,databaseTabShow,questionShow}=toRefs(show)
 
 interface Iadd {
- 
-
-	admin:string;
+  	admin:string;
   answershow:number;
   aorder:number;
   begintime:string;
@@ -222,8 +230,7 @@ interface Iadd {
   scores: number,
   state: null,
   students:  Array<any>
-  title: string;
-  
+  title: string;  
 }
 interface Idata {
   oneIndex:number
@@ -234,6 +241,7 @@ interface Idata {
   itemType: Array<any>;
   questionsType:Array<any>
   compileData:any
+  databaseData:object
 }
 const data: Idata = reactive({
   // 添加数据
@@ -265,9 +273,10 @@ const data: Idata = reactive({
   oneIndex:0,//单条编辑下标
   scores: 0, //总分
   itemType:[],//左侧展示题目类型，题量
-  questionsType:[{type:'单选题',const:0},{type:'多选题',const:0},{type:'判断题',const:0},{type:'填空题',const:0},{type:'问答题',const:0}]
+  questionsType:[{type:'单选题',const:0},{type:'多选题',const:0},{type:'判断题',const:0},{type:'填空题',const:0},{type:'问答题',const:0}],
+  databaseData:{},//题库
 });
-const { addFrom, baseList,itemType,questionsType,selectValue,compileData } = toRefs(data);
+const { addFrom, baseList,itemType,questionsType,selectValue,compileData,databaseData } = toRefs(data);
 // 点击添加题目
 const addSubject = () => {
   drawerShow.value = true;
@@ -277,15 +286,16 @@ const getQuseType=()=>{
   questionsType.value.forEach(item=>{
   item.const= addFrom.value.questions.filter(it=>it.type===item.type).length
   })
-  console.log(222,questionsType.value); 
+  // console.log(222,questionsType.value); 
 }
+// 试卷类型事件监听
 watch(() =>addFrom.value.questions ,(newVal,oldVal)=>{
   getQuseType()
 },{deep:true,immediate:true})
 // 获取题库列表
 const getDatabaseList = async () => {
   const res: any = await databaseList().catch(() => {});
-  console.log('题库列表', res);
+  // console.log('题库列表', res);
   if (res.errCode !== 10000) {
     return false;
   }
@@ -293,11 +303,11 @@ const getDatabaseList = async () => {
 };
 // 触发自定义事件接收添加题目传值
 const drawerEmit = (data: any) => {
-  console.log('接收子组件题目传值', data);
+  // console.log('接收子组件题目传值', data);
   if(data.type==='多选题'){
     data.answer=data.checkList.join('|')
   }
-  console.log(data);
+  // console.log(data);
   if(data.oneIndex===-1){
     addFrom.value.questions.push(data);
   }else{
@@ -305,7 +315,7 @@ const drawerEmit = (data: any) => {
   }
   
 
-  console.log('接收题目数据', addFrom.value.questions);
+  // console.log('接收题目数据', addFrom.value.questions);
 };
 // 接收子组件数据控制组件显示隐藏
 const showEmit = (data: any) => {  
@@ -313,23 +323,33 @@ const showEmit = (data: any) => {
   drawerShow.value = data;
   inportShow.value = data;
   databaseShow.value=data
-
+  databaseTabShow.value=data
 };
+// 题目组件自定义事件传控制显示隐藏
+const qushowEmit=(data: any)=>{
+  questionShow.value=data
+}
+// 点击接收题目组件传值
+const questionsEmit=(data: any)=>{
+  console.log('接收题库题目传值',data);
+  addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(data))]
+
+}
 // 点击事件单条编辑
 const compile=(data:any,index:number)=>{
-  console.log('点击编辑',data,index);
+  // console.log('点击编辑',data,index);
   compileData.value={...data,oneIndex:index}
-  console.log('单条编辑',compileData.value);
+  // console.log('单条编辑',compileData.value);
   
   drawerShow.value=true
   
-console.log(2222,compileData.value);
+// console.log(2222,compileData.value);
 
 }
 // 触发自定义事件接收批量导入试卷列表
 const subjectEmit=(obj: any)=>{
   addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(obj))]
-  console.log('接受批量导入',addFrom.value.questions);
+  // console.log('接受批量导入',addFrom.value.questions);
 }
 
 // 点击选择显示老师可见弹框
@@ -338,7 +358,7 @@ const getSeleter = () => {
 };
 // 触发自定义事件接收子组件穿梭框数据
 const transferEmit = (val: any) => {
-  console.log('接收穿梭框数据', val);
+  // console.log('接收穿梭框数据', val);
   if(val){
     val.forEach((item: any)=>{
       addFrom.value.limits.push({id:item})
@@ -379,9 +399,9 @@ const itemDel=(index: any)=>{
 
 // 点击提交
 const submit=async ()=>{
-  console.log('点击提交',addFrom.value);
+  // console.log('点击提交',addFrom.value);
   const res:any=await AddSubject(addFrom.value).catch(()=>{})
-  console.log('提交',res);
+  // console.log('提交',res);
   if(res.errCode!==10000){
     ElMessage.error(res.errMsg)
     return false
@@ -417,8 +437,19 @@ const getOneData=async()=>{
 // 点击创建试题库
 const establish=()=>{
   console.log(111);
-  
   databaseShow.value=true
+}
+// 点击从题库中引入
+const importDatabase=()=>{
+  databaseTabShow.value=true
+  
+}
+//触发自定义事件接收题库中数据传值
+const questionList=(data: any)=>{
+  console.log('接收题库传值',data);
+  questionShow.value=true
+  databaseData.value=data
+
 
 }
 </script>

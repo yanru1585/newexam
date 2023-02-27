@@ -185,12 +185,12 @@ const rules = reactive<FormRules>({
   ],
 
 })
-console.log(777,props.compileData);
+// console.log(777,props.compileData);
 
 // 点击添加选项数据
 const add = () => {
   let num=65+addForm.value.answers.length
-  console.log(555,num);
+  // console.log(555,num);
   let optionData={
     
     answerno:String.fromCharCode(num++),
@@ -211,7 +211,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log('submit!')
+      // console.log('submit!')
       if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
         addForm.value.answers.forEach(item=>{
           if(!item.content){
@@ -243,7 +243,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       emit('showEmit',false)
       // drawer.value=false
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }
@@ -252,7 +252,7 @@ watch(
   (newValue, oldValue) => {
     console.log('变化了', newValue);
     Object.assign(addForm.value,newValue[0])
-    console.log('变化了', addForm.value);
+    // console.log('变化了', addForm.value);
  
   },
   { immediate: true, deep: true }
