@@ -9,7 +9,7 @@
   </div>
     <el-form
       :inline="true"
-      :model="formInline"
+      :model="dataa"
       class="demo-form-inline"
       style="display: flex"
     >
@@ -17,16 +17,12 @@
         <el-input  placeholder="请输入关键字" v-model="data.params.key"/>
       </el-form-item>
       <el-form-item label="部门" prop="region" style="margin-left: 10px">
-        <el-select style="width: 200px" placeholder="请选择"  >
-            <el-option>11</el-option>
-   
-        </el-select>
+        <el-cascader :options="dataa.arr" :props="props"  clearable />
       </el-form-item>
       <el-form-item label="角色" prop="region" style="margin-left: 10px">
-        <el-select style="width: 200px" placeholder="请选择"  >
-        <el-option  v-for="item in  formInline.personType" :key="item.id" :label="item.type_name" :value="item.id" />
-   
-        </el-select>
+        <el-select v-model="aa"  placeholder="请选择" clearable>
+          <el-option  v-for="item in lisi.list" :label="item.name" :value="item.id" />
+      </el-select>
       </el-form-item>
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
@@ -73,21 +69,52 @@
 import {onMounted} from 'vue'
 import { reactive } from 'vue';
 import { ref } from 'vue';
-import { teacherlsit,teacherdele } from '../../../api/admin'
+import { teacherlsit,teacherdele,IClasses,rolelistt} from '../../../api/admin'
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const router = useRouter()//跳转路由
+const aa = ref('')
 
-const formInline:Iform = reactive({
-  personType:[//访客类型列表
-    {id:1,type_name:'vbfbgrbftb'},
-    {id:2,type_name:'1111111111111111111'},
-    {id:3,type_name:'4444444444'},
-    {id:4,type_name:'admin'},
-    {id:5,type_name:'超级管理员'},
-  ],
-});
+// 部门三级联动
+const props={
+  value: 'id',
+    label: 'name',
+    children: 'children',
+    checkStrictly: true, //点击单选框选中改点击整行选中
+    emitPath: false, //只获取级联选择器中最后一项
+}
+const dataa = reactive({
+  arr:[],
+  information:[] as any 
+})
+const lists = async ()=>{
+  const res = await IClasses({})
+  // console.log(res);
+  dataa.arr = res.data.list
+}
+onMounted(()=>{
+  lists()
+})
+// 角色
+interface Irole{
+  page:number	
+  psize:number
+  list:Array<any>
+}
+const lisi:Irole=reactive({
+  page:1,
+  psize:50,
+  list:[]
+})
+const getrolelist= async ()=>{
+  const res = await rolelistt(lisi.page,lisi.psize)
+  console.log(res);
+  lisi.list = res.data.list
+}
+onMounted(()=>{
+  getrolelist()
+})
 
 //列表数据
 interface Iparams {
