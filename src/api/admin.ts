@@ -16,6 +16,10 @@ export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
 
+export const AddText=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/test/add',params)
+}//考试添加
+
 // 阅卷管理列表
 interface Iist{
   (page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>

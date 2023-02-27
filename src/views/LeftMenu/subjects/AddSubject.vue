@@ -163,7 +163,7 @@
       :compileData="compileData"
     ></Drawer>
     <!-- 可见老师穿梭框 -->
-    <Transfer v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> <!-- 可见老师 -->
+    <Transfer v-if="teacherDialogisShow" @showEmit="showEmit" :title="title" @transferEmit="transferEmit"/> <!-- 可见老师 -->
     <!-- 批量导入 -->
     <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
     <!-- 创建试题库 -->
@@ -329,6 +329,7 @@ const showEmit = (data: any) => {
   inportShow.value = data;
   databaseShow.value=data
   databaseTabShow.value=data
+  teacherDialogisShow.value=data
 
 
 };
@@ -361,9 +362,9 @@ const subjectEmit=(obj: any)=>{
 
 // 触发自定义事件接收子组件穿梭框数据
 const transferEmit = (val: any) => {
-  // console.log('接收穿梭框数据', val);
+  console.log('接收穿梭框数据', val);
   if(val){
-    val.forEach((item: any)=>{
+    val.arr.forEach((item: any)=>{
       addFrom.value.limits.push({id:item})
     })
   }
