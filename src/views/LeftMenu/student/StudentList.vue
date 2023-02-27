@@ -19,19 +19,6 @@
         <el-input placeholder="请输入关键字" v-model="data.params.key" />
       </el-form-item>
       <el-form-item label="部门">
-        <!-- <el-select
-          v-model="params.depid"
-          @change="buMenchange"
-          clearable
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="(item, index) in data.list"
-            :key="index"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select> -->
         <el-cascader
           v-model="params.depid"
           :options="data.list"
@@ -75,7 +62,7 @@
       <el-table-column prop="addtime" label="添加时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="root(scope.row)">重置密码</el-button>
+          <el-button link type="primary" size="small">重置密码</el-button>
           <el-button link type="primary" size="small" @click="edit(scope.row)">修改</el-button>
           <el-button
             link
@@ -100,10 +87,7 @@
       />
     </div>
     <div>
-      <!-- 添加修改弹框 -->
       <Addstu ref="studentref" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
-      <!-- 重置密码弹框 -->
-      <Pass ref="studentpassref" :passlistt="passlistt" :getListDialog="getlist"></Pass>
     </div>
   </div>
 </template>
@@ -113,7 +97,6 @@ import { onMounted } from 'vue';
 import { reactive, toRefs } from 'vue';
 import { ref } from 'vue';
 import Addstu from './Addstuden.vue'
-import Pass from './passwords.vue'
 import {
   studentlist,
   studentdele,
@@ -128,7 +111,6 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据
 let studentref =ref<any>()
-const studentpassref=ref<any>()
 const formInline: Iform = reactive({
   personType: [
     //访客类型列表
@@ -224,19 +206,7 @@ const buMenchange = async (val: any) => {
 
   data.classList = res.data.list;
 };
-//重置密码
-const status =reactive({
-  passlistt:{}
-})
-const root =(val:any)=>{
-  console.log(val);
-  status.passlistt=val
-  // alert(1)
-  studentpassref.value.dialogVisible=true
-  console.log( studentpassref.value.dialogVisible);
-  
-}
-const {passlistt}=toRefs(status)
+
 onMounted(() => {
   getlist();
 });
