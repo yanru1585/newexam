@@ -99,6 +99,12 @@ export const studentcs=(ids:any):Promise<AxiosResponse<any>>=>{
 export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/role/list',params)
 }//角色列表
+interface Irolelistt{
+  (page:number,psize:number):Promise<AxiosResponse<any>>
+}
+export const rolelistt:Irolelistt=(page:number,psize:number):Promise<AxiosResponse<any>>=>{
+  return get('/role/list',{page,psize})
+}//角色列表
 
 export const roledel=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/role/delete',{id})
@@ -111,8 +117,8 @@ export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
   }
 //角色删除
 
-export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/menu/list',params)
+export const menulsit=(roleid:any):Promise<AxiosResponse<any>>=>{
+  return get('/menu/list',{roleid})
 }//角色权限列表
 
 

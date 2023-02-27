@@ -72,15 +72,12 @@ defineExpose({
 })
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
-// const ruleForm = reactive({
-//   name: 'Hello',
-// })
 //重置密码回限
 // 编辑回显
 watch(
   [ () => prop.passlistt],
   (newValue, oldValue) => {
-    console.log('person的job变化了', newValue, oldValue);
+    console.log('重置密码','person的job变化了', newValue, oldValue);
     Object.assign(AddForm.value, newValue[0])
     // AddForm=newValue[0]
   },

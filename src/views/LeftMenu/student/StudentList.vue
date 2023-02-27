@@ -62,7 +62,7 @@
       <el-table-column prop="addtime" label="添加时间"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
-          <el-button link type="primary" size="small">重置密码</el-button>
+          <el-button link type="primary" size="small" @click="cpass(scope.row)">重置密码</el-button>
           <el-button link type="primary" size="small" @click="edit(scope.row)">修改</el-button>
           <el-button
             link
@@ -89,6 +89,9 @@
     <div>
       <Addstu ref="studentref" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
     </div>
+    <div>
+      <Pass ref="passstudenref" :getListDialog="getlist" :passlistt="passlistt"></Pass>
+    </div>
   </div>
 </template>
 
@@ -105,6 +108,7 @@ import {
 } from '../../../api/admin';
 import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
+import Pass  from './Passwords.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 
@@ -118,6 +122,19 @@ const formInline: Iform = reactive({
   ],
 });
 
+//重置密码
+let  passstudenref =ref<any>()
+const datast =reactive({
+  passlistt:{}
+})
+const {passlistt} =toRefs(datast)
+const cpass =(val:any)=>{
+  console.log('重置', val);
+  datast.passlistt = val;
+  passstudenref.value.dialogVisible = true;
+// console.log(statst.passlistt);
+
+}
 //列表数据
 interface Iparams {
   page: number; //页码 默认是1

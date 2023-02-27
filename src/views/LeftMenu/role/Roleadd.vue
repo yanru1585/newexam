@@ -1,206 +1,259 @@
 <template>
-
   <el-dialog
     v-model="dialogVisible"
-    title="添加角色"
-    width="40%"
+    title="添加"
+    width="80%"
+    :before-close="handleClose"
   >
-  <el-form
-    ref="ruleFormRef"
-    :model="addData"
-    :rules="rules"
-    label-width="120px"
-    class="demo-ruleForm"
-    :size="formSize"
-    status-icon
-  >
-  <el-form-item label="角色名称" prop="name">
-      <el-input v-model="addData.name" style="width: 300px;"/>
-    </el-form-item>
-  </el-form>
-  <el-form-item  prop="menus">
-  <div v-for="(item,index) in data.list" :key="item.id" style="margin-left: 40px;">
-    <el-checkbox @change="handleCheckAllChange(index)"
-    v-model="item.ced" :indeterminate="item.isIndeterminate">
-      {{ item.name }}
-    </el-checkbox>
-    {{ item.checkedCities }}
-    <el-checkbox-group v-model="item.checkedCities" style="margin: 10px;">
-      <el-checkbox 
-   v-for="subitem in item.children" :key="subitem.id" :label="subitem.id"    @change="handleCheckedCitiesChange(index)">
-        {{ subitem.name }}
-      </el-checkbox>
-    </el-checkbox-group>
-  </div>
-  </el-form-item>
+    <el-form
+      ref="ruleFormRef"
+      :model="addList"
+      :rules="rules"
+      label-width="120px"
+      class="demo-ruleForm"
+      :size="formSize"
+      status-icon
+    >
+      <el-form-item label="角色名称:" prop="name">
+        <el-input v-model="addList.name" />
+      </el-form-item>
+    </el-form>
+    <div
+      style="
+        margin-left: 70px;
+        height: 410px;
+        display: block;
+        overflow-y: scroll;
+      "
+    >
+      <p style="margin-bottom: 15px">权限</p>
+      <div>
+        <div v-for="(item, index) in menuArr" :key="index">
+          <el-checkbox
+            v-model="item.checked"
+            style="margin-left: 30px"
+            @change="handleCheckAllChange(index)"
+            :indeterminate="item.isIndeterminate"
+            >{{ item.name }}</el-checkbox
+          >
+          <el-checkbox-group
+            style="margin-left: 60px"
+            v-model="item.checkedCities"
+          >
+            <el-checkbox
+              v-for="(it, index1) in item.children"
+              :key="index1"
+              :label="it.id"
+              @change="handleCheckedCitiesChange(index)"
+              >{{ it.name }}</el-checkbox
+            >
+          </el-checkbox-group>
+        </div>
+      </div>
+    </div>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="roleAdd(ruleFormRef)">
-         确定
+        <el-button type="primary" @click="confirm(ruleFormRef)">
+          确定
         </el-button>
-       
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus';
-import { ref,onMounted} from 'vue'
-import { ElMessageBox } from 'element-plus'
-import { defineExpose} from 'vue';
-import { reactive } from 'vue';
-import type { FormInstance, FormRules } from 'element-plus'
-import {menulsit} from '../../../api/admin'
-import {roleadd} from '../../../api/admin'
-import { useRouter } from 'vue-router';
-import {toRaw} from 'vue'
-import {watch} from 'vue'
-const router = useRouter()
-const dialogVisible = ref(false)
+import { ref, reactive, onMounted, toRefs, toRaw, watch } from 'vue';
+import { ElMessageBox, ElMessage } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
+import { menulsit, roleadd, rolelist } from '../../../api/admin';
+import { concat } from 'lodash';
+
 const props = defineProps({
-  getListDialog: {
+  getList: {
     type: Function,
     required: true,
   },
-  editlist:{
+  editData: {
     type: Object,
     required: true,
-  }
+  },
+});
+console.log(props.editData.id);
+
+interface Idata {
+  menuArr: Array<any>;
+}
+const data: Idata = reactive({
+  menuArr: [],
+});
+
+interface IaddList {
+  id: number;
+  name: string;
+  menus: Array<any>;
+}
+interface IaddData {
+  addList: IaddList;
+  roleid: number;
+}
+const addData: IaddData = reactive({
+  addList: {
+    id: 0,
+    name: '',
+    menus: [],
+  },
+  roleid: 0,
+});
+const { menuArr } = toRefs(data);
+const { addList } = toRefs(addData);
+
+const getList = async () => {
+  let res: any = await menulsit(addData.roleid);
+  console.log('角色权限',res);
   
-});
+  if (res.errCode !== 10000) {
+    ElMessage.error('角色列表请求失败!');
+    return false;
+  }
+  data.menuArr = res.data.list;
+  data.menuArr.map((item: any) => {  //角色回显
+    let menuEditArr = item.children.filter((i: any) => {
+      if (i.checked === 1) {
+        return i;
+      }
+    }).map((it:any)=>{
+      // console.log(it.id);
+      return it.id
+    }) 
+    item.checkedCities = menuEditArr;
+    if(item.checkedCities.length==item.children.length){
+      item.checked=true
+    }
+  });
+};
 
-defineExpose({
-  dialogVisible
-})
-const formSize = ref('default')
-const ruleFormRef = ref<FormInstance>();
-
-const addData: any = reactive({
-  id: 0,
-  name: '',
-  menus:[],
-});
-
-
-//角色校验
-const rules = reactive<FormRules>({
-  name: [
-    { required: true, message: '请输入角色名称', trigger: 'blur' },
-    { min: 3, max: 5, message: '长度在三到五', trigger: 'blur' },
-  ],
-})
-//列表数据
-interface Iparams {
-  roleid:string
-}
-//定义表格
-interface Istate{
-  params:Iparams,
-  list:Array<any>
-}
-//表格
-const data = reactive<Istate>({
- params:{
-  roleid:'',
- },
- list:[]
-})
-//列表请求
-const getlist =async()=>{
-let res:any = await menulsit(data.params)
-console.log(res);
- data.list=res.data.list
-//  console.log(data.list);
-}
-
-onMounted(()=>{
-getlist()
-Object.assign(props.editlist, addData);
-console.log(props.editlist);
-
-})
-//监听
 watch(
-  [ () => props.editlist.id],
+  [() => props.editData.name, () => props.editData.id],
   (newValue, oldValue) => {
-    console.log('person的job变化了', newValue, oldValue);
- 
+    addList.value.name = newValue[0];
+    addList.value.id = newValue[1];
+    addData.roleid = newValue[1];
   },
   { immediate: true, deep: true }
 );
-//多选框
-const handleCheckAllChange =(index:number)=>{
-  let ids = data.list[index].children.map((item:any)=>item.id);
-  if(data.list[index].checkedCities && data.list[index].checkedCities.length>0){
-    data.list[index].checkedCities=[]
-  }else{
-    data.list[index].checkedCities=ids
+
+// 多选框组
+
+// 点击全选反选
+const handleCheckAllChange = (val: number) => {
+  console.log(data.menuArr[val]);
+  let ids = data.menuArr[val].children.map((item: any) => item.id); //拿到每一项所有的id   [66,65,29,30 ]
+  // console.log(data.menuArr[val].checkedCities.length);
+
+  if (
+    data.menuArr[val].checkedCities &&
+    data.menuArr[val].checkedCities.length > 0
+  ) {
+    data.menuArr[val].checkedCities = [];
+  } else {
+    data.menuArr[val].checkedCities = ids;
+    console.log(ids);
   }
-}
-const handleCheckedCitiesChange =(index:number)=>{
- let checklen = data.list[index].checkedCities.length;
- let alllen = data.list[index].children.length;
- data.list[index].isIndeterminate=false
- if(checklen==alllen){
-  data.list[index].ced=true;
- }else if(checklen>0){
-  data.list[index].isIndeterminate=true;
- }else{
-  data.list[index].ced=false
- }
-}
+};
+// 单选
+const handleCheckedCitiesChange = (val: number) => {
+  console.log(data.menuArr[val].checkedCities);
+  let a = data.menuArr[val].children.length;
+  let b = data.menuArr[val].checkedCities.length;
+  data.menuArr[val].isIndeterminate = false;
 
-// 点击确认添加
- const roleAdd =async(ruleFormRef:any)=>{
-  console.log(toRaw(data.list));
+  console.log(data.menuArr);
 
-  let _list =toRaw(data.list)
-  // console.log(_list);
- let _menus:Array<any>=[]
-  _list.forEach((element:any)=>{
-    if(element.checkedCities){
-    let ids =  element.checkedCities.map((item:any)=>({id:item}))
+  if (a == b) {
+    data.menuArr[val].checked = true;
+  } else if (b > 0) {
+    data.menuArr[val].isIndeterminate = true;
+  } else {
+    data.menuArr[val].checked = false;
+  }
+};
 
-      addData.menus=_menus.concat(ids)
-      console.log(addData.menus);
-      
-      // element.checkedCities.forEach((item:any)=>{
-      // _menus.push({id:item})
-      // })
-    }
-  })
-  console.log(addData.menus);
-  
-  const res:any=await roleadd(addData).catch(()=>{})
-      console.log('添加',res);
-      if(res.errCode!==10000){
-        return false
-      } if (addData.id == 0) {
+const formSize = ref('default');
+const ruleFormRef = ref<FormInstance>();
+
+const rules = reactive<FormRules>({
+  name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
+});
+
+// 是否显示弹窗
+const dialogVisible = ref(true);
+
+const emits = defineEmits(['closeDialog']);
+
+onMounted(() => {
+  getList(); //获取权限功能列表
+  // getRoleList(); //角色列表
+});
+
+// 关闭弹窗
+const handleClose = (done: () => void) => {
+  emits('closeDialog', false);
+};
+// 取消
+const cancel = () => {
+  emits('closeDialog', false);
+};
+// 确定
+const confirm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return;
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      data.menuArr.map((item: any, index: any) => {
+        if (item.checkedCities) {
+          let arrid = item.checkedCities.map((element: any) => ({
+            id: element,
+          }));
+          addData.addList.menus = addData.addList.menus.concat(arrid);
+          console.log(addData.addList.menus);
+        }
+      });
+
+      let res: any = await roleadd(addData.addList);
+      console.log('添加角色', res);
+      if (addData.addList.id == 0) {
+        if (res.errCode !== 10000) {
+          ElMessage.error('添加失败！');
+          return false;
+        }
         ElMessage({
-          message: '添加成功！',
+          message: '添加成功!',
           type: 'success',
         });
       } else {
+        if (res.errCode !== 10000) {
+          ElMessage.error('修改失败！');
+          return false;
+        }
         ElMessage({
-          message: '修改成功！',
+          message: '修改成功!',
           type: 'success',
         });
       }
-      dialogVisible.value = false;
-      props.getListDialog(); //调用父级的列表  刷新
-      ruleFormRef.resetFields(); //重置表单
 
- }
-
- const cancel = () => {
-  dialogVisible.value = false;
-
+      emits('closeDialog', false);
+      props.getList(); //调用父组件里的方法
+    } else {
+      console.log('error submit!', fields);
+    }
+  });
 };
 </script>
 <style scoped>
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+.el-form {
+  width: 400px;
 }
 </style>
