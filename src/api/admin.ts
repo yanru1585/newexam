@@ -113,8 +113,8 @@ export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
   }
 //角色删除
 
-export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/menu/list',params)
+export const menulsit=(roleid:any):Promise<AxiosResponse<any>>=>{
+  return get('/menu/list',{roleid})
 }//角色权限列表
 
 
