@@ -34,6 +34,7 @@
               type="password"
               v-model="loginData.pass"
               placeholder="请输入密码"
+              show-password
             />
           </el-form-item>
           <el-form-item>

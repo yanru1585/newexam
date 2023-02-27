@@ -8,8 +8,8 @@
       </template>
       <template #extra>
         <div class="flex items-center">
-          <el-button>添加试题</el-button>
-          <el-button type="primary" class="ml-2">批量添加试题</el-button>
+          <el-button @click="addTest">添加试题</el-button>
+          <el-button type="primary" class="ml-2" @click="isShowAdd=true">批量添加试题</el-button>
         </div>
       </template>
     </el-page-header>
@@ -48,11 +48,24 @@
       <el-table-column type="selection" width="55" />
       <el-table-column prop="title" label="题目名称" width="450">
         <template #default="scope">
-          <span style="color: #409eff" v-html="scope.row.title"></span>
+          <span @click="testDetail(scope.row)" style="color: #409eff;cursor: pointer" v-html="scope.row.title"></span>
         </template>
       </el-table-column>
       <el-table-column prop="type" label="题目类型" width="180" />
-      <el-table-column prop="addtime" label="创建时间" />
+      <el-table-column prop="addtime" label="创建时间">
+        <template #default="scope">
+          <el-popover
+            placement="top"
+            :width="100"
+            trigger="hover"
+            :content="scope.row.addtime.slice(0, 16)"
+          >
+            <template #reference>
+              <span>{{ scope.row.addtime }}</span>
+            </template>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column prop="admin" label="创建人" />
       <el-table-column fixed="right" label="操作" width="110">
         <template #default="scope">
@@ -78,14 +91,28 @@
       @current-change="handleCurrentChange"
     />
   </div>
+
+  <!-- 添加试题的抽屉 -->
+  <AddtestDrawer
+    v-if="isAddtestDrawer"
+    :getList="getList"
+    @closeDrawer="closeDrawer"
+  />
+  <!-- 单条试题详情的抽屉 -->
+  <DatabaseDetail v-if="isDatabaseDetail" :getEestDetail="getEestDetail" @closeDrawer="closeDrawer"/>
+
+  <!-- 批量导入试题 -->
+  <AlladdQuestion @closeDialog="closeDialog" :getList="getList" v-if="isShowAdd"/>
 </template>
 
 <script lang="ts" setup>
 // import FileSaver from 'file-saver';
 // import XLSX from 'xlsx';
 // import {exportExcel} from '../../../utils/exportExcel'
+import AddtestDrawer from '../../../components/database/AddtestDrawer.vue';
+import DatabaseDetail from '../../../components/database/DatabaseDetail.vue'
+import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
-
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted, ref, toRaw } from 'vue';
 import {
@@ -96,6 +123,34 @@ import {
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
+
+const isAddtestDrawer = ref(false);
+const isDatabaseDetail = ref(false);
+const isShowAdd=ref(false)
+
+// 接受子组件传过来的值  关闭弹窗
+const closeDialog=(val:any)=>{
+  isShowAdd.value=val
+}
+
+// 接收从子组件传过来的值  关闭抽屉
+const closeDrawer = (val: any) => {
+  isAddtestDrawer.value = val;
+  isDatabaseDetail.value=val
+};
+
+// 点击展开单条试题详情的抽屉
+const testDetail=(val:any)=>{
+  isDatabaseDetail.value=true
+  console.log(val);
+  state.getEestDetail=val
+}
+
+// 添加试题
+const addTest = () => {
+  isAddtestDrawer.value = true;
+};
 
 const exportExcel = () => {
   console.log(1234544446);
@@ -147,8 +202,6 @@ const back = () => {
   router.push('databaselist');
 };
 
-const route = useRoute();
-
 const types: any = ref(['单选题', '多选题', '判断题', '填空题', '问答题']);
 
 const data: any = reactive({
@@ -166,9 +219,11 @@ const state: any = reactive({
   tableData: [],
   total: 0,
   ids: [],
+  compileData: {},
+  getEestDetail:{}
 });
 const { key, type, admin } = toRefs(data);
-const { obj, tableData, total } = toRefs(state);
+const { obj, tableData, total, compileData,getEestDetail } = toRefs(state);
 
 // const titleArr = ['id','巡河次数','完成次数','巡河人员','时间']//表头中文名
 // exportExcel(state.tableData, 'test', titleArr, 'sheetName');

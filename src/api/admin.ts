@@ -89,6 +89,9 @@ export const studentall=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/student/deleteall',{ids})
 }//学员批量删除
 
+export const studentcs=(ids:any):Promise<AxiosResponse<any>>=>{
+  return post('/student/changepass',{ids})
+}//学员重置密码
 export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/role/list',params)
 }//角色列表
@@ -110,8 +113,8 @@ export const testGet=(id:any):Promise<AxiosResponse<any>>=>{
   }
 //角色删除
 
-export const menulsit=(params:any):Promise<AxiosResponse<any>>=>{
-  return get('/menu/list',params)
+export const menulsit=(roleid:any):Promise<AxiosResponse<any>>=>{
+  return get('/menu/list',{roleid})
 }//角色权限列表
 
 
@@ -120,3 +123,17 @@ export const roleadd=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/role/add',params)
 }//角色添加
 
+// 老师修改密码
+export const teacherChangePass=(oldpass:string,pass:string):Promise<AxiosResponse<any>>=>{
+  return post('/teacher/changePass',{oldpass,pass})
+}
+
+// 修改发布状态
+export const teacherUpdateState=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/test/updateState',params)
+}
+
+// 获取考试阅卷老师
+export const testGetmarkteachers=(params:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/getmarkteachers',params)
+}

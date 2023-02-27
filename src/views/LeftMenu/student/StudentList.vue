@@ -19,19 +19,6 @@
         <el-input placeholder="请输入关键字" v-model="data.params.key" />
       </el-form-item>
       <el-form-item label="部门">
-        <!-- <el-select
-          v-model="params.depid"
-          @change="buMenchange"
-          clearable
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="(item, index) in data.list"
-            :key="index"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select> -->
         <el-cascader
           v-model="params.depid"
           :options="data.list"
@@ -119,6 +106,7 @@ import {
 import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
+
 
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据

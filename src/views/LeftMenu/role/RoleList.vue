@@ -1,179 +1,157 @@
 <template>
-  <div class="box">
-    <div style="display: flex;justify-content: space-between;margin-top: 10px;">
-    <h3>角色管理</h3>
-    <div>
-      <!-- <el-button text @click="dialogVisible = true">
-    click to open the Dialog
-  </el-button> -->
-     <el-button text @click="Addexam">
-    添加角色
-  </el-button>
-  </div>
-  </div>
-  
-    <el-table :data="data.tableData" stripe style="width: 100%;" >
-      <el-table-column prop="name" label="姓名" >
-        </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200">
-      <template #default="scope">
-    
-        <el-button link type="primary" size="small" @click="edit(scope.row)">编辑</el-button>
-        <el-button link type="primary" size="small" @click="delId(scope.row.id)">删除</el-button>
-  
-      </template>
-     
-    </el-table-column>
+  <div>
+    <div style="display: flex; justify-content: space-between">
+      <p class="toptitle">角色管理</p>
+      <el-button type="primary" @click="isShowDialog = true"
+        >添加角色</el-button
+      >
+    </div>
+
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="name" label="名称" />
+      <el-table-column label="操作" fixed="right" width="150">
+        <template #default="scope">
+          <el-button type="primary" link size="small" @click="edit(scope.row)"
+            >编辑</el-button
+          >
+          <el-button type="primary" link size="small" @click="del(scope.row.id)"
+            >删除</el-button
+          >
+        </template>
+      </el-table-column>
     </el-table>
-    <div class="pigeBox">
-      <el-pagination
-      v-model:current-page="currentPage1"
-      v-model:page-size="pageSize2"
-      :page-sizes="[5,10,15,20]"
-      style="margin-top: 10px;float: right;"
+
+    <!-- 分页 -->
+    <el-pagination
+      v-model:current-page="currentPage4"
+      v-model:page-size="pageSize4"
+      :page-sizes="[10, 20, 30, 40]"
+      :small="small"
+      :disabled="disabled"
+      :background="background"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="data.total"
+      :total="counts"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-  </div>
-  <!-- 添加的弹框 -->
-  <div>
-    <Role ref="roleRef" :getListDialog="getlist" :editlist="editlist"></Role>
-  </div>
+
+    <RoleDialog
+      v-if="isShowDialog"
+      @closeDialog="closeDialog"
+      :getList="getList"
+      style="margin-top: 18px"
+      :editData="editData"
+    />
   </div>
 </template>
 
-<script setup lang="ts">
-import {onMounted} from 'vue'
-import { reactive } from 'vue';
-import { ref,toRefs} from 'vue';
-import { rolelist,roledel } from '../../../api/admin'
-import { useRouter } from 'vue-router';
-import { ElMessage, ElMessageBox } from 'element-plus'
-import Role from './Roleadd.vue'
-const router = useRouter()//跳转路由
-let roleRef =ref<any>()
-//列表数据
-interface Iparams {
-  page: number; //页码 默认是1
-  psize: number; //每页显示多少条 默认是2
-}
-//定义表格
-interface Istate{
-  tableData:Array<any>
-  params:Iparams
-  total:Number,
-}
-//数据
-interface Iform {//数据对象接口
-  personType:Array<any>
-}
-//表格
-const data = reactive<Istate>({
- params:{
-  page:1,//页码 默认是1
-  psize:4,//每页显示多少条 默认是2
- },
- tableData:[],
- total:0,
-})
-//编辑
-const stats =reactive({
-  editlist:{}
-})
+<script lang="ts" setup>
+import { reactive, onMounted, toRefs, ref } from 'vue';
+import { rolelist, roledel } from '../../../api/admin';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import RoleDialog from './Roleadd.vue';
 
-const edit = (val: any) => {
-  // console.log('编辑', val);
-  stats.editlist = val;
-  roleRef.value.dialogVisible = true;
-  console.log(stats.editlist );
+const isShowDialog = ref(false);
+
+// 子组件传过来的
+const closeDialog = (val: any) => {
+  console.log(val);
+  isShowDialog.value = val;
 };
-const {  editlist } = toRefs(stats);
-//列表请求
-const getlist =async()=>{
-let res:any = await rolelist(data.params)
-console.log(res);
-if(res.errCode ===10000){
-  data.tableData=res.data.list
-  data.total = res.data.counts
-}
-}
 
-onMounted(()=>{
-getlist()
-})
-//删除
-const delId = (id:number)=>{
-  console.log('删除',id);
-  ElMessageBox.confirm(
-    '是否确认删除？',
-    '提示',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then( async () => {
-  const res:any= await roledel(id).catch(()=>{})
-  console.log('删除数据',res);
-  if (res.errCode != 10000) {
+// 分页
+const currentPage4 = ref(1);
+const pageSize4 = ref(10);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
+
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`);
+  params.psize = val;
+  getList();
+};
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`);
+  params.page = val;
+  getList();
+};
+
+const params: any = reactive({
+  page: 1,
+  psize: 10,
+});
+
+interface Idata {
+  tableData: Array<any>;
+  counts: number;
+  editData:Object;
+
+}
+const data: Idata = reactive({
+  tableData: [],
+  counts: 0,
+  editData:{}
+});
+const { tableData, counts,editData } = toRefs(data);
+
+onMounted(() => {
+  getList();
+});
+
+const getList = async () => {
+  let res: any = await rolelist(params);
+  console.log('获取角色', res);
+  if (res.errCode !== 10000) {
+    ElMessage.error('角色列表请求失败!');
     return false;
   }
+  data.tableData = res.data.list;
+  data.counts = res.data.counts;
+};
+// 删除
+const del = async (val: any) => {
+  ElMessageBox.confirm('你确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await roledel(val);
+      console.log('删除角色', res);
+      if (res.errCode !== 10000) {
+        return false;
+      }
       ElMessage({
         type: 'success',
-        message: '删除成功',
-      })
-      getlist()
+        message: '删除成功!',
+      });
+      getList();
     })
     .catch(() => {
       ElMessage({
         type: 'info',
-        message: '已取消删除！',
-      })
-    })
-  
-}
-//添加教资
+        message: '取消删除',
+      });
+    });
+};
 
-const Addexam = () => {
-  roleRef.value.dialogVisible=true
-
-}
-
-//分页
-const pageSize2 =ref(4)
-const currentPage1= ref(1)
-const handleSizeChange =(val:number)=>{
+// 编辑
+const edit = (val: any) => {
   console.log(val);
-data.params.psize=val
-getlist()
-}
-const handleCurrentChange=(val:number)=>{
-  console.log(1111,val);
-  data.params.page=val
-  getlist()
-}
-
-
-//查询
-const onSubmit=()=>{
-  getlist()
-}
+  data.editData=val
+  isShowDialog.value=true
+};
 </script>
 
-<style lang="less" scoped>
-.box h3 {
-  padding: 10px;
+<style scoped lang="less">
+.toptitle {
+  font-size: 22px;
+  // font-weight: bold;
 }
-.el-input {
-  width: 200px;
-}
-.book{
-  color: #409eff;
-}
-.el-table .cell{
-  color: #409eff;
+.el-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
 }
 </style>

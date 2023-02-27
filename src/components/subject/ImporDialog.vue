@@ -16,7 +16,6 @@
           <el-step title="上传填写好的试题表" />
         </el-steps>
       </div>
-      <!-- <el-button type="primary" style="margin-left: 10%;">点击上传文件</el-button> -->
       <el-upload
         v-model:file-list="fileList"
         class="upload-demo"
@@ -45,20 +44,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs,defineEmits } from 'vue';
+import { ref, reactive, toRefs, defineEmits } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import type { UploadProps, UploadUserFile } from 'element-plus';
-const emit=defineEmits(['subjectEmit','showEmit'])
-interface Isubjet{
-  subjectList:Array<any>
+const emit = defineEmits(['subjectEmit', 'showEmit']);
+interface Isubjet {
+  subjectList: Array<any>;
 }
-const subjectData:Isubjet=reactive({
-  subjectList:[]
-
-})
-const {subjectList}=toRefs(subjectData)
-const fileList = ref<UploadUserFile[]>([
-]);
+const subjectData: Isubjet = reactive({
+  subjectList: [],
+});
+const { subjectList } = toRefs(subjectData);
+const fileList = ref<UploadUserFile[]>([]);
 // 上传接口调取成功status为200
 const uploadSuccess = (res: any) => {
   console.log('文件上传成功', res);
@@ -67,7 +64,7 @@ const uploadSuccess = (res: any) => {
     return false;
   }
   // 文件上传成功
-  subjectList.value=[...res.data]
+  subjectList.value = [...res.data];
   console.log(res.data);
 };
 
@@ -111,24 +108,21 @@ const dialogVisible = ref(true);
 const handleClose = (done: () => void) => {
   ElMessageBox.confirm('是否取消批量上传?')
     .then(() => {
-      emit('showEmit',false)
+      emit('showEmit', false);
     })
     .catch(() => {
       // catch error
     });
 };
 // 点击确定
-const confirm=()=>{
-
-  emit('subjectEmit',[...subjectList.value])
-  emit('showEmit',false)
-
-
-}
+const confirm = () => {
+  emit('subjectEmit', [...subjectList.value]);
+  emit('showEmit', false);
+};
 // 点击取消
-const cancelForm=()=>{
-  emit('showEmit',false)
-}
+const cancelForm = () => {
+  emit('showEmit', false);
+};
 </script>
 
 <style lang="less" scoped>
