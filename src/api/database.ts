@@ -45,3 +45,13 @@ export const databasequestionDelete = (id: any): Promise<AxiosResponse<any>> => 
 export const databasequestionDeleteall = (ids: any): Promise<AxiosResponse<any>> => {
   return post('/databasequestion/deleteall', { ids });
 };
+
+// 题库试题添加
+export const databasequestionAdd = (params: any): Promise<AxiosResponse<any>> => {
+  return post('/databasequestion/add', params);
+};
+
+// 题库试题批量添加
+export const databasequestionAddlist = (params: any): Promise<AxiosResponse<any>> => {
+  return post('/databasequestion/addlist', params);
+};

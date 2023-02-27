@@ -56,8 +56,8 @@
     </el-form>
     <div style="padding: 10px 0px" v-if="istop">
       <el-button type="danger" @click="deletelist">批量删除</el-button>
-      <el-button type="primary">发布考试</el-button>
-      <el-button type="success">取消发布</el-button>
+      <el-button type="primary" @click="truePublic(1)">发布考试</el-button>
+      <el-button type="success" @click="cancelPublic(2)">取消发布</el-button>
     </div>
 
     <el-table
@@ -75,9 +75,15 @@
         </span>
       </el-table-column>
       <el-table-column prop="state" label="状态" #default="scope">
-        <span style="color: #409eff; cursor: pointer">{{
-          scope.row.state === 1 ? '已发布' : '未发布'
-        }}</span>
+        <span
+          @click="editState(scope.row.id, scope.row.state)"
+          :style="
+            scope.row.state === 1
+              ? 'color: #409eff; cursor: pointer'
+              : 'color:#f56c6c;cursor: pointer'
+          "
+          >{{ scope.row.state === 1 ? '已发布' : '未发布' }}</span
+        >
       </el-table-column>
       <el-table-column prop="scores" label="总分" />
       <el-table-column prop="pastscores" label="通过分数" />
@@ -91,9 +97,9 @@
       <el-table-column fixed="right" label="操作" width="200">
         <template #default>
           <p>
-            <el-button link type="primary" size="small">学生</el-button>
-            <el-button link type="primary" size="small">可见</el-button>
-            <el-button link type="primary" size="small">阅卷老师</el-button>
+            <el-button link type="primary" size="small" @click="studentDialog">学生</el-button>
+            <el-button link type="primary" size="small" @click="teacherDialog">可见</el-button>
+            <el-button link type="primary" size="small" @click="readTeacherDialog">阅卷老师</el-button>
           </p>
           <p>
             <el-button link type="primary" size="small">分析</el-button>
@@ -124,18 +130,45 @@
     @isshowDialog="isshowDialog"
     :getData="getData"
   />
+
+  <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> <!-- 可见老师 -->
 </template>
 
 <script setup lang="ts">
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
-import { onMounted, defineProps, toRefs } from 'vue';
+import TransferDialog from '../../../components/subject/TransferDialog.vue';
+import { onMounted, defineProps, toRefs, toRaw } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
-import { list, dele } from '../../../api/admin';
+import { list, dele, teacherUpdateState } from '../../../api/admin';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
 const isShowGet = ref(false);
+
+
+const title=ref() //弹框的标题
+const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
+
+const studentDialog=()=>{//学生
+  teacherDialogisShow.value=true
+  title.value='学生考试列表'
+}
+
+const teacherDialog=()=>{//可见老师
+  teacherDialogisShow.value=true
+  title.value='可见老师'
+}
+
+const readTeacherDialog=()=>{//阅卷老师
+  teacherDialogisShow.value=true
+  title.value='阅卷老师'
+}
+
+// 接收子组件传来的  关闭TransferDialog弹窗
+const showEmit=(val:any)=>{
+  teacherDialogisShow.value=val
+}
 
 // 接收子组件传来的  关闭弹窗
 const isshowDialog = (val: any) => {
@@ -168,9 +201,9 @@ interface Iparams {
   isread: string; //1考试列表（判卷）
   result: string; //学生考试结果 “已通过”，”未通过”，”待阅卷”，”未考试”
 }
-interface Igetdata{
-  getId:number,
-  type:string
+interface Igetdata {
+  getId: number;
+  type: string;
 }
 //定义表格
 interface Istate {
@@ -178,7 +211,7 @@ interface Istate {
   params: Iparams;
   total: Number;
   // getId: number;
-  getData:Igetdata
+  getData: Igetdata;
 }
 //数据
 interface Iform {
@@ -203,10 +236,10 @@ const data = reactive<Istate>({
   tableData: [],
   total: 0,
   // getId: 0,
-  getData:{
-    getId:0,
-    type:'考试'
-  }
+  getData: {
+    getId: 0,
+    type: '考试',
+  },
 });
 const { getData } = toRefs(data);
 
@@ -214,7 +247,6 @@ const getTestInfo = async (val: any) => {
   // console.log('获取单个考试信息的id',val);
   isShowGet.value = true;
   getData.value.getId = val;
-
 };
 
 //列表请求
@@ -247,6 +279,81 @@ const handleSelectionChange = (val: any) => {
   ids = arr;
   // istop = true
 };
+
+const updateData: any = reactive({
+  state: 1,
+  ids: [],
+});
+
+// 修改发布状态
+const editState = async (id: any, state: any) => {
+  updateData.ids = toRaw([id]);
+
+  if (state == 2) {
+    updateData.state = 1;
+    Public(updateData);
+  } else {
+    updateData.state = 2;
+    Public(updateData);
+  }
+};
+
+// 批量发布
+const truePublic = (state: any) => {
+  updateData.state = state;
+  updateData.ids = ids;
+  Public(updateData);
+};
+
+// 批量取消发布
+const cancelPublic = (state: any) => {
+  updateData.state = state;
+  updateData.ids = ids;
+  Public(updateData);
+};
+
+// 发布
+const Public = (val: any) => {
+  console.log(val);
+  let content = val.state == 1 ? '你确定要发布吗?' : '你确定要取消发布吗?';
+  let title = val.state == 1 ? '发布' : '取消发布';
+
+  ElMessageBox.confirm(content, title, {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      let res: any = await teacherUpdateState(val);
+      console.log('修改发布状态', res);
+      if (val.state == 1) {
+        ElMessage({
+          type: 'success',
+          message: '发布成功！',
+        });
+      } else {
+        ElMessage({
+          type: 'success',
+          message: '取消发布成功！',
+        });
+      }
+      getlist();
+    })
+    .catch(() => {
+      if (val.state == 1) {
+        ElMessage({
+          type: 'success',
+          message: '发布失败！',
+        });
+      } else {
+        ElMessage({
+          type: 'success',
+          message: '取消发布成功！',
+        });
+      }
+    });
+};
+
 //批量删除
 const deletelist = () => {
   ElMessageBox.confirm('是否确定删除', '删除', {

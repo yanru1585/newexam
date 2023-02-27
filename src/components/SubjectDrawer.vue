@@ -72,8 +72,12 @@
             <el-radio-button label="错误" />
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="解析"  v-if="addForm.radio >'3'">
-          <el-input type="textarea" style="width: 100%" v-model="addForm.name"  />
+        <el-form-item label="解析" v-if="addForm.radio > '3'">
+          <el-input
+            type="textarea"
+            style="width: 100%"
+            v-model="addForm.name"
+          />
         </el-form-item>
         <el-form-item label="分值">
           <el-input style="width: 100px" v-model="addForm.name" />
@@ -81,7 +85,7 @@
         <el-form-item>
           <el-button type="primary">保存</el-button>
           <el-button>保存并继续</el-button>
-          <el-button >取消</el-button>
+          <el-button>取消</el-button>
         </el-form-item>
       </el-form>
     </el-drawer>

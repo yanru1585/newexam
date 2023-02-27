@@ -6,7 +6,9 @@
       <p class="first">1</p>
       <p class="information">基本信息</p>
     </div>
+
     <el-form :model="addFrom" label-width="120px">
+
       <el-form-item
         label="考试名称:"
         style="margin-left: 60px; padding: 10px 0px"
@@ -211,9 +213,7 @@
         <div class="hour">可见老师:</div>
 
         <el-badge :value="0" class="item" type="primary">
-          <el-button style="margin-left: 10px; margin-top: 10px"
-            >+选择</el-button
-          >
+          <el-button style="margin-left: 10px; margin-top: 10px" @click="teacherDialog">+选择</el-button>
         </el-badge>
       </div>
       <div class="box">
@@ -224,9 +224,7 @@
         <div class="hour">考试范围:</div>
 
         <el-badge :value="0" class="item" type="primary">
-          <el-button style="margin-left: 10px; margin-top: 10px"
-            >+选择</el-button
-          >
+          <el-button style="margin-left: 10px; margin-top: 10px" @click="studentDialog">+选择</el-button>
         </el-badge>
       </div>
       <div class="box">
@@ -237,9 +235,7 @@
         <div class="hour">阅卷老师:</div>
 
         <el-badge :value="0" class="item" type="primary">
-          <el-button style="margin-left: 10px; margin-top: 10px"
-            >+选择</el-button
-          >
+          <el-button style="margin-left: 10px; margin-top: 10px" @click="readTeacherDialog">+选择</el-button>
         </el-badge>
       </div>
       <div class="buoot">
@@ -264,9 +260,12 @@
     <DatabaseTab v-if="databaseTabShow"  @showEmit="showEmit" @questionList="questionList"></DatabaseTab>
      <!-- 题目列表 -->
      <Question v-if="questionShow" :databaseData="databaseData" @questionsEmit="questionsEmit" @qushowEmit="qushowEmit"></Question>
+     <!-- 可见老师 -->
+     <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> 
 </template>
 
 <script setup lang="ts">
+import TransferDialog from '../../../components/subject/TransferDialog.vue';//可见老师
 import Question from '../../../components/subject/QuestionDialog.vue'//题目列表
 import DatabaseTab from '../../../components/database/DatabaseTabDialog.vue'//从题库引入
 import Database from '../../../components/subject/SubDatabaseDialog.vue'//创建题库
@@ -360,6 +359,33 @@ const form = reactive({
   desc: '',
 });
 
+
+const isShowDrawer=ref(false)
+
+const title=ref() //弹框的标题
+const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
+
+const studentDialog=()=>{//学生
+  teacherDialogisShow.value=true
+  title.value='学生考试列表'
+}
+
+const teacherDialog=()=>{//可见老师
+  teacherDialogisShow.value=true
+  title.value='可见老师'
+}
+
+const readTeacherDialog=()=>{//阅卷老师
+  teacherDialogisShow.value=true
+  title.value='阅卷老师'
+}
+
+// 接收子组件传来的  关闭TransferDialog弹窗
+// const showEmit=(val:any)=>{
+//   teacherDialogisShow.value=val
+// }
+
+
 //单选框
 const radio = ref(3);
 //多选框
@@ -399,6 +425,7 @@ const shortcuts = [
       return [start, end];
     },
   },
+
 ];
 //获取题目类型和数量
 const getQuseType=()=>{
@@ -417,6 +444,7 @@ const showEmit = (data: any) => {
   inportShow.value = data;
   databaseShow.value = data;
   databaseTabShow.value=data
+  teacherDialogisShow.value=data
 };
 // 题目组件自定义事件传控制显示隐藏
 const qushowEmit=(data: any)=>{
@@ -553,6 +581,7 @@ onMounted(()=>{
 }
 
 
+
 .right {
   width: 80%;
   // margin-left: 20px;
@@ -560,10 +589,19 @@ onMounted(()=>{
   border: 1px solid #dcdfe6;
   .godTop {
   width: 100%;
+
+// .right {
+//   margin-left: 20px;
+//   margin-top: 10px;
+// }
+// .godTop {
+//   width: 1025px;
+// >>>>>>> a5e87e83ebfe793a892a70f62aad3fe96aa8e605
   border: 1px solid #dcdfe6;
   // display: flex;
   display: flex;
   justify-content: space-between;
+
   // border-bottom: 4px solid #dcdfe6;
 }
   .buttons {
@@ -582,6 +620,16 @@ onMounted(()=>{
   margin-left: 20px;
 }
 }
+
+// }
+
+  // border-bottom: 4px solid #dcdfe6;
+
+// .buttons {
+//   width: 1025px;
+//   border: 1px solid #dcdfe6;
+//   padding: 10px;
+// }
 
 
 .lefts {
@@ -658,6 +706,7 @@ onMounted(()=>{
 .buto {
   font-size: 13px;
 }
+
 .sublist {
   max-height: 500px;
   padding: 0px 10px;
@@ -729,4 +778,5 @@ onMounted(()=>{
   padding: 5px;
   border: 1px solid rgb(159, 158, 158);
 }
+
 </style>

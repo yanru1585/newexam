@@ -37,7 +37,7 @@
     <el-table-column prop="scores" label="总分" align="center" />
     <el-table-column prop="admin" label="创建人" align="center" />
     <el-table-column prop="addtime" label="更新时间" align="center" />
-    <el-table-column fixed="right" label="Operations" align="center" >
+    <el-table-column fixed="right" label="操作" align="center" >
       <template #default="scope">
         <el-button link type="primary" size="small" @click="compile(scope.row.id)">编辑</el-button>
         <span>|</span>

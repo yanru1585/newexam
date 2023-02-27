@@ -19,19 +19,6 @@
         <el-input placeholder="请输入关键字" v-model="data.params.key" />
       </el-form-item>
       <el-form-item label="部门">
-        <!-- <el-select
-          v-model="params.depid"
-          @change="buMenchange"
-          clearable
-          placeholder="请选择"
-        >
-          <el-option
-            v-for="(item, index) in data.list"
-            :key="index"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select> -->
         <el-cascader
           v-model="params.depid"
           :options="data.list"

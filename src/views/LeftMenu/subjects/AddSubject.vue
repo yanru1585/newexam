@@ -142,7 +142,7 @@
         <div class="itemInput">
           <span>可见老师：</span>
           <el-badge :value="addFrom.limits.length" class="item" type="primary">
-            <el-button @click="getSeleter">+ 选择</el-button>
+            <el-button @click="teacherDialog">+ 选择</el-button>
           </el-badge>
         </div>
       </el-form-item>
@@ -163,11 +163,7 @@
       :compileData="compileData"
     ></Drawer>
     <!-- 可见老师穿梭框 -->
-    <Transfer
-      v-if="tranferShow"
-      @transferEmit="transferEmit"
-      @showEmit="showEmit"
-    ></Transfer>
+    <Transfer v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> <!-- 可见老师 -->
     <!-- 批量导入 -->
     <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
     <!-- 创建试题库 -->
@@ -185,13 +181,22 @@ import Database from '../../../components/subject/SubDatabaseDialog.vue'//创建
 import Import from '../../../components/subject/ImporDialog.vue'//批量导入
 import Drawer from '../../../components/subject/SubjectDrawer.vue';//创建试卷
 import Transfer from '../../../components/subject/TransferDialog.vue';//可见老师+选择
-import { reactive, toRefs, onMounted, computed,watch,toRaw } from 'vue';
+import { reactive, toRefs, onMounted, computed,watch,toRaw,ref } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 import { databaseList,AddSubject,oneSubject } from '../../../api/subjects';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const route=useRoute()
 
 // console.log('添加试卷接收id',route.query.id);
+
+const title=ref() //弹框的标题
+const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
+const teacherDialog=()=>{//可见老师
+  teacherDialogisShow.value=true
+  title.value='可见老师'
+}
+
+
 
 const router=useRouter()
 interface Ishow{
@@ -323,7 +328,11 @@ const showEmit = (data: any) => {
   drawerShow.value = data;
   inportShow.value = data;
   databaseShow.value=data
+<<<<<<< HEAD
   databaseTabShow.value=data
+=======
+  teacherDialogisShow.value=data
+>>>>>>> a5e87e83ebfe793a892a70f62aad3fe96aa8e605
 };
 // 题目组件自定义事件传控制显示隐藏
 const qushowEmit=(data: any)=>{
@@ -352,10 +361,6 @@ const subjectEmit=(obj: any)=>{
   // console.log('接受批量导入',addFrom.value.questions);
 }
 
-// 点击选择显示老师可见弹框
-const getSeleter = () => {
-  tranferShow.value = true;
-};
 // 触发自定义事件接收子组件穿梭框数据
 const transferEmit = (val: any) => {
   // console.log('接收穿梭框数据', val);
