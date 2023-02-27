@@ -328,11 +328,9 @@ const showEmit = (data: any) => {
   drawerShow.value = data;
   inportShow.value = data;
   databaseShow.value=data
-<<<<<<< HEAD
   databaseTabShow.value=data
-=======
-  teacherDialogisShow.value=data
->>>>>>> a5e87e83ebfe793a892a70f62aad3fe96aa8e605
+
+
 };
 // 题目组件自定义事件传控制显示隐藏
 const qushowEmit=(data: any)=>{
