@@ -60,7 +60,6 @@ import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
-import { fa } from 'element-plus/es/locale';
 
 const ruleFormRef = ref<FormInstance>();
 interface Ilogin{
@@ -80,9 +79,9 @@ const {loginData}=toRefs(ruleForm)
 const rules = reactive<FormRules>({
 
 
-  username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 8, message: '账号为3到8个字符', trigger: 'blur' },],
+  username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 15, message: '账号为3到15个字符', trigger: 'blur' },],
   
-  pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 8, message: '密码为3到8个字符', trigger: 'blur' },],
+  pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 15, message: '密码为3到15个字符', trigger: 'blur' },],
 
   // username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 10, message: '账号为3到10个字符', trigger: 'blur' },],
   
@@ -98,7 +97,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (valid) {
       // console.log('submit!')
       const res = await Loginteach(loginData.value.username,loginData.value.pass);
-      console.log(res);
+      console.log('登录',res);
   if (res.errCode === 10000) {
     ElMessage({
       message: '登陆成功',

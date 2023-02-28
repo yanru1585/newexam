@@ -55,3 +55,8 @@ export const databasequestionAdd = (params: any): Promise<AxiosResponse<any>> =>
 export const databasequestionAddlist = (params: any): Promise<AxiosResponse<any>> => {
   return post('/databasequestion/addlist', params);
 };
+
+// 根据id下载单个考试试题列表
+export const testExportExcel = (id: any): Promise<AxiosResponse<any>> => {
+  return get('/test/exportExcel', {id},{responseType:'blob'});
+};

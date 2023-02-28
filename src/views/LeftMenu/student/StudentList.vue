@@ -5,7 +5,7 @@
     >
       <h3>学员管理</h3>
       <div>
-        <el-button>批量添加</el-button>
+        <el-button @click="batchAdd">批量添加</el-button>
         <el-button type="primary" @click="Addstudent">添加学生</el-button>
       </div>
     </div>
@@ -90,9 +90,11 @@
       <Addstu ref="studentref" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
     </div>
   </div>
+  <AlladdQuestion @closeDialog="closeDialog" :addUrl="addStudentUrl" :getList="getlist" v-if="isShowAdd"/> <!-- 批量上传学生 -->
 </template>
 
 <script setup lang="ts">
+import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
 import { onMounted } from 'vue';
 import { reactive, toRefs } from 'vue';
 import { ref } from 'vue';
@@ -106,6 +108,17 @@ import {
 import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
+
+const addStudentUrl=ref('http://estate.eshareedu.cn/exam/upload/student.xlsx')
+const isShowAdd=ref(false)
+const batchAdd=()=>{
+  isShowAdd.value=true
+}
+
+// 接受子组件传过来的值  关闭弹窗
+const closeDialog=(val:any)=>{
+  isShowAdd.value=val
+}
 
 
 const router = useRouter(); //跳转路由

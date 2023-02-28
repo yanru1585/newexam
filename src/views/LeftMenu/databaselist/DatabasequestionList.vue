@@ -102,7 +102,7 @@
   <DatabaseDetail v-if="isDatabaseDetail" :getEestDetail="getEestDetail" @closeDrawer="closeDrawer"/>
 
   <!-- 批量导入试题 -->
-  <AlladdQuestion @closeDialog="closeDialog" :getList="getList" v-if="isShowAdd"/>
+  <AlladdQuestion @closeDialog="closeDialog" :addUrl="addTestUrl" :getList="getList" v-if="isShowAdd"/>
 </template>
 
 <script lang="ts" setup>
@@ -119,12 +119,14 @@ import {
   databasequestionList,
   databasequestionDelete,
   databasequestionDeleteall,
+  testExportExcel
 } from '../../../api/database';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
 
+const addTestUrl=ref('http://estate.eshareedu.cn/exam/upload/question.xlsx')
 const isAddtestDrawer = ref(false);
 const isDatabaseDetail = ref(false);
 const isShowAdd=ref(false)
@@ -152,8 +154,11 @@ const addTest = () => {
   isAddtestDrawer.value = true;
 };
 
-const exportExcel = () => {
+const exportExcel = async() => {
   console.log(1234544446);
+  let res = await testExportExcel(3630)
+  console.log('根据id下载单个考试试题列表',res);
+  
 
   //因为此处有分页，每页展示14条数据，在方法调用的开始，展示所有数据，导出之后再把条数更改过来
   // data.psize = state.tableData.length;
@@ -224,9 +229,6 @@ const state: any = reactive({
 });
 const { key, type, admin } = toRefs(data);
 const { obj, tableData, total, compileData,getEestDetail } = toRefs(state);
-
-// const titleArr = ['id','巡河次数','完成次数','巡河人员','时间']//表头中文名
-// exportExcel(state.tableData, 'test', titleArr, 'sheetName');
 
 onMounted(() => {
   getList();

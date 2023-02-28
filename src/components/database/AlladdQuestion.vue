@@ -7,8 +7,12 @@
   >
     <div style="height: 140px">
       <el-steps direction="vertical" :active="1">
-        <el-step title="下载 试题模板，批量导入试题" :description="desc" />
-        <el-step style="color: #c0c4cc;" title="上传填写好的试题表" />
+        <el-step
+          @click="down"
+          title="下载 试题模板，批量导入试题"
+          :description="desc"
+        />
+        <el-step style="color: #c0c4cc" title="上传填写好的试题表" />
       </el-steps>
     </div>
     <el-upload
@@ -25,7 +29,7 @@
       :limit="3"
       :on-exceed="handleExceed"
     >
-      <el-button style="margin-top: 10px;margin-left: 40px;" type="primary"
+      <el-button style="margin-top: 10px; margin-left: 40px" type="primary"
         >点击上传文件</el-button
       >
     </el-upload>
@@ -40,6 +44,7 @@
 
 <script lang="ts" setup>
 import { databasequestionAddlist } from '../../api/database';
+import { Down } from '../../utils/down';
 import { ref, toRefs, reactive } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import type { UploadProps, UploadUserFile } from 'element-plus';
@@ -63,6 +68,11 @@ const emits = defineEmits(['closeDialog']);
 
 const handleClose = (done: () => void) => {
   emits('closeDialog', false);
+};
+
+// 点击下载试题模板
+const down = () => {
+  Down('http://estate.eshareedu.cn/exam/upload/question.xlsx');
 };
 
 // 上传文件
@@ -90,10 +100,9 @@ const onSuccess = (res: any) => {
   addData.list = res.data;
 };
 
-const onError=(val:any)=>{
+const onError = (val: any) => {
   console.log(val);
-  
-}
+};
 
 const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
   console.log(file, uploadFiles);
@@ -127,8 +136,8 @@ const cancel = () => {
 // 确定
 const confirm = async () => {
   console.log(addData.list.length);
-  
-  if(addData.list.length==0){
+
+  if (addData.list.length == 0) {
     ElMessage.error('请先选择要上传的文件！');
     return false;
   }

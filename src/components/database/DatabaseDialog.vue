@@ -121,12 +121,9 @@ const props = defineProps({
   getListDialog: {
     type: Function,
     required: true,
-  },
-  editList: {
-    type: Object,
-    required: true,
-  },
+  }
 });
+
 const ifShow = ref(true);
 
 const formSize = ref('default');
@@ -139,6 +136,7 @@ const addData: any = reactive({
   isshow: 1,
   limits: [],
 });
+
 const { title, isshow, limits } = toRefs(addData);
 // 获取单选框的值
 const radioChange = (val: any) => {
@@ -155,6 +153,7 @@ const dialogVisible = ref<any>(false);
 // 暴露
 defineExpose({
   dialogVisible,
+  addData
 });
 
 const handleClose = (done: () => void) => {
@@ -205,18 +204,7 @@ const { list, teacherArr, teacherData } = toRefs(data);
 
 onMounted(() => {
   getList();
-  // Object.assign(props.editList, addData);
 });
-// 编辑回显
-watch(
-  [() => props.editList.title, () => props.editList.id],
-  (newValue, oldValue) => {
-    // console.log('person的job变化了', newValue, oldValue);
-    addData.title = newValue[0];
-    addData.id = newValue[1];
-  },
-  { immediate: true, deep: true }
-);
 
 const getList = async () => {
   let res: any = await departmentList();
