@@ -6,7 +6,7 @@
           <LeftMenu ref="infoRef"/>
         </el-aside>
         <el-container>
-          <el-main @click="clickFn">
+          <el-main @click="clickFn" >
             <router-view></router-view>
           </el-main>
         </el-container>
@@ -32,5 +32,4 @@ const clickFn=()=>{
   height: 100vh;
   // position: fixed;
 }
-
 </style>

@@ -7,7 +7,7 @@
       <p class="information">基本信息</p>
     </div>
 
-    <el-form :model="addFrom" label-width="120px">
+    <el-form :model="addFrom" label-width="120px" >
 
       <el-form-item
         label="考试名称:"
@@ -35,7 +35,7 @@
                 <p style="font-size: 13px; color: #848484; margin-bottom: 10px;">{{item.type}}<span>{{item.const}}</span> 道</p>
                 <div class="item_detail">
                   <span>每题</span>
-                  <el-input></el-input>
+                  <el-input v-model="item.score" type="text"/>
                   <span>分</span>
                 </div>
               </div>
@@ -47,9 +47,9 @@
             <div class="godTop">
               <h3 class="lefts">试题列表</h3>
               <div class="god">
-                <span>总分：0</span>
-                <span>已添加：0题</span>
-                <button type="button"><span>清空</span></button>
+                <span>总分：{{ addFrom.scores }}</span>
+                <span>已添加：{{addFrom.questions.length}}题</span>
+                <button type="button" @click="empty"><span>清空</span></button>
               </div>
             </div>
           <!-- 添加题目展示 -->
@@ -201,7 +201,7 @@
       <div class="examss">
         <div class="hour">防作弊:</div>
         <el-checkbox-group
-          v-model="checkList"
+          v-model="aorderCheck"
           style="margin-top: 10px; margin-left: 10px"
         >
           <el-checkbox :label='0' >试题顺序打乱</el-checkbox>
@@ -246,8 +246,7 @@
         <el-button>取消</el-button>
       </div>
     </el-form>
-  </div>
-  <!-- 添加题目 -->
+     <!-- 添加题目 -->
   <Drawer
     v-if="drawerShow"
     @showEmit="showEmit"
@@ -266,6 +265,8 @@
      <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" @transferEmit="transferEmit" :title="title"/> 
      <!-- 从题库中导入 -->
      <SubjectList v-if="subjectListShow" @showEmit="showEmit" @questionsEmit="questionsEmit"></SubjectList>
+  </div>
+ 
 </template>
 
 <script setup lang="ts">
@@ -318,13 +319,15 @@ interface ItestData {
   compileData:any
   baseList: Array<any>;
   databaseData:object
+  score:string
 }
+const aorderCheck = ref<any>([]);
 const testData: ItestData = reactive({
   // 添加数据
   addFrom: {
     admin: 'ldq',
     answershow: 0,//答案可见
-    aorder: 0,//防作弊
+    aorder: aorderCheck.value[0],//防作弊
     begintime: '',//开始时间
     databaseid: 20,//题库id
     endtime: '',//结束时间
@@ -344,12 +347,13 @@ const testData: ItestData = reactive({
     students: [],//学生可见
     title: '', //考试名称
   },
-  questionsType:[{type:'单选题',const:0},{type:'多选题',const:0},{type:'判断题',const:0},{type:'填空题',const:0},{type:'问答题',const:0}],
+  questionsType:[{type:'单选题',const:0,score:''},{type:'多选题',const:0,score:''},{type:'判断题',const:0,score:''},{type:'填空题',const:0,score:''},{type:'问答题',const:0,score:''}],
   compileData:{},//编辑数据详情
   baseList: [], //题库列表
   databaseData:{},//题库
+  score:'',//分值
 });
-const { addFrom,questionsType,compileData,baseList ,databaseData} = toRefs(testData);
+const { addFrom,questionsType,compileData,baseList ,databaseData,score} = toRefs(testData);
 const show: Ishow = reactive({
   drawerShow: false, //控制抽屉显示隐藏
   tranferShow: false, //控制弹框显示隐藏
@@ -413,9 +417,23 @@ const transferEmit=(data: any)=>{
   }
 }
 
+// 随机排序
+// const getShuffle=(arr: any)=>{
+//   let temp=[]
+//   for(let i=arr.length;i>0;i--){
+//     let temRandom=Math.floor(Math.random()*i)
+//     temp.push(arr[temRandom])
+//     arr.splice(temRandom,1)
+//   }
+//   // return temp
+//   console.log('随机排序',temp);
+  
+// }
+
 
 //多选框
-const checkList = ref(['selected and disabled']);
+
+
 //时间
 const time = ref('');
 const shortcuts = [
@@ -571,6 +589,22 @@ const datetimerangeChange=(data:any)=>{
   // console.log('时间选择器',addFrom.value.endtime);
 ;
 }
+// 监听左侧数据变化
+watch(()=>questionsType.value,(newVal)=>{
+
+  if(newVal){
+    let res=newVal.filter(item=>item.score!==null)
+    res.forEach(ite=>{
+      addFrom.value.questions.forEach(datalist=>{
+        if(ite.type===datalist.type){
+          datalist.scores=ite.score?ite.score:datalist.scores
+        }
+      })
+  }
+
+)}
+
+},{deep:true,immediate:true})
 onMounted(()=>{
   getDatabaseList()
 })
@@ -599,11 +633,23 @@ const keepUnpublished=()=>{
 // 选择已有试卷导入
 const checkSubject=()=>{
   subjectListShow.value=true
+}
+// 点击清空
+const empty=()=>{
+  addFrom.value.questions=[]
 
 }
 </script>
 
 <style lang="less" scoped>
+.bot{
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow-y: scroll;
+
+}
+
 .box {
   display: flex;
   align-items: center;
@@ -730,8 +776,9 @@ const checkSubject=()=>{
   margin-left: 10px;
 }
 .buoot {
-  margin: 20px;
+  margin: 50px;
   margin-left: 200px;
+  margin-bottom: 100px;
 }
 .butm {
   width: 100px;
