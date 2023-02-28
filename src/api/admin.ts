@@ -141,3 +141,7 @@ export const teacherUpdateState=(params:any):Promise<AxiosResponse<any>>=>{
 export const testGetmarkteachers=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/test/getmarkteachers',params)
 }
+// 师资重置密码
+export const teacher=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/teacher/add',params)
+}
