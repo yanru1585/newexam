@@ -16,6 +16,10 @@ export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
 
+export const AddText=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/test/add',params)
+}//考试添加
+
 // 阅卷管理列表
 interface Iist{
   (page:number,psize:number,isread:number,key:string):Promise<AxiosResponse<any>>
@@ -94,6 +98,12 @@ export const studentcs=(ids:any):Promise<AxiosResponse<any>>=>{
 }//学员重置密码
 export const rolelist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/role/list',params)
+}//角色列表
+interface Irolelistt{
+  (page:number,psize:number):Promise<AxiosResponse<any>>
+}
+export const rolelistt:Irolelistt=(page:number,psize:number):Promise<AxiosResponse<any>>=>{
+  return get('/role/list',{page,psize})
 }//角色列表
 
 export const roledel=(id:any):Promise<AxiosResponse<any>>=>{

@@ -181,8 +181,12 @@ onMounted(() => {
 });
 // 点击确定
 const confirm = () => {
+  let data={
+    tit:title.value,
+    arr:value.value
+  }
   console.log('确定', value.value);
-  emit('transferEmit', value.value);
+  emit('transferEmit', data);
   emit('showEmit', false);
 };
 // 点击取消

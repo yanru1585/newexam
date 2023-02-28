@@ -39,7 +39,7 @@
           <div class="option">
             <div class="item" v-for="(item, index) in addForm.answers" :key="index">
               <span>{{ item.answerno }}:</span>
-              <el-input  v-model="item.content" type="textarea" />
+              <el-input  v-model="item.content" type="textarea"  size="small" />
               <el-icon size="26px" @click="dele"><CircleClose /></el-icon>
             </div>
           </div>

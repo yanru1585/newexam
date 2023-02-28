@@ -120,7 +120,7 @@
             <el-button @click="addSubject" style="margin: 10px">添加题目</el-button >
             <el-button  style="margin: 10px" @click="bulkImport">批量导入</el-button>
             <el-button  style="margin: 10px" @click="importDatabase">从题库导入</el-button>
-            <el-button  style="margin: 10px">选择已有试卷</el-button>
+            <el-button  style="margin: 10px" @click="checkSubject">选择已有试卷</el-button>
           </div>
         </div>
       </div>
@@ -139,7 +139,7 @@
           </el-select>
         </el-form-item>
         <div>
-          <el-button @click="establish" style="margin-left: 10px;">+创建试题库</el-button>
+          <el-button @click="establish" style="margin-left: 10px;" >+创建试题库</el-button>
         </div>
       </div>
       <!-- 考试设置 -->
@@ -159,11 +159,11 @@
           v-model="addFrom.isshow"
           style="margin-top: 5px; margin-left: 10px"
         >
-          <el-radio label="0">不限时长</el-radio>
-          <el-radio label="1">限时时长</el-radio>
+          <el-radio :label='0'>不限时长</el-radio>
+          <el-radio :label='1'>限时时长</el-radio>
         </el-radio-group>
-        <div class="">
-          <input type="number" v-model="addFrom.pastscores" placeholder="60" />
+        <div class="minuteBox" v-if="addFrom.isshow==1">
+          <input type="text" v-model="addFrom.limittime"   />
           <span>分钟</span>
         </div>
       </div>
@@ -172,12 +172,15 @@
         <div class="hour">开放时间:</div>
         <div class="block">
           <el-date-picker
-            v-model="value2"
+            v-model="time"
             type="datetimerange"
             :shortcuts="shortcuts"
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
+            @change="datetimerangeChange"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
           />
         </div>
         <span class="bu">不填表示永久</span>
@@ -188,11 +191,11 @@
           v-model="addFrom.answershow"
           style="margin-top: 5px; margin-left: 10px"
         >
-          <el-radio label="1">交卷后显示</el-radio>
-          <el-radio label="2">不允许查看</el-radio>
-          <el-radio label="3">仅可查看对错</el-radio>
-          <el-radio label="4">仅查看对错</el-radio>
-          <el-radio label="5">考试结束后查看</el-radio>
+          <el-radio :label='1'>交卷后显示</el-radio>
+          <el-radio :label='2'>不允许查看</el-radio>
+          <el-radio :label='3'>仅可查看对错</el-radio>
+          <el-radio :label='4'>仅查看对错</el-radio>
+          <el-radio :label='5'>考试结束后查看</el-radio>
         </el-radio-group>
       </div>
       <div class="examss">
@@ -201,8 +204,8 @@
           v-model="checkList"
           style="margin-top: 10px; margin-left: 10px"
         >
-          <el-checkbox label="0" >试题顺序打乱</el-checkbox>
-          <el-checkbox label="1" >选项顺序打乱(单选题,多选题,判断题)</el-checkbox>
+          <el-checkbox :label='0' >试题顺序打乱</el-checkbox>
+          <el-checkbox :label='1' >选项顺序打乱(单选题,多选题,判断题)</el-checkbox>
         </el-checkbox-group>
       </div>
       <div class="box">
@@ -212,7 +215,7 @@
       <div class="examss">
         <div class="hour">可见老师:</div>
 
-        <el-badge :value="0" class="item" type="primary">
+        <el-badge :value="addFrom.limits.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="teacherDialog">+选择</el-button>
         </el-badge>
       </div>
@@ -223,7 +226,7 @@
       <div class="examss">
         <div class="hour">考试范围:</div>
 
-        <el-badge :value="0" class="item" type="primary">
+        <el-badge :value="addFrom.students.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="studentDialog">+选择</el-button>
         </el-badge>
       </div>
@@ -233,14 +236,13 @@
       </div>
       <div class="examss">
         <div class="hour">阅卷老师:</div>
-
-        <el-badge :value="0" class="item" type="primary">
+        <el-badge :value="addFrom.markteachers.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="readTeacherDialog">+选择</el-button>
         </el-badge>
       </div>
       <div class="buoot">
-        <el-button>发布</el-button>
-        <el-button type="primary">保存(不发布)</el-button>
+        <el-button @click="getPublish">发布</el-button>
+        <el-button type="primary" @click="keepUnpublished">保存(不发布)</el-button>
         <el-button>取消</el-button>
       </div>
     </el-form>
@@ -253,7 +255,7 @@
     :compileData="compileData"
   ></Drawer>
   <!-- 批量导入 -->
-  <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
+    <Import v-if="inportShow" @showEmit="showEmit" @subjectEmit="subjectEmit"></Import>
     <!-- 创建试题库 -->
     <Database  v-if="databaseShow" @showEmit="showEmit"></Database>
     <!-- 从题库中引入 -->
@@ -261,10 +263,14 @@
      <!-- 题目列表 -->
      <Question v-if="questionShow" :databaseData="databaseData" @questionsEmit="questionsEmit" @qushowEmit="qushowEmit"></Question>
      <!-- 可见老师 -->
-     <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" :title="title"/> 
+     <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" @transferEmit="transferEmit" :title="title"/> 
+     <!-- 从题库中导入 -->
+     <SubjectList v-if="subjectListShow" @showEmit="showEmit" @questionsEmit="questionsEmit"></SubjectList>
 </template>
 
 <script setup lang="ts">
+import {AddText} from '../../../api/admin'
+import SubjectList from '../../../components/subject/SubjectListDialog.vue'//从题库中导入
 import TransferDialog from '../../../components/subject/TransferDialog.vue';//可见老师
 import Question from '../../../components/subject/QuestionDialog.vue'//题目列表
 import DatabaseTab from '../../../components/database/DatabaseTabDialog.vue'//从题库引入
@@ -273,14 +279,17 @@ import Import from '../../../components/subject/ImporDialog.vue'//批量导入
 import Drawer from '../../../components/subject/SubjectDrawer.vue';
 import { ref, toRefs, reactive,watch,onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { databaseList,AddSubject,oneSubject } from '../../../api/subjects';
+import { databaseList } from '../../../api/subjects';
+import { useRouter } from 'vue-router';
+const router =useRouter()
 interface Ishow {
   drawerShow: boolean;
   tranferShow: boolean;
   inportShow: boolean;
   databaseShow: boolean;
   databaseTabShow:boolean,
-  questionShow:boolean
+  questionShow:boolean,
+  subjectListShow:boolean
 }
 interface Iadd {
   admin: string;
@@ -298,7 +307,7 @@ interface Iadd {
   qorder: number;
   questions: Array<any>;
   scores: number;
-  state: null;
+  state: number;
   students: Array<any>;
   title: string;
   isshow:number
@@ -321,15 +330,17 @@ const testData: ItestData = reactive({
     endtime: '',//结束时间
     id: 0,
     info: '',//考试介绍
-    isshow: 1,//限制时长
+    isshow: 0,//限制时长
     limits: [], //可见老师
-    limittime: '',//考试时长
-    markteachers: [],//阅卷老师
+    limittime:'',//考试时长
+    markteachers: [
+      {id:2020}
+    ],//阅卷老师
     pastscores: 60,//通过分数
     qorder: 0,
     questions: [], //接收题目列表数据
     scores: 100,
-    state: null,
+    state:1,//是否发布
     students: [],//学生可见
     title: '', //考试名称
   },
@@ -346,8 +357,9 @@ const show: Ishow = reactive({
   databaseShow: false, //控制创建试题库显示隐藏
   databaseTabShow:false,//控制题库列表显示隐藏
   questionShow:false,//控制题目列表显示隐藏
-});
-const { drawerShow, tranferShow, inportShow, databaseShow,databaseTabShow,questionShow } = toRefs(show);
+  subjectListShow:false,//控制题库显示隐藏
+})
+const { drawerShow, tranferShow, inportShow, databaseShow,databaseTabShow,questionShow ,subjectListShow} = toRefs(show);
 const form = reactive({
   name: '',
   region: '',
@@ -360,13 +372,14 @@ const form = reactive({
 });
 
 
-const isShowDrawer=ref(false)
+// const isShowDrawer=ref(false)
 
 const title=ref() //弹框的标题
 const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
 
 const studentDialog=()=>{//学生
   teacherDialogisShow.value=true
+
   title.value='学生考试列表'
 }
 
@@ -379,24 +392,32 @@ const readTeacherDialog=()=>{//阅卷老师
   teacherDialogisShow.value=true
   title.value='阅卷老师'
 }
+// 触发自定义事件接收可见老师，学生，及阅卷老师数据
+const transferEmit=(data: any)=>{
+  console.log('接收可见',data);
+  if(data.tit==='可见老师'){
+    addFrom.value.limits=data.arr.map((item: any)=>{
+      return {id:item}
+      
+    })
+  }else if(data.tit==='学生考试列表'){
+    addFrom.value.students=data.arr.map((item: any)=>{
+      return {studentid:item}
+      
+    })
+  }else{
+    addFrom.value.markteachers=data.arr.map((item: any)=>{
+      return {id:item}
+      
+    })
+  }
+}
 
-// 接收子组件传来的  关闭TransferDialog弹窗
-// const showEmit=(val:any)=>{
-//   teacherDialogisShow.value=val
-// }
 
-
-//单选框
-const radio = ref(3);
 //多选框
 const checkList = ref(['selected and disabled']);
 //时间
-const value1 = ref<[Date, Date]>([
-  new Date(2000, 10, 10, 10, 10),
-  new Date(2000, 10, 11, 10, 10),
-]);
-const value2 = ref('');
-
+const time = ref('');
 const shortcuts = [
   {
     text: '最近一周',
@@ -445,6 +466,7 @@ const showEmit = (data: any) => {
   databaseShow.value = data;
   databaseTabShow.value=data
   teacherDialogisShow.value=data
+  subjectListShow.value=data
 };
 // 题目组件自定义事件传控制显示隐藏
 const qushowEmit=(data: any)=>{
@@ -540,9 +562,45 @@ const questionsEmit=(data: any)=>{
   addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(data))]
 
 }
+// 时间选择器点击事件
+const datetimerangeChange=(data:any)=>{
+
+  addFrom.value.begintime=data[0]
+  addFrom.value.endtime=data[1]
+  // console.log('时间选择器',addFrom.value.begintime);
+  // console.log('时间选择器',addFrom.value.endtime);
+;
+}
 onMounted(()=>{
   getDatabaseList()
 })
+// 点击发布
+const getIssue=async()=>{  
+  console.log('发布',addFrom.value);
+  const res:any=await AddText(addFrom.value).catch(()=>{})
+  console.log('点击发布',res);
+  if(res.errCode!==10000){
+    ElMessage.error(res.errMsg)
+    return false
+  }
+  router.push('/test')
+}
+// 点击发布
+const getPublish=()=>{
+  addFrom.value.state=1
+  getIssue() 
+}
+// 点击保存未发布
+const keepUnpublished=()=>{
+  addFrom.value.state=0
+  getIssue()
+
+}
+// 选择已有试卷导入
+const checkSubject=()=>{
+  subjectListShow.value=true
+
+}
 </script>
 
 <style lang="less" scoped>
@@ -590,19 +648,10 @@ onMounted(()=>{
   .godTop {
   width: 100%;
 
-// .right {
-//   margin-left: 20px;
-//   margin-top: 10px;
-// }
-// .godTop {
-//   width: 1025px;
-// >>>>>>> a5e87e83ebfe793a892a70f62aad3fe96aa8e605
   border: 1px solid #dcdfe6;
-  // display: flex;
   display: flex;
   justify-content: space-between;
 
-  // border-bottom: 4px solid #dcdfe6;
 }
   .buttons {
   width: 100%;
@@ -620,17 +669,6 @@ onMounted(()=>{
   margin-left: 20px;
 }
 }
-
-// }
-
-  // border-bottom: 4px solid #dcdfe6;
-
-// .buttons {
-//   width: 1025px;
-//   border: 1px solid #dcdfe6;
-//   padding: 10px;
-// }
-
 
 .lefts {
   padding: 15px 15px;
@@ -657,9 +695,10 @@ onMounted(()=>{
   width: 70px;
   color: #606266;
   height: 30px;
+  border-radius: 4px;
   background-color: #fff;
   border: 1px solid #dcdfe6;
-  border-radius: 4px;
+  
 }
 .fen input {
   padding: 0px 10px;
@@ -778,5 +817,18 @@ onMounted(()=>{
   padding: 5px;
   border: 1px solid rgb(159, 158, 158);
 }
-
+.minuteBox{
+  width: 100px;
+  margin-left: 20px;
+  margin-top: 10px;
+  input{
+    color: #606266;
+    width: 40px;
+    padding: 0px 10px;
+    height: 30px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #dcdfe6;
+  }
+}
 </style>

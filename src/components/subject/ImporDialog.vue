@@ -47,7 +47,7 @@
 import { ref, reactive, toRefs, defineEmits } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import type { UploadProps, UploadUserFile } from 'element-plus';
-const emit = defineEmits(['subjectEmit', 'showEmit']);
+const emit = defineEmits(['subjectEmit', 'showEmit']); 
 interface Isubjet {
   subjectList: Array<any>;
 }
