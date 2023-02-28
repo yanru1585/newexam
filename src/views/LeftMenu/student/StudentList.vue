@@ -72,6 +72,7 @@
             >删除</el-button
           >
         </template>
+    
       </el-table-column>
     </el-table>
     <div class="pigeBox">
