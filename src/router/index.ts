@@ -72,6 +72,16 @@ const routes: any = [
         component: () => import('../views/LeftMenu/teacher/TeacherList.vue'),
       },
       {
+        path: '/teacherreset', //师资重置密码
+        name: 'Teacherreset',
+        component: () => import('../views/LeftMenu/teacher/teacherreset.vue'),
+      },
+      {
+        path: '/teacherrevise', //师资添加和修改
+        name: 'Teacherrevise',
+        component: () => import('../views/LeftMenu/teacher/teacherrevise.vue'),
+      },
+      {
         path: '/classes', //班级
         name: 'Classes',
         component: () => import('../views/LeftMenu/classes/ClassesList.vue'),
