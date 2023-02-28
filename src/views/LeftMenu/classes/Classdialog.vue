@@ -16,7 +16,7 @@
         <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item label="部门" prop="name">
-        <el-cascader :options="dataa.arr" :props="props" clearable />
+        <el-cascader :options="dataa.arr" :props="props" clearable @change="handleChange"/>
       </el-form-item>
     </el-form>
 
@@ -54,13 +54,20 @@ const formSize = ref('default');
 const ruleFormRef = ref<FormInstance>();
 const ruleForm = reactive({
   name: a.carr.name,
-  depid: a.carr.ids,
+  depid: 0,
   id: a.carr.id,
 });
 
 const rules = reactive<FormRules>({
   name: [{ required: true, message: '请输入班级名称', trigger: 'blur' }],
 });
+
+// 级联选择器change事件
+const handleChange = (value:any) => {
+  console.log(value)
+  ruleForm.depid=value
+}
+
 // 确定按钮
 const add = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;

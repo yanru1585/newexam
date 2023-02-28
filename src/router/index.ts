@@ -97,7 +97,26 @@ const routes: any = [
         component: () =>
           import('../views/LeftMenu/databaselist/DatabasequestionList.vue'),
       },
+      // 学生端
+      {
+        path: '/stutest', //考试列表
+        name: 'Stutest',
+        component: () =>
+          import('../views/LeftMenu/stutest/StutestList.vue'),
+      },
+      {
+        path: '/set', //设置
+        name: 'Set',
+        component: () =>
+          import('../views/LeftMenu/set/ChangePass.vue'),
+      },
     ],
+  },
+  {
+    path: '/examprepare', //准备考试页面
+    name: 'Examprepare',
+    component: () =>
+      import('../views/LeftMenu/stutest/ExamprepareView.vue'),
   },
 ];
 

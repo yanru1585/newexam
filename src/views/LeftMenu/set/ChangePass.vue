@@ -40,7 +40,7 @@ const data: any = reactive({
 const { info } = toRefs(data);
 
 onMounted(() => {
-  console.log(sessionStorage.getItem('model'));
+  // console.log(sessionStorage.getItem('model'));
   let obj: any = sessionStorage.getItem('model');
   data.info = JSON.parse(obj);
 });

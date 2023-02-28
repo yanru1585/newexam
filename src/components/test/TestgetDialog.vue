@@ -31,14 +31,11 @@
         </el-row>
       </div>
       <div>
-        <el-button>导出excel</el-button>
+        <el-button @click="exportExcel">导出excel</el-button>
       </div>
     </div>
 
     <div class="content">
-      <!-- <div v-for="(item, index) in questionsList" :key="index">
-        {{ item }}
-      </div> -->
       <div
         v-for="(item, index) in questionsList"
         :key="index"
@@ -79,12 +76,7 @@
         </p>
         <div v-else-if="item.type == '填空题'">
           <p
-            style="
-              color: #70d3b2;
-              background-color: #eefaf6;
-              padding: 13px;
-              margin-bottom: 10px;
-            "
+            style="color: #70d3b2;background-color: #eefaf6;padding: 13px;margin-bottom: 10px;"
           >
             正确答案&nbsp;&nbsp;&nbsp;{{ item.answer }}
           </p>
@@ -114,6 +106,8 @@ import {
 import { ElMessageBox } from 'element-plus';
 import { testGet } from '../../api/admin';
 import  {oneSubject}  from '../../api/subjects';
+import {testExportExcel} from '../../api/database'
+import {Downblob} from '../../utils/down'
 
 const dialogVisible = ref(true);
 
@@ -123,15 +117,18 @@ const props = defineProps({
     required: true,
   },
 });
-// console.log(props.getId);
 
 interface Idata {
   getTestData: any;
   questionsList: Array<any>;
+  exportId:number,
+  exportName:string
 }
 const data: Idata = reactive({
   getTestData: {},
   questionsList: [],
+  exportId:0,
+  exportName:''
 });
 const { getTestData, questionsList } = toRefs(data);
 
@@ -149,6 +146,8 @@ const getTestInfo = async () => {
     }
     data.getTestData = res.data;
     data.questionsList = res.data.questions;
+    data.exportId=res.data.id
+    data.exportName=res.data.title
     console.log(data.getTestData);
     return false
   }
@@ -161,9 +160,19 @@ const getTestInfo = async () => {
     }
     data.getTestData = subjectres.data;
     data.questionsList = subjectres.data.questions;
+    data.exportId=subjectres.data.id
+    data.exportName=subjectres.data.title
     console.log(data.getTestData);
   }
 };
+
+// 导出excel
+const exportExcel=async()=>{
+  let res:any = await testExportExcel(data.exportId)
+  console.log(res);
+  
+  Downblob(res,data.exportName)
+}
 
 const emits = defineEmits(['isshowDialog']);
 

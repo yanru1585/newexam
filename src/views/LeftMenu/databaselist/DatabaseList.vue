@@ -39,10 +39,10 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="题库" #default="scope" width="450">
           <span
-          style="color: #409eff; cursor: pointer"
-          @click="toQuestions(scope.row.id)"
-          >{{ scope.row.title }}
-        </span>
+            style="color: #409eff; cursor: pointer"
+            @click="toQuestions(scope.row.id)"
+            >{{ scope.row.title }}
+          </span>
         </el-table-column>
         <el-table-column prop="counts" label="题目数量" width="180" />
         <el-table-column prop="addtime" label="创建时间" />
@@ -89,18 +89,18 @@
   <DatabaseDialog
     ref="dialogRef"
     :getListDialog="getList"
-    :editList="editList"
   ></DatabaseDialog>
 </template>
 
 <script lang="ts" setup>
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { reactive, toRefs, onMounted, ref, watch, toRaw } from 'vue';
+import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick } from 'vue';
 import {
   databaseList,
   databaseDelete,
   databaseDeleteall,
+  
 } from '../../../api/database';
 import { useRouter } from 'vue-router';
 
@@ -135,11 +135,10 @@ const state: any = reactive({
   tableData: [],
   total: 0,
   ids: [],
-  editList: {},
 });
 
 const { key, admin, ismy } = toRefs(data);
-const { tableData, total, ids, editList } = toRefs(state);
+const { tableData, total, ids } = toRefs(state);
 
 onMounted(() => {
   getList(); //题库列表
@@ -238,9 +237,11 @@ const delAll = async () => {
 // 编辑
 const edit = (val: any) => {
   console.log('编辑', val);
-  state.editList = val;
   dialogRef.value.dialogVisible = true;
-  console.log(state.editList);
+  nextTick(() => {
+    //延迟函数  回显
+    dialogRef.value.addData.title = val.title;
+  });
 };
 
 // 点击跳转到试题列表
