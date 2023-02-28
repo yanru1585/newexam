@@ -13,14 +13,15 @@
     :size="formSize"
     status-icon
   >
-    <el-form-item label="姓名" prop="name">
-      <el-input v-model="AddForm.name" />
+   <el-form-item label="姓名" prop="name">
+      <!-- <el-input v-model="AddForm.name" /> -->
+      <span>{{ AddForm.name }}</span>
     </el-form-item>
     <el-form-item label="密码" prop="oldpass">
-      <el-input v-model="AddForm.oldpass" type="password"/>
+      <el-input v-model="AddForm.oldpass" type="password" />
     </el-form-item>
     <el-form-item label="重置密码" prop="pass"  >
-      <el-input v-model="AddForm.pass" type="password"/>
+      <el-input v-model="AddForm.pass" type="password" autocapitalize="off"/>
     </el-form-item>
     
     <el-form-item>
@@ -42,7 +43,7 @@ const dialogVisible = ref(false)
 
 const prop = defineProps({
   passlistt:{
-    type:Object,
+    type:Object, 
     required:true
   },
   getListDialog:{
