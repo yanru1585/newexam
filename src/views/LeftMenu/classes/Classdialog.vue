@@ -16,7 +16,13 @@
         <el-input v-model="Idataa.name" />
       </el-form-item>
       <el-form-item label="部门" prop="name">
-        <el-cascader v-model="Idataa.depid" :options="dataa.arr" :props="props" clearable @change="handleChange"/>
+        <el-cascader
+          v-model="Idataa.depid"
+          :options="dataa.arr"
+          :props="props"
+          clearable
+          @change="handleChange"
+        />
       </el-form-item>
     </el-form>
 
@@ -53,51 +59,46 @@ console.log(a.carr);
 const formSize = ref('default');
 const ruleFormRef = ref<FormInstance>();
 
-
 const rules = reactive<FormRules>({
   name: [{ required: true, message: '请输入班级名称', trigger: 'blur' }],
 });
 
 // 级联选择器change事件
-const handleChange = (value:any) => {
-  console.log(value)
-  Idataa.depid=value
-}
+const handleChange = (value: any) => {
+  console.log(value);
+  Idataa.depid = value;
+};
 // 确定按钮
-interface Idata{
-  name: string,
-  depid: number,
-  id: number,
+interface Idata {
+  name: string;
+  depid: number;
+  id: number;
 }
-const Idataa:Idata=reactive({
+const Idataa: Idata = reactive({
   name: a.carr.name,
   depid: a.carr.ids,
   id: a.carr.id,
-})
+});
 const add = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
-      const res: any = await classesadd(
-        Idataa.name,
-        Idataa.depid,
-        Idataa.id
-      );
+      const res: any = await classesadd(Idataa.name, Idataa.depid, Idataa.id);
       // console.log(res);
-      if(res.errCode === 10000){
+      if (res.errCode === 10000) {
         if (res.data.id === 0) {
-        ElMessage({
-          message: '添加成功',
-          type: 'success',
-        });
-        a.fal() 
-      }else{
-        ElMessage({
-          message: '修改成功',
-          type: 'success',
-        });
-        a.fal() 
-      }
+          ElMessage({
+            message: '添加成功',
+            type: 'success',
+          });
+          a.fal();
+        } else {
+          ElMessage({
+            message: '修改成功',
+            type: 'success',
+          });
+          a.fal();
+        }
       }
     } else {
       console.log('error submit!', fields);
