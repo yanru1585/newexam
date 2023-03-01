@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="Tips"
+    :title="AddForm.id===0?'添加':'修改' "
     width="40%"
   >
   <el-form
@@ -45,11 +45,11 @@
     </el-form-item>
     <el-form-item label="备注" prop="remarks" style="border-bottom: solid 1px #eee;padding: 10px 0px;">
       <el-input v-model="AddForm.remarks" type="textarea" style="width: 300px;"/>
-    </el-form-item>
-    <el-form-item label="账号" prop="username">
+    </el-form-item >
+    <el-form-item label="账号" prop="username" v-if="AddForm.id===0">
       <el-input v-model="AddForm.username" />
-    </el-form-item>
-    <el-form-item label="密码" prop="pass">
+    </el-form-item >
+    <el-form-item label="密码" prop="pass" v-if="AddForm.id===0">
       <el-input v-model="AddForm.pass" />
     </el-form-item>
   </el-form>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted,toRefs,watch } from 'vue'
+import { ref,onMounted,toRefs,watch,defineExpose } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus'
 import { reactive } from 'vue'
@@ -73,9 +73,10 @@ import { departmentList } from '../../../api/department';
 import {classeslist,classesad}from '../../../api/admin'
 import { indexOf } from 'lodash';
 const dialogVisible = ref(false)
-
+const title =ref()
 defineExpose({
-  dialogVisible
+  dialogVisible,
+  title
 })
 //接收数据
 const propss = defineProps({
@@ -224,7 +225,6 @@ const rules = reactive<FormRules>({
   ]
 })
 //添加
-// 确定
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
@@ -245,6 +245,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
       } else {
         ElMessage({
+     
           message: '修改成功！',
           type: 'success',
         });

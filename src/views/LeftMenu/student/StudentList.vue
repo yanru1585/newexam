@@ -88,10 +88,10 @@
       />
     </div>
     <div>
-      <Addstu ref="studentref" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
+      <Addstu ref="studentref"  :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
     </div>
     <div>
-      <Pass ref="passstudenref" :getListDialog="getlist" :passlistt="passlistt"></Pass>
+      <Pass ref="passstudenref"  :getListDialog="getlist" :passlistt="passlistt"></Pass>
     </div>
   </div>
   <AlladdQuestion @closeDialog="closeDialog" :addUrl="addStudentUrl" :getList="getlist" v-if="isShowAdd"/> <!-- 批量上传学生 -->
@@ -303,10 +303,16 @@ const delId = (id: number) => {
     });
 };
 //添加学生
+
 const Addstudent = () => {
+  studentref.value.title='添加'
   studentref.value.dialogVisible=true
 };
 //修改
+// const istops =ref<boolean>()
+//   const daty =reactive({
+//     istops:false
+// })
 const stats =reactive({
   stuentlist:{}
 })
@@ -315,6 +321,7 @@ const edit = (val: any) => {
   
   console.log('编辑', val);
   stats.stuentlist = val;
+
   studentref.value.dialogVisible = true;
   console.log(stats.stuentlist );
 };
