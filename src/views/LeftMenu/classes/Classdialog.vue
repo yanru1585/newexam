@@ -72,6 +72,7 @@ const handleChange = (value: any) => {
 interface Idata {
   name: string;
   depid: number;
+  
   id: number;
 }
 const Idataa: Idata = reactive({
