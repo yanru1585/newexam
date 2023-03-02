@@ -152,7 +152,7 @@ const father = () => {
 
 <style scoped>
 .top {
-  width: 150px;
+  width: 300px;
   height: 50px;
   display: flex;
   line-height: 50px;

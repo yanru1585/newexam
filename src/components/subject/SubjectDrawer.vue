@@ -17,7 +17,7 @@
             <el-radio label="问答题">问答题</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="题干" >
+        <el-form-item label="题干" prop="title">
           <!-- 富文本编辑器 -->
           <div style="border: 1px solid #ccc">
             <Toolbar
@@ -177,11 +177,8 @@ const handleCreated = (editor: any) => {
 //验证
 const rules = reactive<FormRules>({
   scores: [
-  {
-      required: true,
-      message: '请输入分值',
-      trigger: 'blur',
-    },
+  { required: true, message: "分值为数字", trigger: "blur" },
+ { pattern: /^[0-9]*.?[0-9]{1,2}?$/ , message: '分值为数字', trigger: "blur"}
   ],
 
 })
@@ -210,17 +207,27 @@ const cancelForm=()=>{
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
+    console.log(addForm.value.title );
+    
     if (valid) {
+      if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
+        return ElMessage.error('请输入题目内容')
+      }
       // console.log('submit!')
       if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
-        addForm.value.answers.forEach(item=>{
-          if(!item.content){
-            ElMessage.error('选项内容必填')
-            return false
-          }
-        })
-        
+       let arr= addForm.value.answers.filter(item=>{
+        if(!item.content){
+          return item
+        }
+       })
+       if(arr.length!==0){
+        ElMessage.error('请输入选项内容')
+        return false
+       }
+        // console.log(444,arr)
       }
+      console.log(2222);
+      
        if(addForm.value.type==='单选题'){
         if(!addForm.value.answer){
             ElMessage.error('正确答案必填')
@@ -237,8 +244,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         if(!addForm.value.judge){
             ElMessage.error('正确答案必填')
             return false
-          }
+        }
       }
+      console.log(222222222);
+      
       emit('drawerEmit',{...addForm.value})
       emit('showEmit',false)
       // drawer.value=false
