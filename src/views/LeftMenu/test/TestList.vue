@@ -95,7 +95,7 @@
       <el-table-column prop="admin" label="创建人" />
       <el-table-column prop="addtime" label="更新时间" width="200" />
       <el-table-column fixed="right" label="操作" width="200">
-        <template #default>
+        <template #default="scope">
           <p>
             <el-button link type="primary" size="small" @click="studentDialog">学生</el-button>
             <el-button link type="primary" size="small" @click="teacherDialog">可见</el-button>
@@ -104,7 +104,7 @@
           <p>
             <el-button link type="primary" size="small">分析</el-button>
             <el-button link type="primary" size="small">编辑</el-button>
-            <el-button link type="danger" size="small">删除</el-button>
+            <el-button link type="danger" size="small" @click="del(scope.row)">删除</el-button>
           </p>
         </template>
       </el-table-column>
@@ -140,7 +140,7 @@ import TransferDialog from '../../../components/subject/TransferDialog.vue';
 import { onMounted, defineProps, toRefs, toRaw } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
-import { list, dele, teacherUpdateState } from '../../../api/admin';
+import { list, dele, teacherUpdateState,deles } from '../../../api/admin';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 
@@ -353,6 +353,32 @@ const Public = (val: any) => {
       }
     });
 };
+
+// 删除
+const del = async(row:any)=>{
+  // console.log(row);
+  ElMessageBox.confirm('是否确定删除', '删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      const res = await deles(row.id)
+      console.log(res);
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      });
+      getlist();
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      });
+    });
+  
+}
 
 //批量删除
 const deletelist = () => {
