@@ -29,7 +29,7 @@
             />
           </el-select>
         </el-form-item>
-        <div v-if="xian">
+        <div v-if="a.carr.id ===undefined ? true :false " >
           <el-form-item label="账号" prop="username">
             <el-input v-model="params.username" />
           </el-form-item>
@@ -76,7 +76,7 @@ const a = defineProps({
 });
 console.log(a.carr);
 
-const xian = ref(true); //显示或隐藏
+const xian = ref(false); //显示或隐藏
 const aa = ref('');
 
 const formSize = ref('default');

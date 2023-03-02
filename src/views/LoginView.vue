@@ -1,19 +1,18 @@
-
 <template>
   <div class="boxlogin">
     <div class="login">
       <div class="img">
         <img src="../assets/images/1.png" alt="" />
       </div>
-      <div class="biao">
+      <div class="biao" v-if="user">
         <div class="hw">
           <h2>考试系统</h2>
         </div>
-        <div>
+        <div @click="user = !user">
           <img src="../assets/images/2.png" alt="" class="images" />
         </div>
       </div>
-      <div>
+      <div v-if="user">
         <el-form
           ref="ruleFormRef"
           :model="loginData"
@@ -38,7 +37,10 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" class="Loginbutton"  @click="submitForm(ruleFormRef)"
+            <el-button
+              type="primary"
+              class="Loginbutton"
+              @click="submitForm(ruleFormRef)"
               >登录</el-button
             >
           </el-form-item>
@@ -49,77 +51,99 @@
           </el-form-item>
         </el-form>
       </div>
-    </div>
 
+      <div>
+        <div class="biao" v-if="!user">
+          <div class="hw">
+            <h2>考试系统</h2>
+          </div>
+          <div @click="user = !user">
+            <img src="../assets/images/3.png" alt="" class="imagess" />
+          </div>
+        </div>
+        <div v-if="!user">
+        <img src="../assets/images/4.png" alt="" class="code">
+        <div class="wx">
+          使用<span>微信</span>扫一扫进行登录
+        </div>
+        </div>
+
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref,toRefs } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
 import { ElMessage } from 'element-plus';
 import router from '../router';
 
+const user = ref(true);
+
 const ruleFormRef = ref<FormInstance>();
-interface Ilogin{
-  username: String,
-  pass: String,
+interface Ilogin {
+  username: String;
+  pass: String;
 }
-interface Irule{
-  loginData:Ilogin
+interface Irule {
+  loginData: Ilogin;
 }
 const ruleForm = reactive({
-  loginData:{
+  loginData: {
     username: '',
     pass: '',
-  } 
+  },
 });
-const {loginData}=toRefs(ruleForm)
+const { loginData } = toRefs(ruleForm);
 const rules = reactive<FormRules>({
+  username: [
+    { required: true, message: '请输入账号', trigger: 'blur' },
+    { min: 3, max: 15, message: '账号为3到15个字符', trigger: 'blur' },
+  ],
 
-
-  username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 15, message: '账号为3到15个字符', trigger: 'blur' },],
-  
-  pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 15, message: '密码为3到15个字符', trigger: 'blur' },],
+  pass: [
+    { required: true, message: '请输入密码', trigger: 'blur' },
+    { min: 3, max: 15, message: '密码为3到15个字符', trigger: 'blur' },
+  ],
 
   // username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 10, message: '账号为3到10个字符', trigger: 'blur' },],
-  
+
   // pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 10, message: '密码为3到10个字符', trigger: 'blur' },],
-
 });
-
 
 // 点击登录
 const submitForm = async (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  await formEl.validate(async(valid, fields) => {
+  if (!formEl) return;
+  await formEl.validate(async (valid, fields) => {
     if (valid) {
       // console.log('submit!')
-      const res = await Loginteach(loginData.value.username,loginData.value.pass);
-      console.log('登录',res);
-  if (res.errCode === 10000) {
-    ElMessage({
-      message: '登陆成功',
-      type: 'success',
-    });
-    sessionStorage.setItem('token',res.data.token)//存储token
-    sessionStorage.setItem('menu',JSON.stringify(res.data.menu))//存储菜单数据
-    sessionStorage.setItem('model',JSON.stringify(res.data.model))//存储管理员数据
-    sessionStorage.setItem('type',res.data.type)//登录类型
-    router.push('/test')
-  } else {
-    ElMessage.error(res.errMsg);
-  }
+      const res = await Loginteach(
+        loginData.value.username,
+        loginData.value.pass
+      );
+      console.log('登录', res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          message: '登陆成功',
+          type: 'success',
+        });
+        sessionStorage.setItem('token', res.data.token); //存储token
+        sessionStorage.setItem('menu', JSON.stringify(res.data.menu)); //存储菜单数据
+        sessionStorage.setItem('model', JSON.stringify(res.data.model)); //存储管理员数据
+        sessionStorage.setItem('type', res.data.type); //登录类型
+        router.push('/test');
+      } else {
+        ElMessage.error(res.errMsg);
+      }
     } else {
       // console.log('error submit!', fields)
-      ElMessage.error('请正确输入账号密码')
+      ElMessage.error('请正确输入账号密码');
     }
-  })
-}
+  });
+};
 </script>
-
-
 
 <style scoped>
 .boxlogin {
@@ -149,13 +173,17 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 }
 .username1 {
   color: cornflowerblue;
-  font-size: 16px;
 }
 .img {
   margin-top: 50px;
 }
 .images {
   width: 60px;
+}
+.imagess {
+  margin-right: 12px;
+  width: 48px;
+  height: 50px;
 }
 .biao {
   display: flex;
@@ -167,6 +195,15 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 .hw h2 {
   margin-left: 60px;
 }
+.code{
+  width: 30%;
+  height: 30%;
+  margin-top: 30px;
+}
+.wx{
+  margin-top: 50px;
+}
+.wx span{
+  color: #0089ff;
+}
 </style>
-
-
