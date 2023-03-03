@@ -371,13 +371,13 @@ const Public = (val: any) => {
     .catch(() => {
       if (val.state == 1) {
         ElMessage({
-          type: 'success',
+          type: 'error',
           message: '发布失败！',
         });
       } else {
         ElMessage({
-          type: 'success',
-          message: '取消发布成功！',
+          type: 'info',
+          message: '已取消！',
         });
       }
     });
