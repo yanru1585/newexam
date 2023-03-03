@@ -209,7 +209,7 @@ const checkPhone = (rule:any, value:any, callback:any) => {
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入名字', trigger: 'blur' },
-    { min: 4, max: 8, message: 'Length should be 4 to 8', trigger: 'blur' },
+    { min: 4, max: 8, message: '长度在4-8个字符之间', trigger: 'blur' },
   ],
   photo:[
     { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -221,7 +221,7 @@ const rules = reactive<FormRules>({
   // ],
   pass:[
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 12, message: 'Length should be 6 to 12', trigger: 'blur' },
+    { min: 6, max: 12, message: '长度在6-12个字符之间', trigger: 'blur' },
   ]
 })
 //添加
