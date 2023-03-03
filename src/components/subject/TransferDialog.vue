@@ -13,15 +13,13 @@
             v-model="seleValue"
             class="m-2"
             placeholder="请选择"
-            @change="selectChang"
-            
+            @change="selectChang"  
           >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.name"
-              :value="item.id"
-             
+              :value="item.id" 
             />
             <!--  -->
           </el-select>
