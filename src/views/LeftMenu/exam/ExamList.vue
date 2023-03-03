@@ -100,7 +100,7 @@ const reser=()=>{
 }
 // 查看
 const see=(row:any)=>{
-  // console.log(row);
+  console.log(row);
   router.push({path:"/Examsee",query:{id:row.id,title:row.title}})
 }
 onMounted(() => {
