@@ -17,7 +17,7 @@
             <el-radio label="问答题">问答题</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="题干" >
+        <el-form-item label="题干" prop="title">
           <!-- 富文本编辑器 -->
           <div style="border: 1px solid #ccc">
             <Toolbar
@@ -39,8 +39,8 @@
           <div class="option">
             <div class="item" v-for="(item, index) in addForm.answers" :key="index">
               <span>{{ item.answerno }}:</span>
-              <el-input  v-model="item.content" type="textarea"  size="small" />
-              <el-icon size="26px" @click="dele"><CircleClose /></el-icon>
+              <el-input  v-model="item.content" type="textarea"  size="small" class="put" />
+              <el-icon size="20px" @click="dele"><CircleClose /></el-icon>
             </div>
           </div>
           <el-icon class="add" @click="add"><CirclePlus /></el-icon>
@@ -177,11 +177,8 @@ const handleCreated = (editor: any) => {
 //验证
 const rules = reactive<FormRules>({
   scores: [
-  {
-      required: true,
-      message: '请输入分值',
-      trigger: 'blur',
-    },
+  { required: true, message: "分值为数字", trigger: "blur" },
+ { pattern: /^[0-9]*.?[0-9]{1,2}?$/ , message: '分值为数字', trigger: "blur"}
   ],
 
 })
@@ -210,17 +207,27 @@ const cancelForm=()=>{
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
+    console.log(addForm.value.title );
+    
     if (valid) {
+      if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
+        return ElMessage.error('请输入题目内容')
+      }
       // console.log('submit!')
       if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
-        addForm.value.answers.forEach(item=>{
-          if(!item.content){
-            ElMessage.error('选项内容必填')
-            return false
-          }
-        })
-        
+       let arr= addForm.value.answers.filter(item=>{
+        if(!item.content){
+          return item
+        }
+       })
+       if(arr.length!==0){
+        ElMessage.error('请输入选项内容')
+        return false
+       }
+        // console.log(444,arr)
       }
+      console.log(2222);
+      
        if(addForm.value.type==='单选题'){
         if(!addForm.value.answer){
             ElMessage.error('正确答案必填')
@@ -237,8 +244,10 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         if(!addForm.value.judge){
             ElMessage.error('正确答案必填')
             return false
-          }
+        }
       }
+      console.log(222222222);
+      
       emit('drawerEmit',{...addForm.value})
       emit('showEmit',false)
       // drawer.value=false
@@ -278,14 +287,16 @@ watch(
   margin-top: 10px;
   span {
     color: rgb(97, 97, 97);
-    font-size: 20px;
+    // font-size: 20px;
     display: block;
     width: 20px;
+    line-height:32px;
     text-align: center;
-    margin: 0px 10px;
+    margin: 0px 5px;
+    font-size: var(--font-size);
   }
   .el-icon {
-    margin-top: 15px;
+    margin-top: 10px;
     color: rgb(249, 115, 115);
     margin-left: 10px;
   }
@@ -294,5 +305,13 @@ watch(
   font-size: 30px;
   color: #48a2ff;
   margin: 20px 0px 0px 30px;
+}
+/deep/.el-textarea__inner{
+  // width: 400px;
+  // height: 34px;
+  padding: 0px 0px;
+}
+.el-form-item{
+  font-size: 14px;
 }
 </style>

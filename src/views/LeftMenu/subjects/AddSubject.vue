@@ -3,14 +3,17 @@
     <div class="header">
       <h3>创建试卷</h3>
     </div>
-    <el-form :model="addFrom">
+    <el-form :model="addFrom"
+    ref="ruleFormRef"
+    :rules="rules"
+    >
       <el-form-item>
         <div class="stepe">
           <span>1</span>
           <span>基本信息</span>
         </div>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="title" class="inputBox">
         <div class="itemInput">
           <span>考试名称：</span>
           <el-input v-model="addFrom.title" clearable />
@@ -22,7 +25,7 @@
           <span>内容设置</span>
         </div>
       </el-form-item>
-      <el-form-item>
+      <el-form-item >
         <!-- 试卷内容考试列表 -->
         <div class="content">
           <div class="titBox">
@@ -43,11 +46,11 @@
 
           <div class="list">
             <div class="top">
-              <h4>考试列表</h4>
+              <h4>试题列表</h4>
               <div class="right">
                 <span style="margin: 0px 20px">总分:{{ scores }}</span>
                 <span>已添加{{ addFrom.questions.length }}题</span>
-                <el-button>清空</el-button>
+                <el-button @click="empty">清空</el-button>
               </div>
             </div>
             <!-- 添加题目展示 -->
@@ -118,9 +121,10 @@
         <div class="bank">
           <span>试题存入题库 :</span>
           <el-select
-            v-model="selectValue"
-            class="m-2"
+            v-model="addFrom.databaseid"
             placeholder="请选择题库"
+            class="m-2"
+          
           >
             <el-option
               v-for="item in baseList"
@@ -132,13 +136,13 @@
           <el-button @click="establish">+创建试题库</el-button>
         </div>
       </el-form-item>
-      <el-form-item>
+      <el-form-item >
         <div class="stepe">
           <span>4</span>
           <span>教师范围</span>
         </div>
       </el-form-item>
-      <el-form-item>
+      <el-form-item >
         <div class="itemInput">
           <span>可见老师：</span>
           <el-badge :value="addFrom.limits.length" class="item" type="primary">
@@ -148,7 +152,7 @@
       </el-form-item>
       <el-form-item>
         <div class="footer">
-          <el-button type="primary" @click="submit">提交</el-button>
+          <el-button type="primary" @click="submitForm(ruleFormRef)">提交</el-button>
           <el-button>取消</el-button>
         </div>
       </el-form-item>
@@ -185,6 +189,8 @@ import { reactive, toRefs, onMounted, computed,watch,toRaw,ref } from 'vue';
 import { useRouter,useRoute } from 'vue-router';
 import { databaseList,AddSubject,oneSubject } from '../../../api/subjects';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus'
+const ruleFormRef = ref<FormInstance>()
 const route=useRoute()
 
 // console.log('添加试卷接收id',route.query.id);
@@ -195,8 +201,6 @@ const teacherDialog=()=>{//可见老师
   teacherDialogisShow.value=true
   title.value='可见老师'
 }
-
-
 
 const router=useRouter()
 interface Ishow{
@@ -222,7 +226,7 @@ interface Iadd {
   answershow:number;
   aorder:number;
   begintime:string;
-  databaseid:number;
+  databaseid:string;
   endtime:string;
   id:number;
   info:string;
@@ -255,7 +259,7 @@ const data: Idata = reactive({
     answershow: 1,
     aorder: 0,
     begintime: "",
-    databaseid: 20,
+    databaseid: '',
     endtime:"",
     id: 0,
     info: "",
@@ -282,6 +286,20 @@ const data: Idata = reactive({
   databaseData:{},//题库
 });
 const { addFrom, baseList,itemType,questionsType,selectValue,compileData,databaseData } = toRefs(data);
+// 表单验证
+const rules = reactive<FormRules>({
+  title: [
+    { required: true, message: '请输入考试名称', trigger: 'blur' },
+
+    // number: [
+//  { required: true, message: "数字", trigger: "blur" },
+//  { pattern: /^[0-9]*.?[0-9]{1,2}?$/ , message: '金额为数字', trigger: "blur"},
+
+// ]
+
+  ]
+})
+
 // 点击添加题目
 const addSubject = () => {
   drawerShow.value = true;
@@ -364,7 +382,7 @@ const subjectEmit=(obj: any)=>{
 const transferEmit = (val: any) => {
   console.log('接收穿梭框数据', val);
   if(val){
-    val.arr.forEach((item: any)=>{
+    val.arr.forEach((item: any)=>{ 
       addFrom.value.limits.push({id:item})
     })
   }
@@ -401,10 +419,31 @@ const itemDel=(index: any)=>{
     })
 }
 
+// // 点击提交
+// const submit=async ()=>{
+//   // console.log('点击提交',addFrom.value);
+
+  
+  
+// }
 // 点击提交
-const submit=async ()=>{
-  // console.log('点击提交',addFrom.value);
-  const res:any=await AddSubject(addFrom.value).catch(()=>{})
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async(valid, fields) => {
+    if (valid) {
+      if(addFrom.value.questions.length===0){
+        ElMessage.error('请添加题目')
+        return false
+      }
+      if(!addFrom.value.databaseid){
+        ElMessage.error('请选择题库')
+        return false
+      }
+      if(addFrom.value.limits.length===0){
+        ElMessage.error('请选择可见老师')
+        return false
+      }
+      const res:any=await AddSubject(addFrom.value).catch(()=>{})
   // console.log('提交',res);
   if(res.errCode!==10000){
     ElMessage.error(res.errMsg)
@@ -412,8 +451,11 @@ const submit=async ()=>{
   }
   ElMessage.success('添加成功')
   router.push('/subjects')
-  
-  
+      console.log('submit!')
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
 // 点击批量导入
 const bulkImport=()=>{
@@ -456,6 +498,30 @@ const questionList=(data: any)=>{
 
 
 }
+// 点击清空题目列表
+const empty=()=>{
+  ElMessageBox.confirm(
+    '是否确认清空试题列表?',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      addFrom.value.questions=[]
+      ElMessage({
+        type: 'success',
+        message: '已清空数据列表',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消',
+      })
+    })
+}
 </script>
 
 <style lang="less" scoped>
@@ -493,12 +559,18 @@ h3 {
   .el-input {
     width: 300px;
   }
+  /deep/.el-form-item__content{
+    display: flex;
+  }
   .itemInput {
     width: 60%;
     margin-left: 10%;
     span:nth-of-type(1) {
       margin: 0px 10px;
     }
+
+   
+
   }
   .content {
     width: 100%;
@@ -642,5 +714,9 @@ h3 {
   background-color: #f5faff;
   margin: 10px;
   padding-left: 10px;
+}
+// 验证信息提示
+/deep/.el-form-item__error{
+  margin-left: 20%;
 }
 </style>

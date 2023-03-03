@@ -106,6 +106,7 @@
 </template>
 
 <script lang="ts" setup>
+import {Downblob} from '../../../utils/down'
 // import FileSaver from 'file-saver';
 // import XLSX from 'xlsx';
 // import {exportExcel} from '../../../utils/exportExcel'
@@ -119,7 +120,7 @@ import {
   databasequestionList,
   databasequestionDelete,
   databasequestionDeleteall,
-  testExportExcel
+  dataExportExcel
 } from '../../../api/database';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -154,35 +155,7 @@ const addTest = () => {
   isAddtestDrawer.value = true;
 };
 
-const exportExcel = async() => {
-  console.log(1234544446);
-  let res = await testExportExcel(3630)
-  console.log('根据id下载单个考试试题列表',res);
-  
 
-  //因为此处有分页，每页展示14条数据，在方法调用的开始，展示所有数据，导出之后再把条数更改过来
-  // data.psize = state.tableData.length;
-  // setTimeout(() => {
-  //   var wb = XLSX.utils.table_to_book(document.querySelector('.el-table'));
-  //   /* get binary string as output */
-  //   var wbout = XLSX.write(wb, {
-  //     bookType: 'xlsx',
-  //     bookSST: true,
-  //     type: 'array',
-  //   });
-  //   try {
-  //     FileSaver.saveAs(
-  //       new Blob([wbout], { type: 'application/octet-stream' }),
-  //       '汇总统计.xlsx'
-  //     );
-  //   } catch (e) {
-  //     if (typeof console !== 'undefined') console.log(e, wbout);
-  //   }
-  //   //在此处更改回来
-  //   data.psize = 10;
-  //   return wbout;
-  // }, 100);
-};
 
 // 分页
 const currentPage4 = ref(1);
@@ -227,7 +200,7 @@ const state: any = reactive({
   compileData: {},
   getEestDetail:{}
 });
-const { key, type, admin } = toRefs(data);
+const { key, type, admin ,databaseid} = toRefs(data);
 const { obj, tableData, total, compileData,getEestDetail } = toRefs(state);
 
 onMounted(() => {
@@ -318,6 +291,13 @@ const delAll = async () => {
         message: '取消删除',
       });
     });
+};
+// 点击导出excel
+const exportExcel = async() => {
+  console.log(1234544446);
+  let res = await dataExportExcel(databaseid.value).catch(()=>{})
+  Downblob(res,obj.value.title+'.xlsx')
+
 };
 </script>
 

@@ -7,15 +7,16 @@
       <p class="information">基本信息</p>
     </div>
 
-    <el-form :model="addFrom" label-width="120px" >
+    <el-form :model="addFrom" label-width="120px" ref="ruleFormRef" :rules="rules">
 
       <el-form-item
         label="考试名称:"
         style="margin-left: 60px; padding: 10px 0px"
+        prop="title"
       >
         <el-input v-model="addFrom.title" />
       </el-form-item>
-      <el-form-item label="考试说明:" style="margin-left: 60px">
+      <el-form-item label="考试说明:" style="margin-left: 60px" prop="info">
         <el-input v-model="addFrom.info" type="textarea" style="width: 300px" />
       </el-form-item>
       <!-- </el-form> -->
@@ -47,9 +48,9 @@
             <div class="godTop">
               <h3 class="lefts">试题列表</h3>
               <div class="god">
-                <span>总分：{{ addFrom.scores }}</span>
+                <span>总分：{{ allScores }}</span>
                 <span>已添加：{{addFrom.questions.length}}题</span>
-                <button type="button" @click="empty"><span>清空</span></button>
+                <el-button  style="margin: 10px" @click="empty">清空</el-button>
               </div>
             </div>
           <!-- 添加题目展示 -->
@@ -67,15 +68,15 @@
                   <el-input v-model="item.scores"></el-input>
                 </div>
                 <div class="tit_right">
-                  <el-icon size="25px" @click="compile(item, index)"
+                  <el-icon size="20px" @click="compile(item, index)"
                     ><EditPen
                   /></el-icon>
-                  <el-icon size="25px" @click="itemDel(index)"
+                  <el-icon size="20px" @click="itemDel(index)"
                     ><Delete
                   /></el-icon>
                 </div>
               </div>
-              <p v-html="item.title" style="margin-left: 20px"></p>
+              <p v-html="item.title" style="margin-left: 20px;line-height: 30px;"></p>
               <el-radio-group
                 v-model="item.answer"
                 v-if="item.type === '单选题'"
@@ -126,9 +127,9 @@
       </div>
       <!-- 题库 -->
       <div class="subict">
-        <el-form-item label="试题存入题库:">
+        <el-form-item label="试题存入题库:"  prop="databaseid">
           <el-select
-            v-model="form.region"
+            v-model="addFrom.databaseid"
             placeholder="请选择题库"
             style="margin-left: 10px"
           >
@@ -147,29 +148,23 @@
         <p class="first">3</p>
         <p class="information">考试设置</p>
       </div>
-      <div class="lable">
-        <div class="lefts">通过分数:</div>
-        <div class="fen">
-          <input type="number" v-model="addFrom.pastscores" placeholder="60" />
-        </div>
-      </div>
-      <div class="examss">
-        <div class="hour">考试时长:</div>
+      <el-form-item class="lable"  label="通过分数:"  prop="pastscores">
+        <input type="number" style=" border: 1px solid #dcdfe6;width: 70px; color: #606266;height: 30px; text-align: center;border-radius: 4px; " v-model="addFrom.pastscores" placeholder="60" />
+      </el-form-item>
+      <el-form-item class="examss"  label="考试时长:"  prop="isshow">
         <el-radio-group
           v-model="addFrom.isshow"
-          style="margin-top: 5px; margin-left: 10px"
+          style=" margin-left: 10px"
         >
           <el-radio :label='0'>不限时长</el-radio>
           <el-radio :label='1'>限时时长</el-radio>
         </el-radio-group>
         <div class="minuteBox" v-if="addFrom.isshow==1">
           <input type="text" v-model="addFrom.limittime"   />
-          <span>分钟</span>
+          <span class="bu" style="color: #606266;">分钟</span>
         </div>
-      </div>
-
-      <div class="examss">
-        <div class="hour">开放时间:</div>
+      </el-form-item>
+      <el-form-item class="examss"  label="开放时间:">
         <div class="block">
           <el-date-picker
             v-model="time"
@@ -184,66 +179,57 @@
           />
         </div>
         <span class="bu">不填表示永久</span>
-      </div>
-      <div class="examss">
-        <div class="hour">答案解析:</div>
+      </el-form-item>
+      <el-form-item class="examss"  label="答案解析:"  prop="answershow">
         <el-radio-group
           v-model="addFrom.answershow"
-          style="margin-top: 5px; margin-left: 10px"
-        >
+          style=" margin-left: 10px">
           <el-radio :label='1'>交卷后显示</el-radio>
           <el-radio :label='2'>不允许查看</el-radio>
           <el-radio :label='3'>仅可查看对错</el-radio>
           <el-radio :label='4'>仅查看对错</el-radio>
           <el-radio :label='5'>考试结束后查看</el-radio>
         </el-radio-group>
-      </div>
-      <div class="examss">
-        <div class="hour">防作弊:</div>
-        <el-checkbox-group
-          v-model="aorderCheck"
-          style="margin-top: 10px; margin-left: 10px"
-        >
+      </el-form-item>
+
+      <el-form-item class="examss"  label="防作弊:" >
+        <el-checkbox-group v-model="aorderCheck" style=" margin-left: 10px">
           <el-checkbox :label='0' >试题顺序打乱</el-checkbox>
           <el-checkbox :label='1' >选项顺序打乱(单选题,多选题,判断题)</el-checkbox>
         </el-checkbox-group>
-      </div>
+      </el-form-item>
       <div class="box">
         <p class="first">4</p>
         <p class="information">教师范围</p>
       </div>
-      <div class="examss">
-        <div class="hour">可见老师:</div>
-
-        <el-badge :value="addFrom.limits.length" class="item" type="primary">
+        <el-form-item class="examss"  label="可见老师:"  prop="limits">
+          <el-badge :value="addFrom.limits.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="teacherDialog">+选择</el-button>
         </el-badge>
-      </div>
+      </el-form-item>
       <div class="box">
         <p class="first">5</p>
         <p class="information">考试学生</p>
       </div>
-      <div class="examss">
-        <div class="hour">考试范围:</div>
-
+      <el-form-item class="examss"  label="考生范围:"  prop="students">
         <el-badge :value="addFrom.students.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="studentDialog">+选择</el-button>
         </el-badge>
-      </div>
+      </el-form-item>
       <div class="box">
         <p class="first">6</p>
         <p class="information">协同设置</p>
       </div>
-      <div class="examss">
-        <div class="hour">阅卷老师:</div>
+      <el-form-item class="examss"  label="阅卷老师:"  prop="markteachers">
         <el-badge :value="addFrom.markteachers.length" class="item" type="primary">
           <el-button style="margin-left: 10px; margin-top: 10px" @click="readTeacherDialog">+选择</el-button>
         </el-badge>
-      </div>
+      </el-form-item>
+      
       <div class="buoot">
-        <el-button @click="getPublish">发布</el-button>
-        <el-button type="primary" @click="keepUnpublished">保存(不发布)</el-button>
-        <el-button>取消</el-button>
+        <el-button @click="getPublish(ruleFormRef)">发布</el-button>
+        <el-button type="primary" @click="keepUnpublished(ruleFormRef)">保存(不发布)</el-button>
+        <el-button @click="resetForm(ruleFormRef)">取消</el-button>
       </div>
     </el-form>
      <!-- 添加题目 -->
@@ -278,10 +264,12 @@ import DatabaseTab from '../../../components/database/DatabaseTabDialog.vue'//�
 import Database from '../../../components/subject/SubDatabaseDialog.vue'//创建题库
 import Import from '../../../components/subject/ImporDialog.vue'//批量导入
 import Drawer from '../../../components/subject/SubjectDrawer.vue';
-import { ref, toRefs, reactive,watch,onMounted } from 'vue';
+import { ref, toRefs, reactive,watch,onMounted,computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { databaseList } from '../../../api/subjects';
 import { useRouter } from 'vue-router';
+import type { FormInstance, FormRules } from 'element-plus'
+const ruleFormRef = ref<FormInstance>()
 const router =useRouter()
 interface Ishow {
   drawerShow: boolean;
@@ -294,10 +282,10 @@ interface Ishow {
 }
 interface Iadd {
   admin: string;
-  answershow: number;
+  answershow: string;
   aorder: number;
   begintime: string;
-  databaseid: number;
+  databaseid: string;
   endtime: string;
   id: number;
   info: string;
@@ -326,10 +314,10 @@ const testData: ItestData = reactive({
   // 添加数据
   addFrom: {
     admin: 'ldq',
-    answershow: 0,//答案可见
+    answershow: '',//答案可见
     aorder: aorderCheck.value[0],//防作弊
     begintime: '',//开始时间
-    databaseid: 20,//题库id
+    databaseid: '',//题库id
     endtime: '',//结束时间
     id: 0,
     info: '',//考试介绍
@@ -374,7 +362,35 @@ const form = reactive({
   resource: '',
   desc: '',
 });
-
+const rules = reactive<FormRules>({
+  title: [
+    { required: true, message: '请输入考试名称', trigger: 'blur' },
+  ],
+  info:[
+  { required: true, message: '请输入考试说明', trigger: 'blur' },
+  ],
+  databaseid:[
+  {required: true,message: '请选择试题库',trigger: 'change',}
+  ],
+  pastscores:[
+  { required: true, message: '通过分数必填', trigger: 'blur' },
+  ],
+  isshow:[
+  {required: true,message: '请选择考试时长',trigger: 'change',}
+  ],
+  limits:[
+  {required: true,message: '请选择可见老师',trigger: 'change',}
+  ],
+  students:[
+  {required: true,message: '请选择考生范围',trigger: 'change',}
+  ],
+  markteachers:[
+  {required: true,message: '请选择阅卷老师',trigger: 'change',}
+  ],
+  answershow:[
+  {required: true,message: '答案解析必选',trigger: 'change',}
+  ]
+})
 
 // const isShowDrawer=ref(false)
 
@@ -416,7 +432,12 @@ const transferEmit=(data: any)=>{
     })
   }
 }
-
+// 计算总分
+const allScores = computed(() => {
+  return addFrom.value.questions.reduce((pive, next) => {
+    return pive + parseInt(next.scores);
+  }, 0);
+});
 // 随机排序
 // const getShuffle=(arr: any)=>{
 //   let temp=[]
@@ -609,8 +630,25 @@ onMounted(()=>{
   getDatabaseList()
 })
 // 点击发布
-const getIssue=async()=>{  
-  console.log('发布',addFrom.value);
+// const getIssue=async()=>{  
+//   console.log('发布',addFrom.value);
+//   const res:any=await AddText(addFrom.value).catch(()=>{})
+//   console.log('点击发布',res);
+//   if(res.errCode!==10000){
+//     ElMessage.error(res.errMsg)
+//     return false
+//   }
+//   router.push('/test')
+// }
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate(async (valid, fields) => {
+    if (valid) {
+      if(addFrom.value.questions.length===0){
+        ElMessage.error('请添加考试题目')
+        return false
+      }
+
   const res:any=await AddText(addFrom.value).catch(()=>{})
   console.log('点击发布',res);
   if(res.errCode!==10000){
@@ -618,26 +656,76 @@ const getIssue=async()=>{
     return false
   }
   router.push('/test')
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
 }
+
+
 // 点击发布
-const getPublish=()=>{
+const getPublish=(ruleFormRef: any)=>{
   addFrom.value.state=1
-  getIssue() 
+  // getIssue() 
+  submitForm(ruleFormRef)
 }
 // 点击保存未发布
-const keepUnpublished=()=>{
+const keepUnpublished=(ruleFormRef: any)=>{
   addFrom.value.state=0
-  getIssue()
+  // getIssue()
+  submitForm(ruleFormRef)
 
 }
 // 选择已有试卷导入
 const checkSubject=()=>{
   subjectListShow.value=true
 }
-// 点击清空
+// 点击清空题目列表
 const empty=()=>{
+  ElMessageBox.confirm(
+    '是否确认清空试题列表?',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      addFrom.value.questions=[]
+      ElMessage({
+        type: 'success',
+        message: '已清空数据列表',
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消',
+      })
+    })
+}
+// 点击取消
+const resetForm = (formEl: FormInstance | undefined) => {
+  ElMessageBox.confirm('确定要取消吗？', {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(() => {
+      if (!formEl) return
+  formEl.resetFields()
   addFrom.value.questions=[]
-
+  time.value=''
+  
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消',
+      });
+    });
+   
+  
 }
 </script>
 
@@ -722,10 +810,7 @@ const empty=()=>{
 .god {
   padding: 15px 15px;
 }
-.god span {
-  color: var(--el-text-color-regular);
-  padding: 0px 10px;
-}
+
 .subict {
   margin-top: 10px;
   margin-left: 60px;
@@ -757,7 +842,8 @@ const empty=()=>{
   display: flex;
   margin-left: 90px;
   margin-top: 10px;
-  padding: 10px 0px;
+  // padding: 10px 0px;
+ 
 }
 .hour {
   margin-top: 10px;
@@ -766,7 +852,6 @@ const empty=()=>{
 }
 .block {
   margin-left: 10px;
-  margin-top: 7px;
 }
 .bu {
   font-size: 14px;
@@ -805,6 +890,7 @@ const empty=()=>{
     margin: 20px 0px;
   }
   .item_tit {
+    margin: 3px 0px;
     display: flex;
     justify-content: space-between;
 
@@ -867,7 +953,7 @@ const empty=()=>{
 .minuteBox{
   width: 100px;
   margin-left: 20px;
-  margin-top: 10px;
+  // margin-top: 10px;
   input{
     color: #606266;
     width: 40px;

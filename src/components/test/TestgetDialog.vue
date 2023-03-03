@@ -106,7 +106,7 @@ import {
 import { ElMessageBox } from 'element-plus';
 import { testGet } from '../../api/admin';
 import  {oneSubject}  from '../../api/subjects';
-import {testExportExcel} from '../../api/database'
+import {testExportExcel,subjectsExportExcel} from '../../api/database'
 import {Downblob} from '../../utils/down'
 
 const dialogVisible = ref(true);
@@ -168,10 +168,19 @@ const getTestInfo = async () => {
 
 // 导出excel
 const exportExcel=async()=>{
+  console.log('导出类型',props.getData.type);
+  if(props.getData.type=='考试'){
   let res:any = await testExportExcel(data.exportId)
   console.log(res);
-  
   Downblob(res,data.exportName)
+  return false
+  }else if(props.getData.type==='试卷'){
+    let res:any=await subjectsExportExcel(data.exportId)
+    Downblob(res,data.exportName)
+    return false
+  }
+  
+  
 }
 
 const emits = defineEmits(['isshowDialog']);
