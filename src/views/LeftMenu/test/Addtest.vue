@@ -50,7 +50,7 @@
               <div class="god">
                 <span>总分：{{ allScores }}</span>
                 <span>已添加：{{addFrom.questions.length}}题</span>
-                <button type="button" @click="empty"><span>清空</span></button>
+                <el-button  style="margin: 10px" @click="empty">清空</el-button>
               </div>
             </div>
           <!-- 添加题目展示 -->
@@ -68,10 +68,10 @@
                   <el-input v-model="item.scores"></el-input>
                 </div>
                 <div class="tit_right">
-                  <el-icon size="25px" @click="compile(item, index)"
+                  <el-icon size="20px" @click="compile(item, index)"
                     ><EditPen
                   /></el-icon>
-                  <el-icon size="25px" @click="itemDel(index)"
+                  <el-icon size="20px" @click="itemDel(index)"
                     ><Delete
                   /></el-icon>
                 </div>
@@ -810,10 +810,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 .god {
   padding: 15px 15px;
 }
-.god span {
-  color: var(--el-text-color-regular);
-  padding: 0px 10px;
-}
+
 .subict {
   margin-top: 10px;
   margin-left: 60px;
@@ -893,6 +890,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     margin: 20px 0px;
   }
   .item_tit {
+    margin: 3px 0px;
     display: flex;
     justify-content: space-between;
 

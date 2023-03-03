@@ -39,8 +39,8 @@
           <div class="option">
             <div class="item" v-for="(item, index) in addForm.answers" :key="index">
               <span>{{ item.answerno }}:</span>
-              <el-input  v-model="item.content" type="textarea"  size="small" />
-              <el-icon size="26px" @click="dele"><CircleClose /></el-icon>
+              <el-input  v-model="item.content" type="textarea"  size="small" class="put" />
+              <el-icon size="20px" @click="dele"><CircleClose /></el-icon>
             </div>
           </div>
           <el-icon class="add" @click="add"><CirclePlus /></el-icon>
@@ -287,14 +287,16 @@ watch(
   margin-top: 10px;
   span {
     color: rgb(97, 97, 97);
-    font-size: 20px;
+    // font-size: 20px;
     display: block;
     width: 20px;
+    line-height:32px;
     text-align: center;
-    margin: 0px 10px;
+    margin: 0px 5px;
+    font-size: var(--font-size);
   }
   .el-icon {
-    margin-top: 15px;
+    margin-top: 10px;
     color: rgb(249, 115, 115);
     margin-left: 10px;
   }
@@ -303,5 +305,13 @@ watch(
   font-size: 30px;
   color: #48a2ff;
   margin: 20px 0px 0px 30px;
+}
+/deep/.el-textarea__inner{
+  // width: 400px;
+  // height: 34px;
+  padding: 0px 0px;
+}
+.el-form-item{
+  font-size: 14px;
 }
 </style>

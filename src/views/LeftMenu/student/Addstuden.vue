@@ -21,7 +21,7 @@
     </el-form-item>
     
     <el-form-item label="部门" prop="department">
-     <el-select v-model="AddForm.depid" clearable placeholder="请选择" @change="selectChange">
+     <el-select v-model="AddForm.depname" clearable placeholder="请选择" @change="selectChange">
         <el-option
           v-for="item in DepartmentList"
           :key="item.id"
@@ -100,7 +100,7 @@ interface Iadd{//添加数据接口
   username:string,
   photo:string,
   pass:string,
-  depid:string,
+  depname:string,
 }
 interface Idatss{
   AddForm:Iadd
@@ -114,7 +114,7 @@ const datss:Idatss = reactive({//添加数据
     photo:'',
     username:"",
     pass:'',
-    depid:'',
+    depname:'',
     }
 })
 const {AddForm} =toRefs(datss)

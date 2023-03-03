@@ -382,7 +382,7 @@ const subjectEmit=(obj: any)=>{
 const transferEmit = (val: any) => {
   console.log('接收穿梭框数据', val);
   if(val){
-    val.arr.forEach((item: any)=>{
+    val.arr.forEach((item: any)=>{ 
       addFrom.value.limits.push({id:item})
     })
   }

@@ -15,6 +15,9 @@ export const list=(params:any):Promise<AxiosResponse<any>>=>{
 export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
+export const deles=(id:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/delete',{id})
+}//考试删除
 
 export const AddText=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/test/add',params)
@@ -141,10 +144,18 @@ export const teacherUpdateState=(params:any):Promise<AxiosResponse<any>>=>{
 }
 
 // 获取考试阅卷老师
+
 export const testGetmarkteachers=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/test/getmarkteachers',params)
 }
+
+// 师资重置密码
+export const teacher=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/teacher/add',params) 
+}
+
 // 获取考试学生列表
 export const testStudent=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/test',params)
 }
+
