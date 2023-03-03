@@ -67,7 +67,6 @@ import { ref, reactive, onMounted, toRefs, toRaw, watch } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { menulsit, roleadd, rolelist } from '../../../api/admin';
-import { concat } from 'lodash';
 
 const props = defineProps({
   getList: {
@@ -214,6 +213,8 @@ const confirm = async (formEl: FormInstance | undefined) => {
           let arrid = item.checkedCities.map((element: any) => ({
             id: element,
           }));
+          console.log(addData.addList.menus);
+          
           addData.addList.menus = addData.addList.menus.concat(arrid);
           console.log(addData.addList.menus);
         }

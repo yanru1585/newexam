@@ -171,6 +171,9 @@ const testGet=(item:any)=>{
   if(item.result=='未考试'){
     router.push({path:"/examprepare",query:{id:item.id}});
   }
+  if(item.result!=='未考试'){
+    router.push({path:"/examresults",query:{id:item.id}});
+  }
   
   console.log('aaaaaa');
   

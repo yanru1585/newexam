@@ -141,3 +141,18 @@ export const teacherUpdateState=(params:any):Promise<AxiosResponse<any>>=>{
 export const testGetmarkteachers=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/test/getmarkteachers',params)
 }
+
+// 获取学生考试结果
+export const testGetForResult=(testid:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/getForResult',{testid})
+}
+
+// 获取考试题目（开始考试）
+export const testStart=(testid:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/start',{testid})
+}
+
+// 学生答题
+export const studentanswerAdd=(params:any):Promise<AxiosResponse<any>>=>{
+  return post('/studentanswer/add',params)
+}

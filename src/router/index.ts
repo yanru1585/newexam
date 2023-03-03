@@ -113,10 +113,28 @@ const routes: any = [
     ],
   },
   {
-    path: '/examprepare', //准备考试页面
+    path: '/examprepare', //准备考试页面(未参加)
     name: 'Examprepare',
     component: () =>
-      import('../views/LeftMenu/stutest/ExamprepareView.vue'),
+      import('../views/LeftMenu/stutest/noJoin/ExamprepareView.vue'),
+  },
+  {
+    path: '/examresults', //未通过
+    name: 'Examresults',
+    component: () =>
+      import('../views/LeftMenu/stutest/noPass/ExamresultsView.vue'),
+  },
+  {
+    path: '/stuexam', //未通过
+    name: 'Stuexam',
+    component: () =>
+      import('../views/LeftMenu/stutest/noJoin/StuExam.vue'),
+  },
+  {
+    path: '/stuexamwrong', //未通过
+    name: 'Stuexamwrong',
+    component: () =>
+      import('../views/LeftMenu/stutest/StuexamWrong.vue'),
   },
 ];
 
