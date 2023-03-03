@@ -22,10 +22,17 @@
         </el-select>
       </el-form-item>
       <el-form-item label="部门:">
-        <el-cascader :options="data.options" :props="props1" clearable />
+        <el-cascader :options="data.options" :props="props1" @change="cascaderChange" clearable />
       </el-form-item>
       <el-form-item label="班级:">
-        <el-select placeholder="请选择" disabled> </el-select>
+        <el-select placeholder="请选择" v-model="data.classid" :disabled="datsa.listdata.length === 0 ? true:false">
+          <el-option
+            v-for="item in datsa.listdata"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="reser">查询</el-button>
@@ -38,7 +45,7 @@
       <el-table-column prop="readtime" label="考试时间" />
       <el-table-column prop="state" label="状态">
         <template #default="scope">
-          <span class="state">{{ scope.row.state }}</span>
+          <span :style="scope.row.state==='未阅卷' ? 'color:red' : '' ">{{ scope.row.state }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -56,9 +63,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
-import { ISee, IClasses } from '../../../api/admin';
+import { ISee, IClasses ,classeslist} from '../../../api/admin';
 import drawerr from './Examdrawer.vue';
 
 import { ArrowLeft } from '@element-plus/icons-vue';
@@ -76,6 +83,7 @@ interface Ise {
   key: string;
   list: Array<any>;
   options: Array<any>;
+    classid:string
 }
 const data: Ise = reactive({
   page: 1,
@@ -84,6 +92,7 @@ const data: Ise = reactive({
   state: '', //状态
   key: '', //value值
   list: [],
+  classid:'',   //班级id
   options: [],
 });
 // 获取列表
@@ -100,7 +109,7 @@ const getSee = async () => {
 };
 // 获取部门下拉框数据
 const props1 = {
-  checkStrictly: true,
+  emitPath:false,
   value: 'id',
   label: 'name',
   children: 'children',
@@ -110,6 +119,23 @@ const getIClasses = async () => {
   console.log(res);
   data.options = res.data.list;
 };
+// 当部门发生变化时
+interface Idata {
+  listdata:Array<any>
+}
+const datsa:Idata=reactive({
+  listdata:[]
+})
+const cascaderChange=async(val:any)=>{
+  console.log('111',val);
+  const res:any = await classeslist({depid:val})
+  console.log(res);
+  if (res.errCode !== 10000 || !res.data.list) {
+    return false;
+  }
+  datsa.listdata = res.data.list
+}
+
 // 返回
 const back = () => {
   router.push('/exam');
@@ -129,17 +155,12 @@ const data1 = reactive({
   },
 });
 const drawer = (row: any) => {
-  // console.log(row);
-
-  // let ids = [row.id,route.query.id]
-  // console.log(ids);
-
+  // console.log(row)
   data1.list.ids = row.id;
   data1.list.name = row.name;
   console.log(data1.list);
   user.value = true;
 };
-
 onMounted(() => {
   getSee();
   getIClasses();
@@ -152,7 +173,7 @@ const father = () => {
 
 <style scoped>
 .top {
-  width: 150px;
+  width: 300px;
   height: 50px;
   display: flex;
   line-height: 50px;

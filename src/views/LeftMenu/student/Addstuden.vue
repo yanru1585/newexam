@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title="Tips"
+    :title="AddForm.id===0?'添加':'修改' "
     width="40%"
   >
   <el-form
@@ -21,7 +21,7 @@
     </el-form-item>
     
     <el-form-item label="部门" prop="department">
-     <el-select v-model="AddForm.depid" clearable placeholder="请选择" @change="selectChange">
+     <el-select v-model="AddForm.depname" clearable placeholder="请选择" @change="selectChange">
         <el-option
           v-for="item in DepartmentList"
           :key="item.id"
@@ -45,11 +45,11 @@
     </el-form-item>
     <el-form-item label="备注" prop="remarks" style="border-bottom: solid 1px #eee;padding: 10px 0px;">
       <el-input v-model="AddForm.remarks" type="textarea" style="width: 300px;"/>
-    </el-form-item>
-    <el-form-item label="账号" prop="username">
+    </el-form-item >
+    <el-form-item label="账号" prop="username" v-if="AddForm.id===0">
       <el-input v-model="AddForm.username" />
-    </el-form-item>
-    <el-form-item label="密码" prop="pass">
+    </el-form-item >
+    <el-form-item label="密码" prop="pass" v-if="AddForm.id===0">
       <el-input v-model="AddForm.pass" />
     </el-form-item>
   </el-form>
@@ -65,7 +65,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted,toRefs,watch } from 'vue'
+import { ref,onMounted,toRefs,watch,defineExpose } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus'
 import { reactive } from 'vue'
@@ -73,9 +73,10 @@ import { departmentList } from '../../../api/department';
 import {classeslist,classesad}from '../../../api/admin'
 import { indexOf } from 'lodash';
 const dialogVisible = ref(false)
-
+const title =ref()
 defineExpose({
-  dialogVisible
+  dialogVisible,
+  title
 })
 //接收数据
 const propss = defineProps({
@@ -99,7 +100,7 @@ interface Iadd{//添加数据接口
   username:string,
   photo:string,
   pass:string,
-  depid:string,
+  depname:string,
 }
 interface Idatss{
   AddForm:Iadd
@@ -113,7 +114,7 @@ const datss:Idatss = reactive({//添加数据
     photo:'',
     username:"",
     pass:'',
-    depid:'',
+    depname:'',
     }
 })
 const {AddForm} =toRefs(datss)
@@ -208,7 +209,7 @@ const checkPhone = (rule:any, value:any, callback:any) => {
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入名字', trigger: 'blur' },
-    { min: 4, max: 8, message: 'Length should be 4 to 8', trigger: 'blur' },
+    { min: 4, max: 8, message: '长度在4-8个字符之间', trigger: 'blur' },
   ],
   photo:[
     { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -220,11 +221,10 @@ const rules = reactive<FormRules>({
   // ],
   pass:[
     { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, max: 12, message: 'Length should be 6 to 12', trigger: 'blur' },
+    { min: 6, max: 12, message: '长度在6-12个字符之间', trigger: 'blur' },
   ]
 })
 //添加
-// 确定
 const confirm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
@@ -233,7 +233,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
       console.log('添加学生', res);
       if (res.errCode !== 10000) {
         ElMessage({
-          message: '失败咯！',
+          message:res.errMsg,
           type: 'error',
         });
         return false;
@@ -245,6 +245,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
       } else {
         ElMessage({
+     
           message: '修改成功！',
           type: 'success',
         });

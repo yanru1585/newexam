@@ -60,3 +60,15 @@ export const databasequestionAddlist = (params: any): Promise<AxiosResponse<any>
 export const testExportExcel = (id: any): Promise<AxiosResponse<any>> => {
   return get('/test/exportExcel', {id},{responseType:'blob'});
 };
+// 根据id下载单个题库试题列表
+export const dataExportExcel = (id: any): Promise<AxiosResponse<any>> => {
+  return get('/databasequestion/exportExcel', {id},{responseType:'blob'});
+};
+// 根据id下载单个试卷试题列表
+export const subjectsExportExcel = (id: any): Promise<AxiosResponse<any>> => {
+  return get('/subjects/exportExcel', {id},{responseType:'blob'});
+};
+// 导出学生成绩列表
+export const studentExportExcel = (testid: any): Promise<AxiosResponse<any>> => {
+  return get('/student/exportExcel', {testid},{responseType:'blob'});
+};

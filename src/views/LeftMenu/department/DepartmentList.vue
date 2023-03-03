@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container>
-      <el-aside width="380px">
+      <el-aside width="380px" >
         <div class="top">
           <p>部门管理</p>
           <el-button
@@ -260,8 +260,11 @@ const del = () => {
 }
 
 .tree {
-  height: 500px;
+  height: 80%;
+  width: 360px;
+
   display: block;
+  position: fixed;
   overflow-y: scroll;
 }
 </style>

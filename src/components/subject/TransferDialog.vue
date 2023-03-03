@@ -3,7 +3,7 @@
     <el-dialog
       v-model="dialogVisible"
       :title="title"
-      width="60%"
+      width="50%"
       :before-close="handleClose"
     >
       <div class="seleBox">
@@ -13,13 +13,13 @@
             v-model="seleValue"
             class="m-2"
             placeholder="请选择"
-            @change="selectChang"
+            @change="selectChang"  
           >
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.name"
-              :value="item.id"
+              :value="item.id" 
             />
             <!--  -->
           </el-select>
@@ -45,6 +45,8 @@
         :data="data"
         :titles="['未选', '全选']"
         :props="props"
+        @left-check-change="leftOptionsChange"
+        @right-check-change="rightOptionsChange"
       />
       <template #footer>
         <span class="dialog-footer">
@@ -108,8 +110,8 @@ const dialogData: Idata = reactive({
   classList: [],
 });
 // 穿梭框数据
-const data = ref();
-const value = ref([]);
+const data:any = ref();
+const value :any= ref([]);
 const { options, seleValue, props, classid, classData, classList } =
   toRefs(dialogData);
 
@@ -128,22 +130,16 @@ const handleClose = (done: () => void) => {
 // 获取部门列表
 const getList = async () => {
   const res: any = await departmentList().catch(() => {});
-  console.log('部门列表', res);
+  // console.log('部门列表', res);
   if (res.errCode !== 10000) {
     return false;
   }
   options.value = res.data.list;
-  console.log(options.value);
+  // console.log(options.value);
 };
 // 下拉框点击事件
 const selectChang = async (val: any) => {
   console.log(val);
-
-  // options.value.forEach(item=>{
-  // if(item.id===val){
-  //   item.children==null?data.value=[]:data.value=[...item.children]
-  // }
-  // })
   if (title.value == '可见老师') {
     const res: any = await teacherlsit({ depid: val }).catch(() => {});
     console.log('可见老师', res);
@@ -152,7 +148,6 @@ const selectChang = async (val: any) => {
     }
     data.value = res.data.list;
   }
-  // testGetmarkteachers
   // 班级
   if (title.value == '学生考试列表') {
     dialogData.classData.depid = val;
@@ -176,6 +171,34 @@ const selectChang = async (val: any) => {
     data.value = result.data.list;
   }
 };
+// 点击左侧穿梭框
+const leftOptionsChange=(key: any)=>{
+  // console.log('左侧穿梭框',key);
+  // console.log('左侧数据11',data.value);
+  key.forEach((item:any)=>{
+    if(value.value.indexOf(item)===-1){
+      value.value.push(item)
+    }
+  }) 
+}
+//点击右侧穿梭框
+
+const rightOptionsChange=(key: any)=>{
+  // console.log('右侧穿梭框',key);
+  // console.log('左侧数据22',data.value);
+  key.forEach((it:any)=>{
+    value.value=value.value.filter((item: any)=>{
+   if(item!==it) {
+    return item
+   }
+      
+  })
+ 
+  })
+  
+
+
+}
 onMounted(() => {
   getList();
 });
@@ -206,5 +229,8 @@ const cancelForm = () => {
 }
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+/deep/.el-transfer__buttons{
+  display: none;
 }
 </style>

@@ -50,6 +50,7 @@
             <p>{{item.pastnum}}人通过</p>
           </div>
         </el-card>
+        
       </el-col>
     </el-row>
   </div>

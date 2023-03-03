@@ -13,36 +13,40 @@
       style="display: flex"
     >
       <el-form-item label="关键字">
-        <el-input v-model="data.params.key" placeholder="考试名称" />
+        <el-input v-model="params.key" placeholder="考试名称" />
       </el-form-item>
       <el-form-item label="创建人">
-        <el-input v-model="data.params.admin" placeholder="创建人" />
+        <el-input v-model="params.admin" placeholder="创建人" />
       </el-form-item>
-      <el-checkbox-group>
+      <el-checkbox-group v-model="checkIsmy" @change="checkoutIsmy">
         <el-checkbox label="我创建的 开放时间" />
       </el-checkbox-group>
       <el-radio-group
-        v-model="radio"
+        v-model="params.opentime"
         style="margin-top: -16px; margin-left: 20px"
       >
-        <el-radio :label="3">永久开放</el-radio>
-        <el-radio :label="6">部分时段</el-radio>
+        <el-radio label="1">永久开放</el-radio>
+        <el-radio label="0">部分时段</el-radio>
       </el-radio-group>
       <div class="block">
         <el-date-picker
-          style="margin-left: 20px; width: 200px"
-          v-model="value1"
-          type="monthrange"
-          range-separator="To"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+            style="width: 360px;margin-left: 15px;"
+            v-model="time"
+            type="datetimerange"
+            :shortcuts="shortcuts"
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            @change="datetimerangeChange"
+            format="YYYY-MM-DD HH:mm:ss"
+            value-format="YYYY-MM-DD HH:mm:ss"
+          />
       </div>
       <el-form-item label="状态" prop="region" style="margin-left: 10px">
         <el-select
           style="width: 100px"
           placeholder="请选择"
-          v-model="data.params.state"
+          v-model="params.state"
         >
           <el-option
             v-for="item in formInline.personType"
@@ -95,24 +99,24 @@
       <el-table-column prop="admin" label="创建人" />
       <el-table-column prop="addtime" label="更新时间" width="200" />
       <el-table-column fixed="right" label="操作" width="200">
-        <template #default>
+        <template #default="scope">
           <p>
             <el-button link type="primary" size="small" @click="studentDialog">学生</el-button>
             <el-button link type="primary" size="small" @click="teacherDialog">可见</el-button>
             <el-button link type="primary" size="small" @click="readTeacherDialog">阅卷老师</el-button>
           </p>
           <p>
-            <el-button link type="primary" size="small">分析</el-button>
+            <el-button link type="primary" size="small" @click="getAnalyse(scope.row)">分析</el-button>
             <el-button link type="primary" size="small">编辑</el-button>
-            <el-button link type="danger" size="small">删除</el-button>
+            <el-button link type="danger" size="small" @click="del(scope.row)">删除</el-button>
           </p>
         </template>
       </el-table-column>
     </el-table>
     <div class="pigeBox">
       <el-pagination
-        v-model:current-page="currentPage1"
-        v-model:page-size="pageSize2"
+        v-model:current-page="params.page"
+        v-model:page-size="params.psize"
         :page-sizes="[5, 10, 15, 20]"
         style="margin-top: 10px; float: right"
         layout="total, sizes, prev, pager, next, jumper"
@@ -137,13 +141,13 @@
 <script setup lang="ts">
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
 import TransferDialog from '../../../components/subject/TransferDialog.vue';
-import { onMounted, defineProps, toRefs, toRaw } from 'vue';
+import { onMounted, defineProps, toRefs, toRaw ,watchEffect} from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
-import { list, dele, teacherUpdateState } from '../../../api/admin';
+import { list, dele, teacherUpdateState,deles } from '../../../api/admin';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
-
+const time = ref('');
 const isShowGet = ref(false);
 
 
@@ -180,9 +184,9 @@ const router = useRouter(); //跳转路由
 const formInline: Iform = reactive({
   personType: [
     //访客类型列表
-    { id: 1, type_name: '所有' },
-    { id: 2, type_name: '已发布' },
-    { id: 3, type_name: '未发布' },
+    { id: 0, type_name: '所有' },
+    { id: 1, type_name: '已发布' },
+    { id: 2, type_name: '未发布' },
   ],
 });
 const radio = ref(3);
@@ -212,6 +216,7 @@ interface Istate {
   total: Number;
   // getId: number;
   getData: Igetdata;
+  checkIsmy:Array<any>
 }
 //数据
 interface Iform {
@@ -222,7 +227,7 @@ interface Iform {
 const data = reactive<Istate>({
   params: {
     page: 1, //页码 默认是1
-    psize: 4, //每页显示多少条 默认是2
+    psize: 5, //每页显示多少条 默认是2
     key: '', //搜索关键字(名称)
     admin: '', //创建人
     ismy: '', //只看我的 >0
@@ -240,8 +245,9 @@ const data = reactive<Istate>({
     getId: 0,
     type: '考试',
   },
+  checkIsmy:[]
 });
-const { getData } = toRefs(data);
+const { getData,checkIsmy,params } = toRefs(data);
 
 const getTestInfo = async (val: any) => {
   // console.log('获取单个考试信息的id',val);
@@ -251,7 +257,9 @@ const getTestInfo = async (val: any) => {
 
 //列表请求
 const getlist = async () => {
-  let res: any = await list(data.params);
+  console.log('列表查询',params.value);
+  
+  let res: any = await list(params.value);
   console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
@@ -263,7 +271,15 @@ const getlist = async () => {
 onMounted(() => {
   getlist();
 });
+// 时间选择器点击事件
+const datetimerangeChange=(data:any)=>{
 
+  params.value.begindate=data[0]
+  params.value.enddate=data[1]
+// console.log('时间选择器',addFrom.value.begintime);
+// console.log('时间选择器',addFrom.value.endtime);
+;
+}
 //多选数据
 const handleSelectionChange = (val: any) => {
   console.log(val);
@@ -297,7 +313,20 @@ const editState = async (id: any, state: any) => {
     Public(updateData);
   }
 };
-
+// 触发只看我创建的
+const checkoutIsmy=()=>{
+  console.log(checkIsmy.value);
+  data.params.admin=''
+  // formInline.value.admin=''
+  data.params.ismy='1'
+  // console.log(formInline.value.admin);
+}
+// 触发创建人输入框时
+watchEffect(()=>{
+  if(data.params.admin){
+    checkIsmy.value=[]
+  }
+})
 // 批量发布
 const truePublic = (state: any) => {
   updateData.state = state;
@@ -342,17 +371,43 @@ const Public = (val: any) => {
     .catch(() => {
       if (val.state == 1) {
         ElMessage({
-          type: 'success',
+          type: 'error',
           message: '发布失败！',
         });
       } else {
         ElMessage({
-          type: 'success',
-          message: '取消发布成功！',
+          type: 'info',
+          message: '已取消！',
         });
       }
     });
 };
+
+// 删除
+const del = async(row:any)=>{
+  // console.log(row);
+  ElMessageBox.confirm('是否确定删除', '删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  })
+    .then(async () => {
+      const res = await deles(row.id)
+      console.log(res);
+      ElMessage({
+        type: 'success',
+        message: '删除成功',
+      });
+      getlist();
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      });
+    });
+  
+}
 
 //批量删除
 const deletelist = () => {
@@ -382,8 +437,7 @@ const Addexam = () => {
   router.push('/Addtest');
 };
 //分页
-const pageSize2 = ref(4);
-const currentPage1 = ref(1);
+
 const handleSizeChange = (val: number) => {
   console.log(val);
   data.params.psize = val;
@@ -404,28 +458,49 @@ const onSubmit = () => {
 const value1 = ref('');
 
 const shortcuts = [
-  {
-    text: 'This month',
-    value: [new Date(), new Date()],
-  },
-  {
-    text: 'This year',
+{
+    text: '最近一周',
     value: () => {
       const end = new Date();
-      const start = new Date(new Date().getFullYear(), 0);
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
       return [start, end];
     },
   },
   {
-    text: 'Last 6 months',
+    text: '最近一个月',
     value: () => {
       const end = new Date();
       const start = new Date();
-      start.setMonth(start.getMonth() - 6);
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+      return [start, end];
+    },
+  },
+  {
+    text: '最近三个月',
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
       return [start, end];
     },
   },
 ];
+// 点击分析
+const getAnalyse=(data:any)=>{
+  console.log('点击分析数据',data);
+  if(data.studentcounts===0){
+    ElMessage.error('没有学生考试')
+    return false
+  }
+  if(data.incomplete!==0){
+    ElMessage.error('判卷未完成')
+    return false
+  }
+  router.push({path:'/Analyse',query:{id:data.id}})
+  
+
+}
 </script>
 
 <style lang="less" scoped>

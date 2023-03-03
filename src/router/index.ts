@@ -25,6 +25,11 @@ const routes: any = [
         component: () => import('../views/LeftMenu/test/TestList.vue'),
       },
       {
+        path: '/Analyse', //考试数据分析
+        name: 'Analyse',
+        component: () => import('../views/LeftMenu/test/AnalyseTest.vue'),
+      },
+      {
         path: '/Addtest', //创建考试
         name: 'addtest',
         component: () => import('../views/LeftMenu/test/Addtest.vue'),
@@ -70,6 +75,16 @@ const routes: any = [
         path: '/teacher', //师资
         name: 'Teacher',
         component: () => import('../views/LeftMenu/teacher/TeacherList.vue'),
+      },
+      {
+        path: '/teacherreset', //师资重置密码
+        name: 'Teacherreset',
+        component: () => import('../views/LeftMenu/teacher/teacherreset.vue'),
+      },
+      {
+        path: '/teacherrevise', //师资添加和修改
+        name: 'Teacherrevise',
+        component: () => import('../views/LeftMenu/teacher/teacherrevise.vue'),
       },
       {
         path: '/classes', //班级
