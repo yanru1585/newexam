@@ -1,3 +1,4 @@
+<!-- 未参加 -->
 <template>
   <div class="box">
     <div class="contentBox">
@@ -6,6 +7,11 @@
           <span class="text-large font-600 mr-3">{{testData.title}}</span>
         </template>
       </el-page-header>
+      <div style="margin-top: 20px;margin-left: 40px;">
+        <p>开放时间</p>
+        <span v-if="testData.begintime&&testData.endtime" style="font-size: 13px;margin-top: 8px;">{{ testData.begintime }}至{{ testData.endtime }}</span>
+        <span v-else>不限</span>
+      </div>
       <p class="line"></p>
       <div style="height: 180px;display: flex;justify-content: space-around; align-items: center;">
         <div>
@@ -14,7 +20,7 @@
         </div>
         <div>
           <p class="titletop">考试时长</p>
-          <p class="titlebot">{{testData.limittime}}min</p>
+          <p class="titlebot">{{testData.limittime==0?'不限':testData.limittime+'min'}}</p>
         </div>
         <div>
           <p class="titletop">考试总分</p>
@@ -26,7 +32,8 @@
         </div>
       </div>
       <div class="btn">
-        <el-button  type="primary">开始考试</el-button>
+        <el-button v-if="isOk||!testData.begintime||!testData.endtime" type="primary" @click="begin">开始考试</el-button>
+        <el-button v-else disabled type="primary">不在开发时间内</el-button>
       </div>
     </div>
   </div>
@@ -34,8 +41,8 @@
 
 <script lang="ts" setup>
 import { useRouter,useRoute } from 'vue-router';
-import {onMounted,reactive,toRefs} from 'vue'
-import {testGet} from '../../../api/admin'
+import {onMounted,reactive,toRefs,ref} from 'vue'
+import {testGet} from '../../../../api/admin'
 import { ElMessage } from 'element-plus'
 const router=useRouter()
 const route=useRoute()
@@ -53,9 +60,29 @@ const data:Idata=reactive({
 })
 const {testData} = toRefs(data)
 
+// 是否在开放时间
+const isOk=ref(true)
+
 onMounted(() => {
   getList();
+  let isDuring =isDuringDate(testData.value.begintime, testData.value.endtime)
+    if(isDuring){
+    isOk.value=true
+    }else{
+    isOk.value=false
+    }
 });
+
+const isDuringDate= (beginDateStr:any, endDateStr:any)=> {
+      let curDate = new Date(),
+      beginDate = new Date(beginDateStr),
+      endDate = new Date(endDateStr);
+      if (curDate >= beginDate && curDate <= endDate) {
+          return true;
+      }
+      return false;
+    }
+
 
 const getList=async()=>{
   let res: any = await testGet(route.query.id);
@@ -66,12 +93,17 @@ const getList=async()=>{
   }
   data.testData=res.data
 }
+
+// 点击开始考试
+const begin=()=>{
+  router.push({path:"/stuexam",query:{id:route.query.id}});
+}
 </script>
 
 <style lang="less" scoped>
 .box {
   height: 100vh;
-  background: url('../../../assets/images/testGetbjt.jpg') no-repeat;
+  background: url('../../../../assets/images/testGetbjt.jpg') no-repeat;
   background-size: cover;
   display: flex;
   justify-content: space-around;
@@ -79,7 +111,6 @@ const getList=async()=>{
 }
 .contentBox {
   width: 650px;
-  height: 280px;
   padding: 50px 60px;
   background-color: #fff;
   .line {

@@ -56,6 +56,10 @@ const props = defineProps({
     type: Function,
     required: true,
   },
+  addUrl:{
+    type: String,
+    required: true,
+  }
 });
 
 const desc = ref(
@@ -69,10 +73,9 @@ const emits = defineEmits(['closeDialog']);
 const handleClose = (done: () => void) => {
   emits('closeDialog', false);
 };
-
 // 点击下载试题模板
 const down = () => {
-  Down('http://estate.eshareedu.cn/exam/upload/question.xlsx');
+  Down(props.addUrl);
 };
 
 // 上传文件
