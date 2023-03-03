@@ -426,7 +426,12 @@ const transferEmit=(data: any)=>{
       
     })
   }else{
-    addFrom.value.markteachers=data.arr.map((item: any)=>{
+    data.arr.map((item: any)=>{
+      return {id:item}
+      
+    }).length===0?addFrom.value.markteachers=[
+      {id:2020}
+    ]:addFrom.value.markteachers=data.arr.map((item: any)=>{
       return {id:item}
       
     })
@@ -438,18 +443,6 @@ const allScores = computed(() => {
     return pive + parseInt(next.scores);
   }, 0);
 });
-// 随机排序
-// const getShuffle=(arr: any)=>{
-//   let temp=[]
-//   for(let i=arr.length;i>0;i--){
-//     let temRandom=Math.floor(Math.random()*i)
-//     temp.push(arr[temRandom])
-//     arr.splice(temRandom,1)
-//   }
-//   // return temp
-//   console.log('随机排序',temp);
-  
-// }
 
 
 //多选框
@@ -629,17 +622,7 @@ watch(()=>questionsType.value,(newVal)=>{
 onMounted(()=>{
   getDatabaseList()
 })
-// 点击发布
-// const getIssue=async()=>{  
-//   console.log('发布',addFrom.value);
-//   const res:any=await AddText(addFrom.value).catch(()=>{})
-//   console.log('点击发布',res);
-//   if(res.errCode!==10000){
-//     ElMessage.error(res.errMsg)
-//     return false
-//   }
-//   router.push('/test')
-// }
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate(async (valid, fields) => {
@@ -682,6 +665,10 @@ const checkSubject=()=>{
 }
 // 点击清空题目列表
 const empty=()=>{
+  if(addFrom.value.questions.length==0){
+    ElMessage.info('题库为空')
+    return false
+  }
   ElMessageBox.confirm(
     '是否确认清空试题列表?',
     {

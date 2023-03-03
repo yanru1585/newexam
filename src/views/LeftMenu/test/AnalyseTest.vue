@@ -26,7 +26,7 @@
     <el-cascader v-model="seachData.depid" :options="options" @change="handleChange"  :props="props"/>
     </el-form-item>
     <el-form-item label="班级">
-      <el-select v-model="seachData.classid" placeholder="请选择">
+      <el-select v-model="seachData.classid"  placeholder="请选择" >
         <el-option v-for="item in classlist" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </el-form-item>
