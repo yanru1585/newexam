@@ -15,6 +15,9 @@ export const list=(params:any):Promise<AxiosResponse<any>>=>{
 export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
+export const deles=(id:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/delete',{id})
+}//考试删除
 
 export const AddText=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/test/add',params)
