@@ -233,7 +233,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
       console.log('添加学生', res);
       if (res.errCode !== 10000) {
         ElMessage({
-          message: '失败咯！',
+          message:res.errMsg,
           type: 'error',
         });
         return false;
