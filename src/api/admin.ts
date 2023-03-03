@@ -146,5 +146,5 @@ export const testGetmarkteachers=(params:any):Promise<AxiosResponse<any>>=>{
 }
 // 师资重置密码
 export const teacher=(params:any):Promise<AxiosResponse<any>>=>{
-  return post('/teacher/add',params)
+  return post('/teacher/add',params) 
 }
