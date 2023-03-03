@@ -6,10 +6,10 @@
      </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
     <el-form-item label="关键字">
-      <el-input v-model="formInline.key" placeholder="考试名称" clearable />
+      <el-input v-model="formInline.key" placeholder="考试名称" />
     </el-form-item>
     <el-form-item label="创建人">
-      <el-input v-model="formInline.admin" placeholder="创建人"  clearable />
+      <el-input v-model="formInline.admin" placeholder="创建人"  />
     </el-form-item>
     <el-form-item >
       <el-checkbox-group v-model="checkIsmy" @change="checkoutIsmy" >
@@ -72,11 +72,11 @@ const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
 interface Iform{
-  key:String
-  admin:String
-  ismy:Number
-  page:Number
-  psize:Number
+  key:string
+  admin:string
+  ismy:number
+  page:number
+  psize:number
 }
 interface Igetdata{
   getId:number,
@@ -85,7 +85,7 @@ interface Igetdata{
 interface Idata{
   formInline:Iform
   tableData:Array<any>
-  total:Number
+  total:number
   checkIsmy:Array<any>
   ischeck:Boolean
   // getId:number,

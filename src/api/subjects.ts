@@ -21,3 +21,7 @@ export const DelSubject=(id:any):Promise<AxiosResponse<any>>=>{
 export const oneSubject=(id:any):Promise<AxiosResponse<any>>=>{
   return get('/subjects/get',id)
 }
+// 获取学生考试结果
+export const reqForResult=(parms:any):Promise<AxiosResponse<any>>=>{
+  return get('/test/getForResult',parms)
+}
