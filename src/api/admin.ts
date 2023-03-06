@@ -16,8 +16,10 @@ export const dele=(ids:any):Promise<AxiosResponse<any>>=>{
   return post('/test/deleteall',{ids})
 }//考试批量删除
 export const deles=(id:any):Promise<AxiosResponse<any>>=>{
+
   return get('/test/delete',{id})
 }//考试删除
+
 
 export const AddText=(params:any):Promise<AxiosResponse<any>>=>{
   return post('/test/add',params)
@@ -86,7 +88,7 @@ export const classesdeles=(ids:any):Promise<AxiosResponse<any>>=>{
 }//班级批量删除
 
 export const classesad=(params:any):Promise<AxiosResponse<any>>=>{
-  return post('/student/add',params)
+ return post('/student/add',params)
 }//添加学生
 export const studentlist=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/list',params)

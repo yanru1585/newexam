@@ -161,6 +161,10 @@ const props = defineProps({
   getList: {
     type: Function,
     required: true,
+  },
+  questionData:{
+    type:Object,
+    
   }
 });
 
@@ -330,7 +334,20 @@ const addTab = () => {
     return false;
   }
 };
+watch(()=>props.questionData,(newVal,oldVal)=>{
+  console.log('编辑新数据',newVal);
+  if(newVal){
+    Object.assign(addData,newVal)
+    if(newVal.answer){
+      checkList.value=newVal.answer.split('|')
+    }
+    console.log(2222,newVal.answer);
+    
+    // checkList.value=newVal.answer.join('|')
+  }
+  
 
+},{deep:true,immediate:true})
 // 点击保存
 const confirm = async () => {
   trueAdd()
@@ -379,7 +396,8 @@ const trueAdd=async()=>{
       return false;
     }
   }
-  let res: any = await databasequestionAdd(addData);
+  if(addData.id===0){
+    let res: any = await databasequestionAdd(addData);
   console.log('添加题库试题', res);
   if (res.errCode !== 10000) {
     ElMessage.error('添加失败！');
@@ -389,6 +407,19 @@ const trueAdd=async()=>{
     message: '添加成功！',
     type: 'success',
   });
+  }else{
+    let res: any = await databasequestionAdd(addData);
+  console.log('添加题库试题', res);
+  if (res.errCode !== 10000) {
+    ElMessage.error('编辑失败！');
+    return false;
+  }
+  ElMessage({
+    message: '编辑成功！',
+    type: 'success',
+  });
+  }
+ 
   console.log(addData);
   props.getList();
 }
