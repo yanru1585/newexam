@@ -49,7 +49,7 @@
     <el-menu
       background-color="#ebebeb"
       class="el-menu-vertical-demo"
-      default-active="test"
+      :default-active="defaultmenu"
       :unique-opened="true"
       @open="handleOpen"
       @close="handleClose"
@@ -83,7 +83,6 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 
 const isShow = ref(false);
-// console.log(isShow.value);
 
 defineExpose({
   isShow,
@@ -91,11 +90,17 @@ defineExpose({
 
 const data: any = reactive({
   info: {},
+  defaultmenu:''
 });
-const { info } = toRefs(data);
+const { info,defaultmenu } = toRefs(data);
 
 onMounted(() => {
-  // console.log(sessionStorage.getItem('model'));
+  console.log(sessionStorage.getItem('type'));
+  if(sessionStorage.getItem('type')=='teacher'){
+    data.defaultmenu='test'
+  }else{
+    data.defaultmenu='stutest'
+  }
   let obj: any = sessionStorage.getItem('model');
   data.info = JSON.parse(obj);
 });

@@ -83,11 +83,9 @@
 
     <!-- 倒计时 -->
     <div class="ding" v-if="testData.limittime">
-      <!-- <div style="margin-top: 10px;"> -->
         <svg style="height: 1.7em;width:1.7em;margin-top: 15px;" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" data-v-237f5b4c=""><path fill="currentColor" d="M512 832a320 320 0 1 0 0-640 320 320 0 0 0 0 640zm0 64a384 384 0 1 1 0-768 384 384 0 0 1 0 768z"></path><path fill="currentColor" d="m292.288 824.576 55.424 32-48 83.136a32 32 0 1 1-55.424-32l48-83.136zm439.424 0-55.424 32 48 83.136a32 32 0 1 0 55.424-32l-48-83.136zM512 512h160a32 32 0 1 1 0 64H480a32 32 0 0 1-32-32V320a32 32 0 0 1 64 0v192zM90.496 312.256A160 160 0 0 1 312.32 90.496l-46.848 46.848a96 96 0 0 0-128 128L90.56 312.256zm835.264 0A160 160 0 0 0 704 90.496l46.848 46.848a96 96 0 0 1 128 128l46.912 46.912z"></path></svg>
         <span>倒计时</span>
         <el-countdown  format="HH:mm:ss" value-style="color:#fff;font-size:13px" :value="value" />
-      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -115,6 +113,7 @@ interface Idata {
   judge: Array<any>;
   residue:number
   addList: Array<any>;
+  studentid:number
 }
 const data: Idata = reactive({
   testData: {},
@@ -126,11 +125,16 @@ const data: Idata = reactive({
     {answer:'错误'}
   ],
   residue:0, //剩余数量
-  addList:[] //学生要提交的题
+  addList:[], //学生要提交的题
+  studentid:0
 });
 const { testData, questionsList,checkList,gapFilling,judge,residue,addList } = toRefs(data);
 
 onMounted(() => {
+  const model:any = sessionStorage.getItem('model')
+  data.studentid=JSON.parse(model).id
+  // console.log(data.studentid);
+  
   getList();
   // 监听滚动事件
     window.addEventListener('scroll', onScroll, false)
@@ -152,7 +156,7 @@ const trueFn=()=>{
     if(!i.studentanswer){
       i.studentanswer=''
     }
-    return {answer:i.studentanswer,questionid:i.id,scores:i.scores,studentid:85997,testid:i.testid}
+    return {answer:i.studentanswer,questionid:i.id,scores:i.scores,studentid:data.studentid,testid:i.testid}
   })
   console.log(data.addList);
 }
@@ -343,7 +347,8 @@ const scrollTo=(index:any)=> {
     text-align: center;
   }
   .tag_right {
-    margin: auto;
+    width: 70%;
+    text-align: center;
     background-color: #f1f5fb;
   }
 }

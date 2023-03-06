@@ -57,7 +57,7 @@
                 </div>
               </div>
               <div v-if="item.type == '判断题'">
-                <div class="radio" :style="item.answer.includes(i.judge)&&item.studentanswer.includes(i.judge)?'margin-bottom: 15px;padding:10px;background-color: #f0faf6;':item.studentanswer.indexOf(i.judge)==-1?'padding:10px':'background-color:pink;padding:10px'" v-for="(i,index2) in judgeAnswer" :key="index2">
+                <div class="radio" :style="item.answer.includes(i.judge)&&item.studentanswer.includes(i.judge)?'margin-bottom: 15px;padding:10px;background-color: #f0faf6;':item.studentanswer.indexOf(i.judge)==-1?'padding:10px':'background-color:#fcf3f3;border: 1px solid #0089ff;border-radius:5px;padding:10px'" v-for="(i,index2) in judgeAnswer" :key="index2">
                   <p class="radio_left"></p>
                   <span>{{i.judge}}</span>
                 </div>
@@ -270,7 +270,8 @@ const scrollTo=(index:any)=> {
     text-align: center;
   }
   .tag_right {
-    margin: auto;
+    width: 70%;
+    text-align: center;
     background-color: #f1f5fb;
   }
 }

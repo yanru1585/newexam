@@ -106,12 +106,12 @@ const getList = async () => {
       
       if(item.type=='单选题'||item.type=='多选题'||item.type=='判断题'){
         item.correct = typeData.filter((it: any) => {
-        if(it.answer.includes(it.studentanswer)){
+        if(it.studentanswer.includes(it.answer)){
           return it
         }
       }).length+'题'; //正确数
         item.mistak=typeData.filter((it:any)=>{
-          if(it.answer.indexOf(it.studentanswer)==-1){
+          if(it.studentanswer.indexOf(it.answer)==-1){
             return it
           }
         }).length+'题'

@@ -22,7 +22,10 @@ const routes: any = [
       {
         path: '/test', //考试
         name: 'Test',
-        component: () => import('../views/LeftMenu/test/TestList.vue'),
+        meta:{
+          keepAlive:true //设置页面是否需要使用缓存
+        },
+        component: () => import('../views/LeftMenu/test/TestList.vue'),  
       },
       {
         path: '/Analyse', //考试数据分析

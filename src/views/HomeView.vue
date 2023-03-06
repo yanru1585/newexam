@@ -7,7 +7,14 @@
         </el-aside>
         <el-container>
           <el-main @click="clickFn" >
-            <router-view></router-view>
+            
+            <router-view v-slot="{ Component }">
+      {{ $route.meta.keepAlive }}
+      <keep-alive>
+        <component :is="Component" v-if="$route.meta.keepAlive" />
+      </keep-alive>
+      <component :is="Component" v-if="!$route.meta.keepAlive" />
+    </router-view>
           </el-main>
         </el-container>
       </el-container>
