@@ -69,7 +69,7 @@
       <el-table-column prop="admin" label="创建人" />
       <el-table-column fixed="right" label="操作" width="110">
         <template #default="scope">
-          <el-button link type="primary" size="small">编辑</el-button>
+          <el-button link type="primary" size="small" @click="compile(scope.row)">编辑</el-button>
           <el-button link type="primary" size="small" @click="del(scope.row.id)"
             >删除</el-button
           >
@@ -96,6 +96,7 @@
   <AddtestDrawer
     v-if="isAddtestDrawer"
     :getList="getList"
+    :questionData="questionData"
     @closeDrawer="closeDrawer"
   />
   <!-- 单条试题详情的抽屉 -->
@@ -126,7 +127,11 @@ import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
 const route = useRoute();
+const Data=reactive({
+  questionData:{}
 
+})
+const {questionData} =toRefs(Data)
 const addTestUrl=ref('http://estate.eshareedu.cn/exam/upload/question.xlsx')
 const isAddtestDrawer = ref(false);
 const isDatabaseDetail = ref(false);
@@ -154,7 +159,13 @@ const testDetail=(val:any)=>{
 const addTest = () => {
   isAddtestDrawer.value = true;
 };
+// 点击编辑a
+const compile=(data:any)=>{
+  console.log('点击题库编辑',data);
+  questionData.value=data
+  isAddtestDrawer.value = true;
 
+}
 
 
 // 分页

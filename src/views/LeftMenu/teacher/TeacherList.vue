@@ -245,7 +245,7 @@ const delId = (id: number) => {
     });
 };
 //分页
-const pageSize2 = ref(4);
+const pageSize2 = ref(5);
 const currentPage1 = ref(1);
 const handleSizeChange = (val: number) => {
   console.log(val);
