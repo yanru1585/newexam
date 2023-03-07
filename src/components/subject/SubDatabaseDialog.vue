@@ -11,7 +11,7 @@
     status-icon
   >
     <el-form-item label="题库名称" prop="name">
-      <el-input v-model="ruleForm.name" placeholder="请输入题库名称"/>
+      <el-input v-model="ruleForm.title" placeholder="请输入题库名称"/>
     </el-form-item>
     <el-form-item label="被他人使用" prop="resource">
       <el-radio-group v-model="ruleForm.isshow" :change="radioChange()">
@@ -107,19 +107,19 @@ const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 interface Irule{
   id:number,  
-  name: string,//题库名称
+  title: string,//题库名称
   isshow:any,//可见老师
   limits:Array<any>,
 }
 const ruleForm:Irule = reactive({
   id:0,  
-  name: '',//题库名称
+  title:'',//题库名称
   isshow:'1',//可见老师
   limits:[],//可见老师数组
 })
 // const {limits} =
 const rules = reactive<FormRules>({
-  name: [
+  title: [
     { required: true, message: '请输入题库名称', trigger: 'blur' },
   ]
 })

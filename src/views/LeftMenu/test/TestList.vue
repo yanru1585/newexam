@@ -107,7 +107,7 @@
           </p>
           <p>
             <el-button link type="primary" size="small" @click="getAnalyse(scope.row)">分析</el-button>
-            <el-button link type="primary" size="small">编辑</el-button>
+            <el-button link type="primary" size="small" @click="getEdit(scope.row.id)">编辑</el-button>
             <el-button link type="danger" size="small" @click="del(scope.row)">删除</el-button>
           </p>
         </template>
@@ -141,7 +141,7 @@
 <script setup lang="ts">
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
 import TransferDialog from '../../../components/subject/TransferDialog.vue';
-import { onMounted, defineProps, toRefs, toRaw ,watchEffect} from 'vue';
+import { onMounted, defineProps, toRefs, toRaw ,watchEffect,onActivated} from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
 import { list, dele, teacherUpdateState,deles } from '../../../api/admin';
@@ -247,6 +247,10 @@ const data = reactive<Istate>({
   },
   checkIsmy:[]
 });
+// keep_alive组件缓存
+onActivated(()=>{
+  getlist()
+})
 const { getData,checkIsmy,params } = toRefs(data);
 
 const getTestInfo = async (val: any) => {
@@ -453,6 +457,13 @@ const handleCurrentChange = (val: number) => {
 const onSubmit = () => {
   getlist();
 };
+// 点击编辑
+const getEdit=(id:any)=>{
+  console.log('考试编辑',id);
+  router.push({path:'/Addtest',query:{id:id}}) 
+}
+// 获取详细考试列表
+
 
 //时间
 const value1 = ref('');

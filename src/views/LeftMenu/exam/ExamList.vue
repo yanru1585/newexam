@@ -9,21 +9,21 @@
           </div>
           <div>
             <el-table :data="data.list"   border style="width: 100%">
-              <el-table-column prop="title" label="考试名称" />
-              <el-table-column prop="info" label="考试说明" />
-              <el-table-column prop="subjectnum" label="题量" />
-              <el-table-column prop="studentcounts" label="考试人数" />
-              <el-table-column  label="未判人数" >
+              <el-table-column prop="title" label="考试名称" align="center" />
+              <el-table-column prop="info" label="考试说明" align="center"/>
+              <el-table-column prop="subjectnum" label="题量" align="center"/>
+              <el-table-column prop="studentcounts" label="考试人数" align="center"/>
+              <el-table-column  label="未判人数" align="center">
                 <template #default="scope">
                   <span class="incomplete">{{scope.row.incomplete}}</span>
                 </template >
               </el-table-column>
-              <el-table-column label="开放时间">
+              <el-table-column label="开放时间" align="center">
                 <template #default="scope">
                   <span>{{scope.row.begintime===null ? '不限':scope.row.begintime}}</span>
                 </template >
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="操作" align="center">
                 <template #default="scope" >
                   <el-button link type="primary" size="small" @click="see(scope.row)">
                   <span>{{scope.row.incomplete === 0 ? '查看':'阅卷'}}</span>
@@ -43,6 +43,7 @@
               :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
+              style="float: right;"
             />
           </div>
         </el-main>
