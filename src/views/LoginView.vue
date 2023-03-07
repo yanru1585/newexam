@@ -124,17 +124,20 @@ const submitForm =debounce ( async (formEl: FormInstance | undefined) => {
         loginData.value.username,
         loginData.value.pass
       );
-      console.log('登录', res);
+      console.log('登录', res.data);
       if (res.errCode === 10000) {
         ElMessage({
           message: '登陆成功',
           type: 'success',
         });
+        let menuUrl=res.data.menu.filter((item: { id: number; })=>item.id===1)
+        console.log(22,menuUrl);
+        
         sessionStorage.setItem('token', res.data.token); //存储token
         sessionStorage.setItem('menu', JSON.stringify(res.data.menu)); //存储菜单数据
         sessionStorage.setItem('model', JSON.stringify(res.data.model)); //存储管理员数据
         sessionStorage.setItem('type', res.data.type); //登录类型
-        router.push('/test');
+        router.push(menuUrl[0].url);
       } else {
         ElMessage.error(res.errMsg);
       }
