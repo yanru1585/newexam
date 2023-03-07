@@ -9,9 +9,9 @@
           </template>
         </el-page-header>
         <div class="topContent">
-          <span>用时：0分钟</span>
+          <span>用时：{{time}}分钟</span>
           <el-divider direction="vertical" />
-          <span>交卷时间：2020.2.21.12:12</span>
+          <span>交卷时间：{{testData.stuEndTime}}</span>
           <el-divider direction="vertical" />
           <span>试卷总分：{{ testData.scores }}分</span>
           <el-divider direction="vertical" />
@@ -70,6 +70,7 @@ interface Idata {
   testTable: Array<any>;
   testTitle: Array<any>;
   transData: Array<any>;
+  time:number
 }
 const data: Idata = reactive({
   testData: {},
@@ -81,9 +82,10 @@ const data: Idata = reactive({
     { type: '问答题', correct: 0, mistak: 0 },
   ],
   testTitle: ["", "正确数", "错误数","","",""],
-  transData:[] 
+  transData:[],
+  time:0
 });
-const { testData,testTable,testTitle,transData } = toRefs(data);
+const { testData,testTable,testTitle,transData,time } = toRefs(data);
 
 onMounted(() => {
   getList();
@@ -97,6 +99,12 @@ const getList = async () => {
     return false;
   }
   data.testData = res.data;
+
+  let d1:any = new Date(res.data.studentStartTime);
+  let d2:any = new Date(res.data.stuEndTime);
+  data.time=(d2 - d1)/ 1000 / 60 //两个时间相差的分钟数
+
+
   let arr = res.data.questions;
   console.log(arr);
 

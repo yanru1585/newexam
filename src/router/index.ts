@@ -18,7 +18,6 @@ const routes: any = [
   {
     path: '/home',
     name: 'Home',
-    
     component: () => import('../views/HomeVIew.vue'),
     children: [
       {
@@ -32,6 +31,9 @@ const routes: any = [
       {
         path: '/Analyse', //考试数据分析
         name: 'Analyse',
+        meta:{
+          keepAlive:false
+        },
         component: () => import('../views/LeftMenu/test/AnalyseTest.vue'),
       },
       {

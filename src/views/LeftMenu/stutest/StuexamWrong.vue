@@ -98,7 +98,7 @@
 
         <div style="display: flex;flex-wrap: wrap;">
           <div class="tiItem" v-for="(item, index) in testList" :key="index"> 
-            <div @click="scrollTo(index)" class="ti" :style="item.studentanswer.includes(item.answer)?'background-color:#f0f8ff;color:#aab4fd':'background-color: #fcf2f0;color: #e9747f;'">{{index+1}}</div>
+            <div @click="scrollTo(index)" class="ti" :style="item.studentanswer.includes(item.answer)?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'background-color: #fcf2f0;color: #e9747f;cursor:pointer'">{{index+1}}</div>
           </div>
         </div>
       </div>
