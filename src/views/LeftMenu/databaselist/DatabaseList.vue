@@ -94,6 +94,7 @@
 </template>
 
 <script lang="ts" setup>
+import {debounce}  from "../../../utils/throTtle"
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick } from 'vue';
@@ -151,7 +152,7 @@ const add = () => {
   dialogRef.value.dialogVisible = true;
 };
 
-const getList = async () => {
+const getList =debounce( async () => {
   let res: any = await databaseList(data);
   console.log('题库列表', res);
   if (res.errCode !== 10000) {
@@ -160,7 +161,7 @@ const getList = async () => {
   }
   state.tableData = res.data.list;
   state.total = res.data.counts;
-};
+},500);
 
 // 查询
 const search = () => {

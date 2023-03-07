@@ -151,7 +151,7 @@ const edit = (val: any) => {
 }
 .el-pagination {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   margin-top: 15px;
 }
 </style>

@@ -75,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
@@ -105,15 +106,7 @@ const reserdata = reactive({
     roleid: 0,
   },
 });
-const reser = (row: any) => {
-  // console.log(row);
-  // reserdata.list.id = row.id       //用来判断添加还是修改
-  // reserdata.list.username = row.username  
-  // reserdata.list.pass = row.pass  
-  // reserdata.list.name = row.name  
-  // reserdata.list.tel = row.tel  
-  // reserdata.list.depid = row.depid  
-  // reserdata.list.roleid = row.roleid    
+const reser = (row: any) => { 
   reserdata.list = row
   
   use.value = true;
@@ -206,14 +199,14 @@ const data = reactive<Istate>({
   total: 0,
 });
 //列表请求
-const getlist = async () => {
+const getlist =debounce(async () => {
   let res: any = await teacherlsit(data.params);
   // console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
   }
-};
+},500) ;
 onMounted(() => {
   getlist();
 });

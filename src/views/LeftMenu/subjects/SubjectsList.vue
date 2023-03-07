@@ -62,6 +62,7 @@
 </template>
 
 <script lang="ts" setup>
+import {debounce}  from "../../../utils/throTtle"
 import Test from '../../../components/test/TestgetDialog.vue'
 import {subjectList,DelSubject}from '../../../api/subjects'
 import { reactive,toRefs,onMounted,ref,watchEffect } from 'vue';
@@ -121,7 +122,7 @@ const seacher=()=>{
   // console.log(formInline.value);
 }
 // 获取试卷列表
-const getList= async ()=>{
+const getList=debounce( async ()=>{
   const res:any=await subjectList(formInline.value).catch(()=>{})
   console.log('试卷列表',res);
   if(res.errCode!==10000){
@@ -131,7 +132,7 @@ const getList= async ()=>{
   total.value=res.data.counts
   console.log(tableData.value);
   
-}
+},500)
 // 分页触发事件
 const handleSizeChange = (val: number) => {
   // console.log(`${val} items per page`)

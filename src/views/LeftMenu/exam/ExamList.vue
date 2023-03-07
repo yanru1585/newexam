@@ -52,6 +52,7 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import { onMounted, reactive, ref } from 'vue';
 import { Ilist } from '../../../api/admin';
 import router from '../../../router';
@@ -71,13 +72,13 @@ const data: marking = reactive({
   list: [],     //
   key:'',        //input 绑定值
 });
-const getIlist = async () => {
+const getIlist =debounce(async () => {
   const res = await Ilist(data.page, data.psize, data.isread,data.key);
   // console.log(res);
   data.list = res.data.list;
   // console.log(data.list);
   total.value = res.data.counts;
-};
+},500) ;
 
 // 分页
 const small = ref(false);

@@ -74,6 +74,7 @@
 </template>
 
 <script lang="ts" setup>
+import {debounce}  from "../utils/throTtle"
 import { reactive, ref, toRefs } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
@@ -114,7 +115,7 @@ const rules = reactive<FormRules>({
 });
 
 // 点击登录
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm =debounce ( async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
@@ -142,7 +143,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       ElMessage.error('请正确输入账号密码');
     }
   });
-};
+},500)
 </script>
 
 <style scoped>

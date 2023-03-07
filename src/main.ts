@@ -10,6 +10,8 @@ import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import './assets/css/iconfont.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+
 const app = createApp(App)
 // 全局挂载 echarts
 app.config.globalProperties.$echarts = echarts;

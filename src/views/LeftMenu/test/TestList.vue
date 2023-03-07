@@ -139,6 +139,7 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
 import TransferDialog from '../../../components/subject/TransferDialog.vue';
 import { onMounted, defineProps, toRefs, toRaw ,watchEffect,onActivated} from 'vue';
@@ -260,7 +261,7 @@ const getTestInfo = async (val: any) => {
 };
 
 //列表请求
-const getlist = async () => {
+const getlist =debounce( async () => {
   console.log('列表查询',params.value);
   
   let res: any = await list(params.value);
@@ -271,7 +272,7 @@ const getlist = async () => {
     // console.log(data.tableData);
     // console.log(res.data.list);
   }
-};
+},500);
 onMounted(() => {
   getlist();
 });

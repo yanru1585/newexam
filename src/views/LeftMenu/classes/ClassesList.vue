@@ -64,6 +64,7 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
@@ -109,14 +110,14 @@ const data = reactive<Istate>({
   total: 0,
 });
 //列表请求
-const getlist = async () => {
+const getlist =debounce( async () => {
   let res: any = await classeslist(data.params);
   // console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
   }
-};
+},500);
 onMounted(() => {
   getlist();
 });
