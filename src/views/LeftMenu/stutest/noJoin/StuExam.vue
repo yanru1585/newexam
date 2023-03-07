@@ -229,6 +229,8 @@ const getList = async () => {
       const array = item.title.split(/([])/).filter((item:any) => {
         return item !== ''
       })
+      console.log(11);
+      
       console.log(array);
       
       // console.log(data.gapFilling);
