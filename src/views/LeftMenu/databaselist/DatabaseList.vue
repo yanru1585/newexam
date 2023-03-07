@@ -37,17 +37,17 @@
         @selection-change="selectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="题库" #default="scope" width="450">
+        <el-table-column prop="title" label="题库" #default="scope" width="450" align="center">
           <span
             style="color: #409eff; cursor: pointer"
             @click="toQuestions(scope.row.id)"
             >{{ scope.row.title }}
           </span>
         </el-table-column>
-        <el-table-column prop="counts" label="题目数量" width="180" />
-        <el-table-column prop="addtime" label="创建时间" />
-        <el-table-column prop="admin" label="创建人" />
-        <el-table-column fixed="right" label="操作" width="150">
+        <el-table-column prop="counts" label="题目数量" width="180" align="center"/>
+        <el-table-column prop="addtime" label="创建时间" align="center"/>
+        <el-table-column prop="admin" label="创建人" align="center"/>
+        <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="scope">
             <el-button
               link
@@ -83,6 +83,7 @@
       :total="total"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
+      style="float: right;"
     />
   </div>
 
