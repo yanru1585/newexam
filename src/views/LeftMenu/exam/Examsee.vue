@@ -38,17 +38,17 @@
         <el-button type="primary" @click="reser">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="data.list" border style="width: 100%">
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="depname" label="班级名称" />
-      <el-table-column prop="scores" label="分数" />
-      <el-table-column prop="readtime" label="考试时间" />
-      <el-table-column prop="state" label="状态">
+    <el-table :data="data.list" border style="width: 100%" >
+      <el-table-column prop="name" label="姓名"  align="center"/>
+      <el-table-column prop="depname" label="班级名称" align="center" />
+      <el-table-column prop="scores" label="分数"  align="center"/>
+      <el-table-column prop="readtime" label="考试时间"  align="center"/>
+      <el-table-column prop="state" label="状态" align="center">
         <template #default="scope">
           <span :style="scope.row.state==='未阅卷' ? 'color:red' : '' ">{{ scope.row.state }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button link type="primary" size="small">
             <span @click="drawer(scope.row)">{{
@@ -58,6 +58,21 @@
         </template>
       </el-table-column>
     </el-table>
+<!-- 分页 -->
+<el-pagination
+              v-model:current-page="data.page"
+              v-model:page-size="data.psize"
+              :page-sizes="[5, 10, 15, 20]"
+              :small="small"
+              :disabled="disabled"
+              :background="background"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              style="float: right;"
+            />
+
     <drawerr v-if="user" v-model="user" :dda="data1.list" :carr="father" />
   </div>
 </template>
@@ -72,6 +87,12 @@ import { ArrowLeft } from '@element-plus/icons-vue';
 import router from '../../../router';
 
 const route = useRoute();
+// 分页
+const total = ref(0);
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
+
 // console.log(route.query.id);
 
 // 根据id渲染列表
@@ -106,6 +127,18 @@ const getSee = async () => {
   );
   // console.log(res);
   data.list = res.data.list;
+  total.value = res.data.counts
+};
+// 分页
+const handleSizeChange = (val: number) => {
+  console.log(`${val} items per page`);
+  data.psize = val;
+  getSee();
+};
+const handleCurrentChange = (val: number) => {
+  console.log(`current page: ${val}`);
+  data.page = val;
+  getSee();
 };
 // 获取部门下拉框数据
 const props1 = {

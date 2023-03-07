@@ -10,11 +10,11 @@
         >
     <div class="box" v-for="(item, index) in data.list" :key="index">
       <div class="top">
-        <span>1.{{ item.type }}</span>
+        <span>{{index+1}}.{{ item.type }}</span>
         <span>分值：{{ item.scores }}</span>
       </div>
       <div class="issue">
-        <span>{{ item.title }}</span>
+        <span v-html="item.title"></span>
       </div>
       <div class="answer">
         <span>回答：</span>
