@@ -19,7 +19,7 @@
                 <span v-html="item.title"></span>
               </p>
               <p v-if="item.type=='填空题'">
-                <span @input="gapFillingFn($event,index)" v-html="gapFilling"></span>
+                <span class="gap" @input="gapFillingFn($event,index)" v-html="gapFilling"></span>
               </p>
             </p>
             <div style="display: flex; flex-direction: column;margin-left: 15px;" v-if="item.type=='单选题'">
@@ -67,7 +67,7 @@
 
       <div style="display: flex;flex-wrap: wrap;">
         <div  class="tiItem" v-for="(item, index) in questionsList" :key="index"> 
-          <div @click="scrollTo(index)" class="ti" :style="item.studentanswer?'background-color:#f0f8ff;color:#aab4fd':''">{{index+1}}</div>
+          <div @click="scrollTo(index)" class="ti" :style="item.studentanswer?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'cursor:pointer'">{{index+1}}</div>
         </div>
       </div>
       <div class="bottom_div">
@@ -102,7 +102,15 @@ const judgeRight=(val:any,index:any)=>{
   data.questionsList[index].studentanswer=val // 判断答案
 }
 const gapFillingFn=(e:any,index:any)=>{
+  console.log(e);
+  
+  data.gapList.push(e.data)
+let aa = data.gapList.join('')
 data.questionsList[index].studentanswer=e.data
+// console.log(index);
+
+// console.log(aa);
+
 }
 
 interface Idata {
@@ -114,6 +122,7 @@ interface Idata {
   residue:number
   addList: Array<any>;
   studentid:number
+  gapList:Array<any>
 }
 const data: Idata = reactive({
   testData: {},
@@ -126,7 +135,8 @@ const data: Idata = reactive({
   ],
   residue:0, //剩余数量
   addList:[], //学生要提交的题
-  studentid:0
+  studentid:0,
+  gapList:[]
 });
 const { testData, questionsList,checkList,gapFilling,judge,residue,addList } = toRefs(data);
 
@@ -152,6 +162,12 @@ const handleCheckAllChange=(index:any)=>{
 
 // 点击交卷
 const trueFn=()=>{
+  let a = document.querySelectorAll('.gap')
+  console.log(a);
+
+  let b = document.querySelectorAll('.input')
+  // console.log(b);
+  
   data.addList=data.questionsList.map((i:any)=>{ //要添加的数据
     if(!i.studentanswer){
       i.studentanswer=''
@@ -177,6 +193,7 @@ watch(()=>data.questionsList,(newVal)=>{
   }
   testnum() //剩余题目数量
 },{deep:true,immediate:true})
+
 const getTest=()=>{ //把题存缓存里
   localStorage.setItem(`examTest${route.query.id}`,JSON.stringify(data.questionsList))
 }
@@ -194,7 +211,7 @@ const getList = async () => {
 
   // 倒计时
     value.value=(Date.now()+new Date(res.data.studentStartTime).getTime())-Date.now()+res.data.limittime*1000 * 60
-    console.log('倒计时',Date.now()+res.data.limittime*1000 * 60);
+    // console.log('倒计时',Date.now()+res.data.limittime*1000 * 60);
     
   if(localStorage.getItem(`examTest${route.query.id}`)){//如果缓存里有值，从缓存里读取题,退出再进来可以接着做
     let a:any =localStorage.getItem(`examTest${route.query.id}`)
@@ -205,7 +222,32 @@ const getList = async () => {
   data.residue=res.data.questions.length
   data.questionsList.filter((item:any)=>{
     if(item.type=='填空题'){
-      data.gapFilling=item.title.replaceAll('[]','<input/>')
+      let list:any = []
+
+
+      data.gapFilling=item.title.replaceAll('[]','<input class="input" type="text" />')
+      const array = item.title.split(/([])/).filter((item:any) => {
+        return item !== ''
+      })
+      console.log(array);
+      
+      // console.log(data.gapFilling);
+  //     data.gapFilling.map((item:any) => {
+  //       console.log(item);
+        
+  //   // if (/_{4,}/.test(item)) { // 输入框
+  //   //   list.push({
+  //   //     type: 1,
+  //   //     value: ''
+  //   //   })
+  //   // } else { // 文字
+  //   //   list.push({
+  //   //     type: 2,
+  //   //     text: item
+  //   //   })
+  //   // }
+  // })
+  // this.list = list
     }
   })
 
