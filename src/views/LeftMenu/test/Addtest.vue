@@ -127,11 +127,12 @@
       </div>
       <!-- 题库 -->
       <div class="subict">
-        <el-form-item label="试题存入题库:"  prop="databaseid">
+        <el-form-item label="试题存入题库:"   prop="databaseid">
           <el-select
             v-model="addFrom.databaseid"
             placeholder="请选择题库"
             style="margin-left: 10px"
+            @click="getDatabase"
           >
             <el-option v-for="item in baseList"
               :key="item.id"
@@ -256,7 +257,7 @@
 </template>
 
 <script setup lang="ts">
-import {AddText} from '../../../api/admin'
+import {AddText,testGet} from '../../../api/admin'
 import SubjectList from '../../../components/subject/SubjectListDialog.vue'//从题库中导入
 import TransferDialog from '../../../components/subject/TransferDialog.vue';//可见老师
 import Question from '../../../components/subject/QuestionDialog.vue'//题目列表
@@ -267,10 +268,13 @@ import Drawer from '../../../components/subject/SubjectDrawer.vue';
 import { ref, toRefs, reactive,watch,onMounted,computed } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { databaseList } from '../../../api/subjects';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 import type { FormInstance, FormRules } from 'element-plus'
 const ruleFormRef = ref<FormInstance>()
 const router =useRouter()
+const route=useRoute()
+
+
 interface Ishow {
   drawerShow: boolean;
   tranferShow: boolean;
@@ -392,7 +396,9 @@ const rules = reactive<FormRules>({
   ]
 })
 
-// const isShowDrawer=ref(false)
+const getDatabase=()=>{
+  getDatabaseList()
+}
 
 const title=ref() //弹框的标题
 const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
@@ -443,7 +449,16 @@ const allScores = computed(() => {
     return pive + parseInt(next.scores);
   }, 0);
 });
-
+console.log('接收编辑参数',route.query.id);
+const getTestEmit=async ()=>{
+  const res:any=await testGet(route.query.id).catch(()=>{})
+  if(res.errCode!==10000){
+    return false
+  }
+  Object.assign(addFrom.value,res.data)
+  console.log('编辑单条考试',res);
+  
+}
 
 //多选框
 
@@ -621,6 +636,7 @@ watch(()=>questionsType.value,(newVal)=>{
 },{deep:true,immediate:true})
 onMounted(()=>{
   getDatabaseList()
+  getTestEmit()
 })
 
 const submitForm = async (formEl: FormInstance | undefined) => {
@@ -633,14 +649,14 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       }
 
   const res:any=await AddText(addFrom.value).catch(()=>{})
-  console.log('点击发布',res);
+  // console.log('点击发布',res);
   if(res.errCode!==10000){
     ElMessage.error(res.errMsg)
     return false
   }
   router.push('/test')
     } else {
-      console.log('error submit!', fields)
+      // console.log('error submit!', fields)
     }
   })
 }
