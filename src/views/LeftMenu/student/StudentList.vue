@@ -101,7 +101,7 @@
 import {debounce}  from "../../../utils/throTtle"
 import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
 import { onMounted } from 'vue';
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs,onActivated } from 'vue';
 import { ref } from 'vue';
 import Addstu from './Addstuden.vue'
 import {
@@ -208,7 +208,7 @@ const data = reactive<Istate>({
 });
 const { list, params, classData, classList } = toRefs(data);
 //列表请求
-const getlist =debounce( async () => {
+const getlist = async () => {
   let res: any = await studentlist(data.params);
   console.log(res);
   if (res.errCode === 10000) {
@@ -222,7 +222,7 @@ const getlist =debounce( async () => {
     return false;
   }
   data.list = result.data.list;
-},500);
+};
 
 // 部门发生变化时
 const buMenchange = async (val: any) => {
@@ -342,9 +342,12 @@ const handleCurrentChange = (val: number) => {
 };
 
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
+onActivated(()=>{
+  getlist()
+})
 </script>
 
 <style lang="less" scoped>

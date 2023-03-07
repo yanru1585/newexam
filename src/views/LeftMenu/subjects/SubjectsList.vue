@@ -65,7 +65,7 @@
 import {debounce}  from "../../../utils/throTtle"
 import Test from '../../../components/test/TestgetDialog.vue'
 import {subjectList,DelSubject}from '../../../api/subjects'
-import { reactive,toRefs,onMounted,ref,watchEffect } from 'vue';
+import { reactive,toRefs,onMounted,ref,watchEffect,onActivated } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const router =useRouter()
@@ -117,12 +117,12 @@ const data:Idata=reactive({
 
 const {formInline,tableData,total,checkIsmy,ischeck,getData,testShow}=toRefs(data)
 // 点击查询
-const seacher=()=>{
+const seacher=debounce(()=>{
   getList()
   // console.log(formInline.value);
-}
+},500)
 // 获取试卷列表
-const getList=debounce( async ()=>{
+const getList= async ()=>{
   const res:any=await subjectList(formInline.value).catch(()=>{})
   console.log('试卷列表',res);
   if(res.errCode!==10000){
@@ -132,7 +132,7 @@ const getList=debounce( async ()=>{
   total.value=res.data.counts
   console.log(tableData.value);
   
-},500)
+}
 // 分页触发事件
 const handleSizeChange = (val: number) => {
   // console.log(`${val} items per page`)
@@ -146,6 +146,10 @@ const handleCurrentChange = (val: number) => {
 }
 onMounted(()=>{
   getList()
+}),
+onActivated(()=>{
+  getList()
+  
 })
 // 触发只看我创建的
 const checkoutIsmy=()=>{

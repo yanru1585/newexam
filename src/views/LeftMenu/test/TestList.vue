@@ -261,7 +261,7 @@ const getTestInfo = async (val: any) => {
 };
 
 //列表请求
-const getlist =debounce( async () => {
+const getlist = async () => {
   console.log('列表查询',params.value);
   
   let res: any = await list(params.value);
@@ -272,7 +272,7 @@ const getlist =debounce( async () => {
     // console.log(data.tableData);
     // console.log(res.data.list);
   }
-},500);
+};
 onMounted(() => {
   getlist();
 });
@@ -455,9 +455,9 @@ const handleCurrentChange = (val: number) => {
 };
 
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
 // 点击编辑
 const getEdit=(id:any)=>{
   console.log('考试编辑',id);

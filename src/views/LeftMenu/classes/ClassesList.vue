@@ -110,14 +110,14 @@ const data = reactive<Istate>({
   total: 0,
 });
 //列表请求
-const getlist =debounce( async () => {
+const getlist = async () => {
   let res: any = await classeslist(data.params);
   // console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
   }
-},500);
+};
 onMounted(() => {
   getlist();
 });
@@ -237,9 +237,9 @@ const handleCurrentChange = (val: number) => {
 };
 
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
 </script>
 
 <style lang="less" scoped>

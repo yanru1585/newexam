@@ -97,7 +97,7 @@
 import {debounce}  from "../../../utils/throTtle"
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick } from 'vue';
+import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick,onActivated } from 'vue';
 import {
   databaseList,
   databaseDelete,
@@ -145,14 +145,16 @@ const { tableData, total, ids } = toRefs(state);
 onMounted(() => {
   getList(); //题库列表
 });
-
+onActivated(()=>{
+  getList()
+})
 const dialogRef = ref<any>();
 // 创建题库
 const add = () => {
   dialogRef.value.dialogVisible = true;
 };
 
-const getList =debounce( async () => {
+const getList = async () => {
   let res: any = await databaseList(data);
   console.log('题库列表', res);
   if (res.errCode !== 10000) {
@@ -161,12 +163,12 @@ const getList =debounce( async () => {
   }
   state.tableData = res.data.list;
   state.total = res.data.counts;
-},500);
+};
 
 // 查询
-const search = () => {
+const search =debounce( () => {
   getList();
-};
+},500);
 
 // 删除题库(单删)
 const del = (id: any) => {

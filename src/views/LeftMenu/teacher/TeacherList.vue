@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import {debounce}  from "../../../utils/throTtle"
-import { onMounted } from 'vue';
+import { onMounted,onActivated } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
 import {
@@ -147,6 +147,9 @@ const lists = async () => {
   // console.log(res);
   dataa.arr = res.data.list;
 };
+onActivated(()=>{
+  getlist()
+})
 onMounted(() => {
   lists();
 });
@@ -199,14 +202,14 @@ const data = reactive<Istate>({
   total: 0,
 });
 //列表请求
-const getlist =debounce(async () => {
+const getlist =async () => {
   let res: any = await teacherlsit(data.params);
   // console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
   }
-},500) ;
+} ;
 onMounted(() => {
   getlist();
 });
@@ -251,9 +254,9 @@ const handleCurrentChange = (val: number) => {
   getlist();
 };
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
 </script>
 
 <style lang="less" scoped>

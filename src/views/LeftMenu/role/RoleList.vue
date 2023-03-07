@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, toRefs, ref } from 'vue';
+import { reactive, onMounted, toRefs, ref,onActivated } from 'vue';
 import { rolelist, roledel } from '../../../api/admin';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import RoleDialog from './Roleadd.vue';
@@ -135,7 +135,9 @@ const del = async (val: any) => {
       });
     });
 };
-
+onActivated(()=>{
+  getList();
+})
 // 编辑
 const edit = (val: any) => {
   console.log(val);
