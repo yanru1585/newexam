@@ -230,6 +230,7 @@ const getList = async () => {
         return item !== ''
       })
       console.log(array);
+      console.log(11);
       
       // console.log(data.gapFilling);
   //     data.gapFilling.map((item:any) => {
