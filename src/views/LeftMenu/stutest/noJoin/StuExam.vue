@@ -212,10 +212,6 @@ const getList = async () => {
     return false;
   }
 
-  // data.questionsList.forEach((item:any)=>{
-	// 				return item.checkedCities=[]
-	// 			})
-
   data.testData = res.data;
 
   // 倒计时
