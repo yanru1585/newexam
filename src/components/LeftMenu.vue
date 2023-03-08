@@ -61,7 +61,8 @@
           v-for="(item, index) in menuList"
           :key="index"
         >
-          <el-icon size="30"><setting /></el-icon>
+        <i class="iconfont " :class=" item.ico " style="font-size: 22px;"></i>
+          <!-- <el-icon size="30"><item.icon /></el-icon> -->
           <span>{{ item.name }}</span>
         </el-menu-item>
       </div>
@@ -241,5 +242,8 @@ isShow.value=false
       font-size: 13px;
     }
   }
+}
+.iconfont{
+  color: #747e97;
 }
 </style>

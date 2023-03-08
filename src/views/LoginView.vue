@@ -93,8 +93,8 @@ interface Irule {
 }
 const ruleForm = reactive({
   loginData: {
-    username: '',
-    pass: '',
+    username: 'lisi123',
+    pass: 'lisi123',
   },
 });
 const { loginData } = toRefs(ruleForm);

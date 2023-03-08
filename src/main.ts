@@ -8,7 +8,7 @@ import ElementPlus from 'element-plus'
 import Vant from './utils/vantui'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import './assets/css/iconfont.css'
+import './assets/css/font/iconfont.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 
