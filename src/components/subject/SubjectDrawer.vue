@@ -79,7 +79,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitForm(ruleFormRef)">保存</el-button>
-          <el-button>保存并继续</el-button>
+          <el-button @click="submitGo(ruleFormRef)">保存并继续</el-button>
           <el-button  @click="cancelForm">取消</el-button>
 
         </el-form-item>
@@ -127,6 +127,7 @@ interface IaddForm {
 }
 interface Idata {
   addForm: IaddForm;
+  newAddForm: IaddForm;
 
   drawer:string
 }
@@ -149,8 +150,25 @@ const data: Idata = reactive({
   ],
   analysis:'',//解析
   },
+  newAddForm: {
+    oneIndex:-1,
+    type:'单选题',//题型
+    scores: '',//分值
+    radio: '1', //题型单选
+    answer: '', //单选框答案
+    checkList: [], //复选框答案
+    judge: '', //判断
+    title:'<p></p>',//富文本数据，题干
+    answers: [//选项数组数据数组
+    {answerno:'A',content:''},
+    {answerno:'B',content:''},
+    {answerno:'C',content:''},
+    {answerno:'D',content:''},
+  ],
+  analysis:'',//解析
+  },
 });
-const { addForm ,drawer} = toRefs(data);
+const { addForm ,drawer,newAddForm} = toRefs(data);
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 
@@ -207,8 +225,7 @@ const cancelForm=()=>{
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
-    console.log(addForm.value.title );
-    
+    console.log(addForm.value.title ); 
     if (valid) {
       if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
         return ElMessage.error('请输入题目内容')
@@ -251,6 +268,59 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       emit('drawerEmit',{...addForm.value})
       emit('showEmit',false)
       // drawer.value=false
+    } else {
+      // console.log('error submit!', fields)
+    }
+  })
+}
+// 点击保存并继续
+const submitGo=async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    console.log(addForm.value.title );
+    
+    if (valid) {
+      if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
+        return ElMessage.error('请输入题目内容')
+      }
+      // console.log('submit!')
+      if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
+       let arr= addForm.value.answers.filter(item=>{
+        if(!item.content){
+          return item
+        }
+       })
+       if(arr.length!==0){
+        ElMessage.error('请输入选项内容')
+        return false
+       }
+        // console.log(444,arr)
+      }
+      console.log(2222);
+      
+       if(addForm.value.type==='单选题'){
+        if(!addForm.value.answer){
+            ElMessage.error('正确答案必填')
+            return false
+          }
+      }
+       if(addForm.value.type==='多选题'){
+        if(addForm.value.checkList.length===0){
+            ElMessage.error('正确答案必填')
+            return false
+          }
+      }
+      if(addForm.value.type==='判断题'){
+        if(!addForm.value.judge){
+            ElMessage.error('正确答案必填')
+            return false
+        }
+      }
+      console.log(222222222);
+      
+      emit('drawerEmit',{...addForm.value})
+      Object.assign(addForm.value,newAddForm.value)
+      // resetFields()
     } else {
       // console.log('error submit!', fields)
     }

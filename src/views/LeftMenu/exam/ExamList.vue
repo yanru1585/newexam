@@ -8,7 +8,7 @@
             <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
           </div>
           <div>
-            <el-table :data="data.list"   border style="width: 100%">
+            <el-table :data="data.list"   border style="width: 100%" v-loading="loading">
               <el-table-column prop="title" label="考试名称" align="center" />
               <el-table-column prop="info" label="考试说明" align="center"/>
               <el-table-column prop="subjectnum" label="题量" align="center"/>
@@ -52,10 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue';
+import {debounce}  from "../../../utils/throTtle"
+import { onMounted, reactive, ref,onActivated } from 'vue';
 import { Ilist } from '../../../api/admin';
 import router from '../../../router';
 const total = ref(0);
+const loading = ref(true)
 // 阅卷列表
 interface marking {
   page: number;
@@ -71,13 +73,14 @@ const data: marking = reactive({
   list: [],     //
   key:'',        //input 绑定值
 });
-const getIlist = async () => {
+const getIlist =async () => {
   const res = await Ilist(data.page, data.psize, data.isread,data.key);
   // console.log(res);
   data.list = res.data.list;
   // console.log(data.list);
   total.value = res.data.counts;
-};
+  loading.value=false
+} ;
 
 // 分页
 const small = ref(false);
@@ -95,10 +98,10 @@ const handleCurrentChange = (val: number) => {
 };
 
 // 搜索
-const reser=()=>{
+const reser=debounce(()=>{
 // console.log(input.value);
   getIlist();
-}
+},500)
 // 查看
 const see=(row:any)=>{
   console.log(row);
@@ -107,6 +110,9 @@ const see=(row:any)=>{
 onMounted(() => {
   getIlist();
 });
+onActivated(()=>{
+  getIlist()
+})
 </script>
 
 <style scoped>

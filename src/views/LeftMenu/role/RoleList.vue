@@ -7,7 +7,7 @@
       >
     </div>
 
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
       <el-table-column prop="name" label="名称" />
       <el-table-column label="操作" fixed="right" width="150">
         <template #default="scope">
@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, toRefs, ref } from 'vue';
+import { reactive, onMounted, toRefs, ref,onActivated } from 'vue';
 import { rolelist, roledel } from '../../../api/admin';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import RoleDialog from './Roleadd.vue';
-
+const loading = ref(true)
 const isShowDialog = ref(false);
 
 // 子组件传过来的
@@ -108,6 +108,7 @@ const getList = async () => {
   }
   data.tableData = res.data.list;
   data.counts = res.data.counts;
+  loading.value=false
 };
 // 删除
 const del = async (val: any) => {
@@ -135,7 +136,9 @@ const del = async (val: any) => {
       });
     });
 };
-
+onActivated(()=>{
+  getList();
+})
 // 编辑
 const edit = (val: any) => {
   console.log(val);
@@ -151,7 +154,7 @@ const edit = (val: any) => {
 }
 .el-pagination {
   display: flex;
-  justify-content: center;
+  justify-content: right;
   margin-top: 15px;
 }
 </style>

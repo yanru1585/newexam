@@ -35,6 +35,7 @@
         style="width: 100%"
         size="small"
         @selection-change="selectionChange"
+        v-loading="loading"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="题库" #default="scope" width="450" align="center">
@@ -94,9 +95,10 @@
 </template>
 
 <script lang="ts" setup>
+import {debounce}  from "../../../utils/throTtle"
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick } from 'vue';
+import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick,onActivated } from 'vue';
 import {
   databaseList,
   databaseDelete,
@@ -104,7 +106,7 @@ import {
   
 } from '../../../api/database';
 import { useRouter } from 'vue-router';
-
+const loading = ref(true)
 const router = useRouter();
 
 // 分页
@@ -144,7 +146,9 @@ const { tableData, total, ids } = toRefs(state);
 onMounted(() => {
   getList(); //题库列表
 });
-
+onActivated(()=>{
+  getList()
+})
 const dialogRef = ref<any>();
 // 创建题库
 const add = () => {
@@ -160,12 +164,13 @@ const getList = async () => {
   }
   state.tableData = res.data.list;
   state.total = res.data.counts;
+  loading.value=false
 };
 
 // 查询
-const search = () => {
+const search =debounce( () => {
   getList();
-};
+},500);
 
 // 删除题库(单删)
 const del = (id: any) => {

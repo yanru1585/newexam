@@ -9,9 +9,9 @@
           <el-main @click="clickFn" >
             <router-view v-slot="{ Component }">
           <keep-alive>
-            <component :is="Component" v-if="$route.meta.keepAlive" />
+            <component :is="Component" :key="$route.name" v-if="$route.meta.keepAlive" />
           </keep-alive>
-          <component :is="Component" v-if="!$route.meta.keepAlive" />
+          <component :is="Component" :key="$route.name" v-if="!$route.meta.keepAlive" />
           </router-view>
           </el-main>
         </el-container>
@@ -35,7 +35,7 @@ const clickFn=()=>{
 .el-aside {
   background-color: #ebebeb;
   height: 100vh;
-  // position: fixed;
-
+  position: fixed;
 }
+
 </style>

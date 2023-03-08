@@ -74,6 +74,7 @@
 </template>
 
 <script lang="ts" setup>
+import {debounce}  from "../utils/throTtle"
 import { reactive, ref, toRefs } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';
@@ -92,8 +93,8 @@ interface Irule {
 }
 const ruleForm = reactive({
   loginData: {
-    username: '',
-    pass: '',
+    username: 'lisi123',
+    pass: 'lisi123',
   },
 });
 const { loginData } = toRefs(ruleForm);
@@ -114,7 +115,7 @@ const rules = reactive<FormRules>({
 });
 
 // 点击登录
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm =debounce ( async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
@@ -123,17 +124,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         loginData.value.username,
         loginData.value.pass
       );
-      console.log('登录', res);
+      console.log('登录', res.data);
       if (res.errCode === 10000) {
         ElMessage({
           message: '登陆成功',
           type: 'success',
         });
+        let menuUrl=res.data.menu.filter((item: { id: number; })=>item.id===1)
+        console.log(22,menuUrl);
+        
         sessionStorage.setItem('token', res.data.token); //存储token
         sessionStorage.setItem('menu', JSON.stringify(res.data.menu)); //存储菜单数据
         sessionStorage.setItem('model', JSON.stringify(res.data.model)); //存储管理员数据
         sessionStorage.setItem('type', res.data.type); //登录类型
-        router.push('/test');
+        router.push(menuUrl[0].url);
       } else {
         ElMessage.error(res.errMsg);
       }
@@ -142,7 +146,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       ElMessage.error('请正确输入账号密码');
     }
   });
-};
+},500)
 </script>
 
 <style scoped>

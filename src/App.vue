@@ -6,4 +6,9 @@
   </div>
 </template>
 
-<style scoped></style>
+<style lang="less" scoped>
+  /deep/.el-main{
+ height: 100vh ;
+
+ }
+</style>

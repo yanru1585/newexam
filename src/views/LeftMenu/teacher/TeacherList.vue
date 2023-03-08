@@ -33,7 +33,7 @@
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
 
-    <el-table :data="data.tableData" stripe style="width: 100%">
+    <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading">
       <el-table-column prop="name" label="姓名" align="center"> </el-table-column>
       <el-table-column prop="depname" label="部门" align="center"> </el-table-column>
       <el-table-column prop="tel" label="电话" align="center"> </el-table-column>
@@ -75,7 +75,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import {debounce}  from "../../../utils/throTtle"
+import { onMounted,onActivated } from 'vue';
 import { reactive } from 'vue';
 import { ref } from 'vue';
 import {
@@ -88,7 +89,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import teacherreset from './teacherreset.vue';
 import teacherrevise from './teacherrevise.vue';
-
+const loading = ref(true)
 const router = useRouter(); //跳转路由
 const aa = ref('');
 
@@ -105,15 +106,7 @@ const reserdata = reactive({
     roleid: 0,
   },
 });
-const reser = (row: any) => {
-  // console.log(row);
-  // reserdata.list.id = row.id       //用来判断添加还是修改
-  // reserdata.list.username = row.username  
-  // reserdata.list.pass = row.pass  
-  // reserdata.list.name = row.name  
-  // reserdata.list.tel = row.tel  
-  // reserdata.list.depid = row.depid  
-  // reserdata.list.roleid = row.roleid    
+const reser = (row: any) => { 
   reserdata.list = row
   
   use.value = true;
@@ -154,6 +147,9 @@ const lists = async () => {
   // console.log(res);
   dataa.arr = res.data.list;
 };
+onActivated(()=>{
+  getlist()
+})
 onMounted(() => {
   lists();
 });
@@ -172,6 +168,7 @@ const getrolelist = async () => {
   const res = await rolelistt(lisi.page, lisi.psize);
   // console.log(res);
   lisi.list = res.data.list;
+  loading.value=false
 };
 onMounted(() => {
   getrolelist();
@@ -206,14 +203,14 @@ const data = reactive<Istate>({
   total: 0,
 });
 //列表请求
-const getlist = async () => {
+const getlist =async () => {
   let res: any = await teacherlsit(data.params);
   // console.log(res);
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
   }
-};
+} ;
 onMounted(() => {
   getlist();
 });
@@ -258,9 +255,9 @@ const handleCurrentChange = (val: number) => {
   getlist();
 };
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
 </script>
 
 <style lang="less" scoped>

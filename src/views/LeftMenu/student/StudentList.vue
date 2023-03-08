@@ -52,6 +52,7 @@
       stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-loading="loading"
     >
       <el-table-column type="selection" />
       <el-table-column prop="name" label="姓名"> </el-table-column>
@@ -98,9 +99,10 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
 import { onMounted } from 'vue';
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs,onActivated } from 'vue';
 import { ref } from 'vue';
 import Addstu from './Addstuden.vue'
 import {
@@ -119,7 +121,7 @@ const isShowAdd=ref(false)
 const batchAdd=()=>{
   isShowAdd.value=true
 }
-
+const loading = ref(true)
 // 接受子组件传过来的值  关闭弹窗
 const closeDialog=(val:any)=>{
   isShowAdd.value=val
@@ -213,6 +215,7 @@ const getlist = async () => {
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
+    loading.value=false
   }
 
   let result: any = await departmentList();
@@ -341,9 +344,12 @@ const handleCurrentChange = (val: number) => {
 };
 
 //查询
-const onSubmit = () => {
+const onSubmit =debounce( () => {
   getlist();
-};
+},500);
+onActivated(()=>{
+  getlist()
+})
 </script>
 
 <style lang="less" scoped>

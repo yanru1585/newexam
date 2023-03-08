@@ -78,6 +78,7 @@
 </template>
 
 <script setup lang="ts">
+import {debounce}  from "../../../utils/throTtle"
 import { onMounted, reactive, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { ISee, IClasses ,classeslist} from '../../../api/admin';
@@ -174,9 +175,9 @@ const back = () => {
   router.push('/exam');
 };
 // 查询
-const reser = () => {
+const reser =debounce(() => {
   getSee();
-};
+},500) ;
 // 点击出现抽屉
 const user = ref();
 // console.log(user.value);
