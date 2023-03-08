@@ -36,5 +36,6 @@ const clickFn=()=>{
   background-color: #ebebeb;
   height: 100vh;
   // position: fixed;
+
 }
 </style>
