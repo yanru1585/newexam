@@ -33,7 +33,7 @@
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
 
-    <el-table :data="data.tableData" stripe style="width: 100%">
+    <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading">
       <el-table-column prop="name" label="姓名" align="center"> </el-table-column>
       <el-table-column prop="depname" label="部门" align="center"> </el-table-column>
       <el-table-column prop="tel" label="电话" align="center"> </el-table-column>
@@ -89,7 +89,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import teacherreset from './teacherreset.vue';
 import teacherrevise from './teacherrevise.vue';
-
+const loading = ref(true)
 const router = useRouter(); //跳转路由
 const aa = ref('');
 
@@ -168,6 +168,7 @@ const getrolelist = async () => {
   const res = await rolelistt(lisi.page, lisi.psize);
   // console.log(res);
   lisi.list = res.data.list;
+  loading.value=false
 };
 onMounted(() => {
   getrolelist();

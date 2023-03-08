@@ -52,6 +52,7 @@
       stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-loading="loading"
     >
       <el-table-column type="selection" />
       <el-table-column prop="name" label="姓名"> </el-table-column>
@@ -120,7 +121,7 @@ const isShowAdd=ref(false)
 const batchAdd=()=>{
   isShowAdd.value=true
 }
-
+const loading = ref(true)
 // 接受子组件传过来的值  关闭弹窗
 const closeDialog=(val:any)=>{
   isShowAdd.value=val
@@ -214,6 +215,7 @@ const getlist = async () => {
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
+    loading.value=false
   }
 
   let result: any = await departmentList();

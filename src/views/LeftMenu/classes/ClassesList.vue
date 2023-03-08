@@ -102,7 +102,7 @@ interface Iform {
 const data = reactive<Istate>({
   params: {
     page: 1, //页码 默认是1
-    psize: 4, //每页显示多少条 默认是2
+    psize: 5, //每页显示多少条 默认是2
     key: '', //搜索关键字(名称)
     depid: '', //部门id
   },
@@ -223,7 +223,7 @@ const father = () => {
 };
 
 //分页
-const pageSize2 = ref(4);
+const pageSize2 = ref(5);
 const currentPage1 = ref(1);
 const handleSizeChange = (val: number) => {
   console.log(val);

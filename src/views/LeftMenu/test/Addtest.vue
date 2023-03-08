@@ -288,9 +288,9 @@ interface Iadd {
   admin: string;
   answershow: string;
   aorder: number;
-  begintime: string;
+  begintime: any;
   databaseid: string;
-  endtime: string;
+  endtime: any;
   id: number;
   info: string;
   limits: Array<any>;
@@ -320,9 +320,9 @@ const testData: ItestData = reactive({
     admin: 'ldq',
     answershow: '',//答案可见
     aorder: aorderCheck.value[0],//防作弊
-    begintime: '',//开始时间
+    begintime: null,//开始时间
     databaseid: '',//题库id
-    endtime: '',//结束时间
+    endtime: null,//结束时间
     id: 0,
     info: '',//考试介绍
     isshow: 0,//限制时长

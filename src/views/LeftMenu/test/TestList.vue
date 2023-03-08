@@ -69,6 +69,7 @@
       stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      v-loading="loading"
     >
       <el-table-column type="selection" />
       <el-table-column prop="title" label="考试名称" #default="scope">
@@ -150,7 +151,7 @@ import { useRouter } from 'vue-router';
 import { ElMessage, ElMessageBox } from 'element-plus';
 const time = ref('');
 const isShowGet = ref(false);
-
+const loading = ref(true)
 
 const title=ref() //弹框的标题
 const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅卷老师
@@ -269,6 +270,7 @@ const getlist = async () => {
   if (res.errCode === 10000) {
     data.tableData = res.data.list;
     data.total = res.data.counts;
+    loading.value=false
     // console.log(data.tableData);
     // console.log(res.data.list);
   }
@@ -528,4 +530,8 @@ const getAnalyse=(data:any)=>{
 .el-table .cell {
   color: #409eff;
 }
+//   .el-main{
+//   height: 100vh ;
+
+// }
 </style>

@@ -35,6 +35,7 @@
         style="width: 100%"
         size="small"
         @selection-change="selectionChange"
+        v-loading="loading"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="题库" #default="scope" width="450" align="center">
@@ -105,7 +106,7 @@ import {
   
 } from '../../../api/database';
 import { useRouter } from 'vue-router';
-
+const loading = ref(true)
 const router = useRouter();
 
 // 分页
@@ -163,6 +164,7 @@ const getList = async () => {
   }
   state.tableData = res.data.list;
   state.total = res.data.counts;
+  loading.value=false
 };
 
 // 查询

@@ -34,7 +34,7 @@ const clickFn=()=>{
 <style lang="less" scoped>
 .el-aside {
   background-color: #ebebeb;
-  height: 100vh;
-  // position: fixed;
+  position: fixed;
 }
+
 </style>

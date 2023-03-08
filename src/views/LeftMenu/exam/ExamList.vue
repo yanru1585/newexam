@@ -8,7 +8,7 @@
             <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
           </div>
           <div>
-            <el-table :data="data.list"   border style="width: 100%">
+            <el-table :data="data.list"   border style="width: 100%" v-loading="loading">
               <el-table-column prop="title" label="考试名称" align="center" />
               <el-table-column prop="info" label="考试说明" align="center"/>
               <el-table-column prop="subjectnum" label="题量" align="center"/>
@@ -57,6 +57,7 @@ import { onMounted, reactive, ref,onActivated } from 'vue';
 import { Ilist } from '../../../api/admin';
 import router from '../../../router';
 const total = ref(0);
+const loading = ref(true)
 // 阅卷列表
 interface marking {
   page: number;
@@ -78,6 +79,7 @@ const getIlist =async () => {
   data.list = res.data.list;
   // console.log(data.list);
   total.value = res.data.counts;
+  loading.value=false
 } ;
 
 // 分页
