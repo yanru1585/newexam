@@ -93,8 +93,8 @@ interface Irule {
 }
 const ruleForm = reactive({
   loginData: {
-    username: 'lisi123',
-    pass: 'lisi123',
+    username: '',
+    pass: '',
   },
 });
 const { loginData } = toRefs(ruleForm);
@@ -108,10 +108,6 @@ const rules = reactive<FormRules>({
     { required: true, message: '请输入密码', trigger: 'blur' },
     { min: 3, max: 15, message: '密码为3到15个字符', trigger: 'blur' },
   ],
-
-  // username: [{ required: true, message: '请输入账号', trigger: 'blur' },{ min: 3, max: 10, message: '账号为3到10个字符', trigger: 'blur' },],
-
-  // pass: [{ required: true, message: '请输入密码', trigger: 'blur' },{ min: 3, max: 10, message: '密码为3到10个字符', trigger: 'blur' },],
 });
 
 // 点击登录
