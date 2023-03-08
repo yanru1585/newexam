@@ -73,18 +73,13 @@
                   </div>
                 </div>
                 <p v-html="item.title" style="margin-left: 20px"></p>
-                <el-radio-group
-                  v-model="item.answer"
-                  v-if="item.type === '单选题'"
-                >
-                  <div v-for="(itemr, indexr) in item.answers" :key="indexr">
-                    <el-radio :label="itemr.answerno" :style="item.answer.includes(itemr.answerno)? 'background-color: #eefaf6; width: 100%;':''"
-                      ><span>{{ itemr.answerno }}:</span>{{ itemr.content }}</el-radio
+                <el-radio-group v-if="item.type === '单选题'">
+                    <el-radio v-for="(itemr, indexr) in item.answers" :key="indexr" :label="itemr.answerno+'：'+itemr.content"  :style="item.answer===itemr.answerno? 'background-color: #eefaf6; width: 100%;':''"
+                      ></el-radio
                     >
-                  </div>
+                    <!-- :label="itemr.answerno+itemr.content"  -->
                 </el-radio-group>
                 <el-checkbox-group
-                  v-model="item.checkList"
                   v-if="item.type === '多选题'"
                 >
                   <div v-for="(itemr, indexr) in item.answers" :key="indexr">
@@ -718,5 +713,10 @@ h3 {
 // 验证信息提示
 /deep/.el-form-item__error{
   margin-left: 20%;
+}
+.el-radio-group[data-v-b461af89] {
+  display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 </style>

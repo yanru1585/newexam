@@ -78,7 +78,6 @@
               </div>
               <p v-html="item.title" style="margin-left: 20px;line-height: 30px;"></p>
               <el-radio-group
-                v-model="item.answer"
                 v-if="item.type === '单选题'"
               >
                 <div v-for="(itemr, indexr) in item.answers" :key="indexr">
@@ -89,7 +88,6 @@
                 </div>
               </el-radio-group>
               <el-checkbox-group
-                v-model="item.checkList"
                 v-if="item.type === '多选题'"
               >
                 <div v-for="(itemr, indexr) in item.answers" :key="indexr">
