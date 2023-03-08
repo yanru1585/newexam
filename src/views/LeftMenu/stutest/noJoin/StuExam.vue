@@ -22,23 +22,20 @@
                 <span class="gap" @input="gapFillingFn($event,index)" v-html="gapFilling"></span>
               </p>
             </p>
-            <div style="display: flex; flex-direction: column;margin-left: 15px;" v-if="item.type=='单选题'">
-              <el-radio
-                v-model="item.studentanswer"
-                v-for="(it, index1) in item.answers"
-                :key="index1"
-                :label="it.answerno"
-                size="large"
-                :style="item.studentanswer==it.answerno?'border: 1px solid #0089ff;background-color: #f1f5fb;border-radius:3px;padding:5px 10px;':'padding:5px 10px;'"
-                >{{ it.content }}</el-radio>
-            </div>
-            <div style="display: flex; flex-direction: column;margin-left: 30px;" v-if="item.type=='多选题'">
-              <el-checkbox-group style="display: flex; flex-direction: column;" v-for="(it, index1) in item.answers" :key="index1" @change="handleCheckAllChange(index)" v-model="item.checkedCities">
-                <el-checkbox 
-                :label="it.answerno" size="large">{{ it.content }}</el-checkbox>
-              </el-checkbox-group>
-            </div>
 
+            <view class="" v-for="(it,index1) in item.answers" :key="index1">
+              <view :class="item.studentanswer==it.answerno?'choice choice_sel':'choice'" v-if="item.type=='单选题'" @click="radio(it.answerno,index)">
+                <view :class="item.studentanswer==it.answerno?'choice_left choice_left_sel':'choice_left'">{{it.answerno}}</view>
+                <view class="choice_content">{{it.content}}</view>
+              </view>
+
+              <view :class="item.studentanswer?item.studentanswer.includes(it.answerno)?'choice choice_sel':'choice':'choice'" v-if="item.type=='多选题'" @click="check(it.answerno,index)" >
+                <view style="border-radius:5px" :class="item.studentanswer?item.studentanswer.includes(it.answerno)?'choice_left choice_left_sel':'choice_left':'choice_left'">{{it.answerno}}</view>
+                <view class="check_content">{{it.content}}</view>
+              </view>
+            </view>
+
+      
             <div v-if="item.type=='判断题'">
               <div style="display: flex;flex-direction: column;">
                 <div :class="item.studentanswer==i.answer?'panduanItemSel panduanItem':'panduanItem'" @click="judgeRight(i.answer,index)" v-for="(i,index2) in judge" :key="index2">
@@ -140,6 +137,13 @@ const data: Idata = reactive({
 });
 const { testData, questionsList,checkList,gapFilling,judge,residue,addList } = toRefs(data);
 
+// 点击单选
+const radio=(answerno:any,index:any)=>{
+	data.questionsList[index].studentanswer=answerno
+}
+
+
+
 onMounted(() => {
   const model:any = sessionStorage.getItem('model')
   data.studentid=JSON.parse(model).id
@@ -185,9 +189,6 @@ const testnum=()=>{
     }
   }).length
 }
-console.log(124);
-console.log(123);
-
 
 // 监听  剩余数量
 watch(()=>data.questionsList,(newVal)=>{
@@ -210,6 +211,7 @@ const getList = async () => {
     ElMessage.error(res.errMsg);
     return false;
   }
+
   data.testData = res.data;
 
   // 倒计时
@@ -229,29 +231,6 @@ const getList = async () => {
 
 
       data.gapFilling=item.title.replaceAll('[]','<input class="input" type="text" />')
-      const array = item.title.split(/([])/).filter((item:any) => {
-        return item !== ''
-      })
-      console.log(array);
-      console.log(11);
-      
-      // console.log(data.gapFilling);
-  //     data.gapFilling.map((item:any) => {
-  //       console.log(item);
-        
-  //   // if (/_{4,}/.test(item)) { // 输入框
-  //   //   list.push({
-  //   //     type: 1,
-  //   //     value: ''
-  //   //   })
-  //   // } else { // 文字
-  //   //   list.push({
-  //   //     type: 2,
-  //   //     text: item
-  //   //   })
-  //   // }
-  // })
-  // this.list = list
     }
   })
 
@@ -264,6 +243,19 @@ const shuffle = (arr:any) => { //防作弊 打乱题目
 };
 shuffle(data.questionsList)
 };
+
+// 点击多选
+const check=(answerno:any,index:any)=>{
+  if(!data.questionsList[index].studentanswer){
+    data.questionsList[index].studentanswer=answerno
+  }else if(data.questionsList[index].studentanswer.includes(answerno)){
+    let arr = data.questionsList[index].studentanswer.split('|')
+    arr.splice(arr.indexOf(answerno),1)
+    data.questionsList[index].studentanswer=arr.join('|')
+  }else{
+    data.questionsList[index].studentanswer+='|'+answerno
+  }
+}
 
 const confirmAdd=async()=>{ //交卷
   let res:any = await studentanswerAdd(data.addList)
@@ -437,26 +429,34 @@ const scrollTo=(index:any)=> {
   }
 }
 
-// 单选
-.radioItemSel{
-  background-color: #f1f5fb;
-  border: 1px solid #0089ff;
-  padding: 10px;
-  border-radius: 3px;
-}
-.radioItem{
-  display: flex;
-  margin-bottom: 10px;
-  padding: 8px;
-  .radioItem_left{
+// 选项 单选
+.choice{
+		display: flex;
+		margin-bottom: 10px;
+		padding: 8px;
+	}
+	.choice_sel{
+		border: 1px solid #0053d9;
+		border-radius: 5px;
+		background-color: #f6f9fe;
+	}
+	// 未选中
+	.choice_left{
     width: 20px;
     height: 20px;
-    border: 1px solid #d3d4d8;
     border-radius: 50%;
-    margin-right: 10px;
-  }
-  .radioItem_left_sel{
-    width: 20px;
+    font-size: 12px;
+    border: #d3d4d8 1px solid;
+    color: #777f86;
+    background-color: #fff;
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+	}
+	// 选中
+	.choice_left_sel{
+		width: 20px;
     height: 20px;
     line-height: 20px;
     border: #0089ff 1px solid;
@@ -466,8 +466,11 @@ const scrollTo=(index:any)=> {
     text-align: center;
     color: #fff;
     font-size: 10px;
-  }
-}
+	}
+	.choice_content{
+		font-size: 13px;
+		line-height: 20px;
+	}
 
 .tiItem{
   width: 16%;
