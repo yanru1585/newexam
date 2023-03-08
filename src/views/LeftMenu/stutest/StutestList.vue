@@ -9,9 +9,9 @@
           </el-form-item>
           <el-form-item label="状态：">
             <el-select
-              v-model="listParams.state"
+              v-model="listParams.result"
               class="m-2"
-              placeholder="Select"
+              placeholder="所有"
               style="width: 100px"
             >
               <el-option
@@ -46,7 +46,10 @@
             <p style="font-size: 14px; margin: 10px">{{ item.title }}</p>
           </div>
           <div style="font-size: 12px; color: #aaabad;display: flex;justify-content:space-between;margin: 10px 0;">
-            <p>考试时间: {{item.begintime}}至{{item.endtime}}</p>
+            <p>考试时间:
+              <span v-if="item.begintime&&item.endtime">{{item.begintime}}至{{item.endtime}}</span>
+              <span v-else>不限</span>
+            </p>
             <p>{{item.pastnum}}人通过</p>
           </div>
         </el-card>
