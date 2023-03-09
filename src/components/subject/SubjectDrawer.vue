@@ -27,7 +27,7 @@
               mode="default"
             />
             <Editor
-              style="height: 300px; overflow-y: hidden"
+              style="height: 350px; overflow-y: hidden"
               v-model="addForm.title"
               :defaultConfig="editorConfig"
               mode="default"
@@ -270,8 +270,8 @@ console.log(addForm.value);
       }
       console.log(222222222,addForm.value.answer);
       
-      // emit('drawerEmit',{...addForm.value})
-      emit('drawerEmit',JSON.stringify(addForm.value))
+      emit('drawerEmit',{...addForm.value})
+      // emit('drawerEmit',JSON.stringify(addForm.value))
       emit('showEmit',false)
       // drawer.value=false
     } else {
