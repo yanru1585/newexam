@@ -94,7 +94,7 @@
                   v-if="item.type === '判断题' || item.type === '填空题'"
                 >
                   <span>正确答案</span>
-                  {{ item.judge }}
+                  {{ item.answer}}
                 </div>
                 <div
                   class="analyBox"
@@ -106,7 +106,8 @@
               </div>
             </div>
             <div class="btn">
-              <el-button @click="compile">添加题目</el-button>
+
+              <el-button @click="compile(0,-1)">添加题目</el-button>
               <el-button @click="bulkImport">批量导入</el-button>
               <el-button @click="importDatabase">从题库中导入</el-button>
             </div>
@@ -268,7 +269,8 @@ const data: Idata = reactive({
     scores: 100,
     state: null,
     students: [],
-    title: '', //考试名称
+    title:'', //考试名称 
+
     
   },
   selectValue: '', //下拉框
@@ -315,7 +317,8 @@ const getDatabaseList = async () => {
   baseList.value = res.data.list;
 };
 // 触发自定义事件接收添加题目传值
-const drawerEmit = (data: any) => {
+const drawerEmit = (date: any) => {
+  let data=JSON.parse(date)
   // console.log('接收子组件题目传值', data);
   if(data.type==='多选题'){
     data.answer=data.checkList.join('|')
@@ -324,7 +327,7 @@ const drawerEmit = (data: any) => {
   if(data.oneIndex===-1){
     addFrom.value.questions.push(data);
   }else{
-    addFrom.value.questions[data.oneIndex]=data
+    addFrom.value.questions[data.oneIndex]={...data}
   }
   
 

@@ -44,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import {htmlEncode}  from '../../utils/ByRegExp';
 import { ref, reactive, toRefs, defineEmits } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import type { UploadProps, UploadUserFile } from 'element-plus';
@@ -64,7 +65,8 @@ const uploadSuccess = (res: any) => {
     return false;
   }
   // 文件上传成功
-  subjectList.value = [...res.data];
+  // subjectList.value = [...res.data];
+  subjectList.value=res.data.map(((item: { title: any; })=>({...item,title:htmlEncode(item.title)})))
   console.log(res.data);
 };
 
