@@ -1,4 +1,4 @@
-export  const htmlEncodeByRegExp=(str: string)=>{
+ export const htmlEncode=(str: string)=>{
   var s = '';
   if(str.length === 0) {
     return '';
