@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="header">
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 10px"
+    >
       <h3>试卷管理</h3>
-      <el-button type="primary" @click="addSubject">创建试卷</el-button>
+      <el-button type="primary" @click="addSubject">创建考试</el-button>
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="关键字">

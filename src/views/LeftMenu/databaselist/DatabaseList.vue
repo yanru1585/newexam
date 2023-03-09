@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="top">
-      <p>题库管理</p>
-      <el-button type="primary" @click.prevent="add">创建题库</el-button>
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 10px"
+    >
+      <h3>题库管理</h3>
+      <el-button type="primary" @click="add">创建考试</el-button>
     </div>
 
     <div>
