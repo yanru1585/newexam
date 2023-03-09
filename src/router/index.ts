@@ -224,7 +224,7 @@ const routes: any = [
 
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 
@@ -241,8 +241,9 @@ router.beforeEach( (to: RouteLocationNormalized, from: RouteLocationNormalized, 
     const token = sessionStorage.getItem('token')
     // token 不存在
     if (token === null || token === '') {
-        ElMessage.error('您还没有登录，请先登录');
+        // ElMessage.error('您还没有登录，请先登录');
         next('/');
+        ElMessage.error('您还没有登录，请先登录');
     } else {
         next();
     }

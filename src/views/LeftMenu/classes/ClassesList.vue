@@ -13,7 +13,7 @@
         <el-input placeholder="请输入班级名称" v-model="data.params.key" />
       </el-form-item>
       <el-form-item label="部门">
-        <el-cascader :options="dataa.arr" :props="props"  clearable />
+        <el-cascader :options="dataa.arr" :props="props" @change="handleChange"  clearable />
       </el-form-item>
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
@@ -67,7 +67,7 @@
 import {debounce}  from "../../../utils/throTtle"
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
-import { ref } from 'vue';
+import { ref ,toRefs} from 'vue';
 import {
   classeslist,
   classesdele,
@@ -109,6 +109,7 @@ const data = reactive<Istate>({
   tableData: [],
   total: 0,
 });
+const {params} =toRefs(data)
 //列表请求
 const getlist = async () => {
   let res: any = await classeslist(data.params);
@@ -118,6 +119,14 @@ const getlist = async () => {
     data.total = res.data.counts;
   }
 };
+// 级联框
+const handleChange=(data:any)=>{
+  console.log('部门选择',data);
+ params.value.depid=data
+
+  
+
+}
 onMounted(() => {
   getlist();
 });
