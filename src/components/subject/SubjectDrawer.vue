@@ -114,6 +114,8 @@ const props=defineProps({
     type:Object,
   }
 })
+console.log(props.compileData);
+
 // const drawer = ref(true);
 const emit=defineEmits(['drawerEmit','showEmit'])
 interface IaddForm {

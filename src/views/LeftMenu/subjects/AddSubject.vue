@@ -106,6 +106,7 @@
               </div>
             </div>
             <div class="btn">
+
               <el-button @click="compile(0,-1)">添加题目</el-button>
               <el-button @click="bulkImport">批量导入</el-button>
               <el-button @click="importDatabase">从题库中导入</el-button>
@@ -268,7 +269,8 @@ const data: Idata = reactive({
     scores: 100,
     state: null,
     students: [],
-    title: '', //考试名称
+    title:'', //考试名称 
+
     
   },
   selectValue: '', //下拉框
@@ -294,11 +296,6 @@ const rules = reactive<FormRules>({
 
   ]
 })
-
-// 点击添加题目
-const addSubject = () => {
-  drawerShow.value = true;
-};
 //获取题目类型和数量
 const getQuseType=()=>{
   questionsType.value.forEach(item=>{

@@ -2,14 +2,12 @@
   <div>
     <el-container>
       <el-aside width="380px" >
-        <div class="top">
-          <p>部门管理</p>
-          <el-button
-            type="primary"
-            @click="(isShowAdd = true), (isShowAdd2 = false)"
-            >添加一级节点</el-button
-          >
-        </div>
+        <div
+      style="margin-top: 10px"
+    >
+      <h3>部门管理</h3>
+      <el-button type="primary" @click="(isShowAdd = true), (isShowAdd2 = false)">添加一级节点</el-button>
+    </div>
         <div class="tree">
           <el-tree
             :data="list"

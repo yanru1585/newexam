@@ -1,8 +1,10 @@
 <template>
   <div>
-    <el-container>
-        <el-header><h2>阅卷管理</h2></el-header>
-        <el-main>
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 10px"
+    >
+      <h3>阅卷管理</h3>
+      </div>
           <div class="cha">
             关键字： <el-input v-model="data.key" placeholder="请输入题库名称" @keyup.enter="reser"/>
             <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
@@ -46,8 +48,7 @@
               style="float: right;"
             />
           </div>
-        </el-main>
-      </el-container>
+
   </div>
 </template>
 
