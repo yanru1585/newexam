@@ -34,6 +34,7 @@
               v-model="loginData.pass"
               placeholder="请输入密码"
               show-password
+              @submit.prevent.native  @keyup.enter.native="submitForm(ruleFormRef)"
             />
           </el-form-item>
           <el-form-item>
