@@ -296,9 +296,9 @@ const rules = reactive<FormRules>({
 })
 
 // 点击添加题目
-const addSubject = () => {
-  drawerShow.value = true;
-};
+// const addSubject = () => {
+//   drawerShow.value = true;
+// };
 //获取题目类型和数量
 const getQuseType=()=>{
   questionsType.value.forEach(item=>{
@@ -320,11 +320,15 @@ const getDatabaseList = async () => {
   baseList.value = res.data.list;
 };
 // 触发自定义事件接收添加题目传值
-const drawerEmit = (date: any) => {
-  let data=JSON.parse(date)
-  // console.log('接收子组件题目传值', data);
+const drawerEmit = (data: any) => {
+
+  console.log('接收子组件题目传值', data);
   if(data.type==='多选题'){
     data.answer=data.checkList.join('|')
+  }
+  if(data.type==='填空题'){
+    data.title=data.title.replaceAll('[]','_______,')
+    data.answer=data.answer.replaceAll('|',",")
   }
   // console.log(data);
   if(data.oneIndex===-1){
