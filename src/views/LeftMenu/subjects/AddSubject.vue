@@ -369,6 +369,8 @@ const compile=(data:any,index:number)=>{
 // console.log(2222,compileData.value);
 
 }
+
+
 // 触发自定义事件接收批量导入试卷列表
 const subjectEmit=(obj: any)=>{
   addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(obj))]
