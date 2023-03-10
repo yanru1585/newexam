@@ -249,6 +249,8 @@ const edit = (val: any) => {
   nextTick(() => {
     //延迟函数  回显
     dialogRef.value.addData.title = val.title;
+    dialogRef.value.addData.id = val.id;
+    dialogRef.value.name = '题库修改';
   });
 };
 

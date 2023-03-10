@@ -15,12 +15,7 @@
           <!-- 选项 -->
           <div >
             <p style="margin: 20px 0;" >
-              <p v-if="item.type!=='填空题'">
-                <span v-html="item.title"></span>
-              </p>
-              <p v-if="item.type=='填空题'">
-                <span class="gap" @input="gapFillingFn($event,index)" v-html="gapFilling"></span>
-              </p>
+              <span v-html="item.title"></span>
             </p>
 
             <view class="" v-for="(it,index1) in item.answers" :key="index1">
@@ -35,7 +30,6 @@
               </view>
             </view>
 
-      
             <div v-if="item.type=='判断题'">
               <div style="display: flex;flex-direction: column;">
                 <div :class="item.studentanswer==i.answer?'panduanItemSel panduanItem':'panduanItem'" @click="judgeRight(i.answer,index)" v-for="(i,index2) in judge" :key="index2">
@@ -88,7 +82,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, toRefs,ref,watch,onBeforeUnmount,toRaw } from 'vue';
+import { onMounted, reactive, toRefs,ref,watch,onBeforeUnmount,toRaw,nextTick } from 'vue';
 import { testStart,studentanswerAdd } from '../../../../api/admin';
 import { ElMessage } from 'element-plus';
 import { useRouter, useRoute } from 'vue-router';
@@ -98,23 +92,10 @@ const route = useRoute();
 const judgeRight=(val:any,index:any)=>{
   data.questionsList[index].studentanswer=val // 判断答案
 }
-const gapFillingFn=(e:any,index:any)=>{
-  console.log(e);
-  
-  data.gapList.push(e.data)
-let aa = data.gapList.join('')
-data.questionsList[index].studentanswer=e.data
-// console.log(index);
-
-// console.log(aa);
-
-}
 
 interface Idata {
   testData: any;
   questionsList: Array<any>;
-  checkList: Array<any>;
-  gapFilling:Array<any>
   judge: Array<any>;
   residue:number
   addList: Array<any>;
@@ -124,8 +105,6 @@ interface Idata {
 const data: Idata = reactive({
   testData: {},
   questionsList: [],
-  checkList:[],
-  gapFilling:[],
   judge:[
     {answer:'正确'},
     {answer:'错误'}
@@ -135,19 +114,16 @@ const data: Idata = reactive({
   studentid:0,
   gapList:[]
 });
-const { testData, questionsList,checkList,gapFilling,judge,residue,addList } = toRefs(data);
+const { testData, questionsList,judge,residue } = toRefs(data);
 
 // 点击单选
 const radio=(answerno:any,index:any)=>{
 	data.questionsList[index].studentanswer=answerno
 }
 
-
-
 onMounted(() => {
   const model:any = sessionStorage.getItem('model')
   data.studentid=JSON.parse(model).id
-  // console.log(data.studentid);
   
   getList();
   // 监听滚动事件
@@ -164,23 +140,6 @@ const handleCheckAllChange=(index:any)=>{
   data.questionsList[index].studentanswer=data.questionsList[index].checkedCities.join('|')  //多选
 }
 
-// 点击交卷
-const trueFn=()=>{
-  let a = document.querySelectorAll('.gap')
-  console.log(a);
-
-  let b = document.querySelectorAll('.input')
-  // console.log(b);
-  
-  data.addList=data.questionsList.map((i:any)=>{ //要添加的数据
-    if(!i.studentanswer){
-      i.studentanswer=''
-    }
-    return {answer:i.studentanswer,questionid:i.id,scores:i.scores,studentid:data.studentid,testid:i.testid}
-  })
-  console.log(data.addList);
-}
-
 // 没答的题数量
 const testnum=()=>{
   data.residue=data.questionsList.filter((item:any)=>{
@@ -193,7 +152,7 @@ const testnum=()=>{
 // 监听  剩余数量
 watch(()=>data.questionsList,(newVal)=>{
   if(newVal.length>0){
-    getTest() //存题
+    // getTest() //存题
   }
   testnum() //剩余题目数量
 },{deep:true,immediate:true})
@@ -225,14 +184,34 @@ const getList = async () => {
     data.questionsList = res.data.questions; //题
   }
   data.residue=res.data.questions.length
-  data.questionsList.filter((item:any)=>{
+  data.questionsList = data.questionsList.map((item:any,index:any)=>{
+    
     if(item.type=='填空题'){
-      let list:any = []
-
-
-      data.gapFilling=item.title.replaceAll('[]','<input class="input" type="text" />')
+       item.title=item.title.replaceAll("[]",`<input class="input input${index}" data="${index}" type="text" />`)
     }
+    return item
   })
+
+  // 获得填空题的数据
+  nextTick(() => {
+    let b: any = document.querySelectorAll('.input');
+
+    b.forEach((item: any) => {
+      //为每个input都绑定一个input事件
+      item.oninput = function () {
+        //获取填空题在试题列表里面的下标
+        let _index = this.getAttribute('data');
+        let arr:any=[] // 声明一个空数组
+        document.querySelectorAll('.input'+_index).forEach((i:any)=>{
+          console.log(i.value);
+          if(i.value) arr.push(i.value)
+        })
+        console.log(arr);
+        data.questionsList[_index].studentanswer=arr.length==0?null:arr.join('|')
+      };
+    });
+  });
+  
 
 const shuffle = (arr:any) => { //防作弊 打乱题目
   for (let i = 0; i < arr.length; i++) {
@@ -243,6 +222,51 @@ const shuffle = (arr:any) => { //防作弊 打乱题目
 };
 shuffle(data.questionsList)
 };
+
+// 点击交卷
+const trueFn=()=>{
+  data.addList=data.questionsList.map((i:any,index:any)=>{ //要添加的数据
+    
+    if(!i.studentanswer){
+      i.studentanswer=''
+    }
+    // if(i.type=='填空题'||i.type=='问答题'){
+    //   i.scores=null
+    // }
+
+    // if(i.type=='单选题'||i.type=='判断题'){
+    //   if(i.studentanswer!==i.answer){
+    //     i.scores=0
+    //     // console.log(i.scores);
+        
+    //     // console.log(i);
+        
+    //   }
+    // }
+    // // if(i.type=='单选题'||i.type=='判断题'){
+    // //   if(i.studentanswer!=i.answer){
+    // //     i.scores=0
+    // //   }
+    // // }
+    
+    if(i.type=='多选题'){
+      // i.scores=0
+      // let a = (i.studentanswer).join('')
+      // console.log(a);
+      // console.log(data.addList[index]);
+      // console.log();
+      
+      
+      
+    }
+    
+    // console.log(i.type);
+    
+    return {answer:i.studentanswer,questionid:i.id,scores:i.type=='判断题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
+    // return {answer:i.studentanswer,questionid:i.id,scores:i.scores,studentid:data.studentid,testid:i.testid}
+  })
+  console.log(data.addList);
+}
 
 // 点击多选
 const check=(answerno:any,index:any)=>{

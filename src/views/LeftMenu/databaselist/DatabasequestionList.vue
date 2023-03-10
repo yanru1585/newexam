@@ -108,9 +108,6 @@
 
 <script lang="ts" setup>
 import {Downblob} from '../../../utils/down'
-// import FileSaver from 'file-saver';
-// import XLSX from 'xlsx';
-// import {exportExcel} from '../../../utils/exportExcel'
 import AddtestDrawer from '../../../components/database/AddtestDrawer.vue';
 import DatabaseDetail from '../../../components/database/DatabaseDetail.vue'
 import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
@@ -159,7 +156,7 @@ const testDetail=(val:any)=>{
 const addTest = () => {
   isAddtestDrawer.value = true;
 };
-// 点击编辑a
+// 点击编辑
 const compile=(data:any)=>{
   console.log('点击题库编辑',data);
   questionData.value=data

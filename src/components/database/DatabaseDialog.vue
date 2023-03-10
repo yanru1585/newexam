@@ -2,7 +2,7 @@
   <el-dialog
     :model-value="dialogVisible"
     v-if="ifShow"
-    title="题库添加"
+    :title="name"
     width="40%"
     :before-close="handleClose"
   >
@@ -137,6 +137,8 @@ const addData: any = reactive({
   limits: [],
 });
 
+const name =ref('题库添加')
+
 const { title, isshow, limits } = toRefs(addData);
 // 获取单选框的值
 const radioChange = (val: any) => {
@@ -153,13 +155,16 @@ const dialogVisible = ref<any>(false);
 // 暴露
 defineExpose({
   dialogVisible,
-  addData
+  addData,
+  name
 });
 
 const handleClose = (done: () => void) => {
   dialogVisible.value = false;
+  addData.title = '';
 };
 
+// 级联框弹窗
 const handleCloseFn = (done: () => void) => {
   ifShow.value = true;
 };

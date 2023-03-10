@@ -96,7 +96,7 @@ const data: any = reactive({
 const { info,defaultmenu } = toRefs(data);
 
 onMounted(() => {
-  console.log(sessionStorage.getItem('type'));
+  // console.log(sessionStorage.getItem('type'));
   if(sessionStorage.getItem('type')==='teacher'){
     data.defaultmenu='test'
   }else{

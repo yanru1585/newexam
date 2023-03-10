@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import { useRouter,useRoute } from 'vue-router';
-import {onMounted,reactive,toRefs,ref} from 'vue'
+import {onMounted,reactive,toRefs,ref,nextTick} from 'vue'
 import {testGet} from '../../../../api/admin'
 import { ElMessage } from 'element-plus'
 const router=useRouter()
@@ -65,23 +65,26 @@ const isOk=ref(true)
 
 onMounted(() => {
   getList();
-  let isDuring =isDuringDate(testData.value.begintime, testData.value.endtime)
-    if(isDuring){
-    isOk.value=true
-    }else{
-    isOk.value=false
-    }
+ 
+ 
+  
 });
 
 const isDuringDate= (beginDateStr:any, endDateStr:any)=> {
-      let curDate = new Date(),
-      beginDate = new Date(beginDateStr),
-      endDate = new Date(endDateStr);
-      if (curDate >= beginDate && curDate <= endDate) {
-          return true;
-      }
-      return false;
-    }
+  console.log(endDateStr);
+  
+  let curDate = new Date(),
+  beginDate = new Date(beginDateStr),
+  endDate = new Date(endDateStr);
+  console.log(curDate);
+  console.log(beginDate);
+  console.log(endDate);
+  
+  if (curDate >= beginDate && curDate <= endDate) {
+      return true;
+  }
+  return false;
+}
 
 
 const getList=async()=>{
@@ -92,6 +95,19 @@ const getList=async()=>{
     return false
   }
   data.testData=res.data
+
+    // 开发时间
+   nextTick(()=>{
+    let isDuring =isDuringDate(testData.value.begintime, testData.value.endtime)
+    console.log(testData.value.begintime);
+    
+    if(isDuring){
+      isOk.value=true
+    }else{
+      isOk.value=false
+    }
+    console.log(isDuring);
+  })
 }
 
 // 点击开始考试
