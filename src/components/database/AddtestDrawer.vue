@@ -183,20 +183,15 @@ console.log(valueHtml.value);
 const mode = ref('simple'); // 'default' 或者 'simple'
 const toolbarConfig = {
   excludeKeys: [
-    'insertVideo',
-    'insertTable',
-    'fullScreen',
-    'undo',
-    'redo',
-    'todo',
-  ],
+  'insertVideo', 'insertTable', 'fullScreen', 'undo', 'redo', 'todo'
+  ], //排除不需要的菜单
 };
 const editorConfig: any = {
   placeholder: '请输入内容...',
   MENU_CONF: {},
 };
 editorConfig.MENU_CONF['uploadImage'] = {
-  base64LimitSize: 5 * 1024 * 1024,
+  base64LimitSize: 5 * 1024 * 1024, // 图片小于5M时自动转Base64格式
 };
 
 const handleBlur = () => {

@@ -138,11 +138,6 @@ onBeforeUnmount(()=>{
   window.removeEventListener('scroll', onScroll)
 })
 
-// 点多选框触发
-const handleCheckAllChange=(index:any)=>{
-  data.questionsList[index].studentanswer=data.questionsList[index].checkedCities.join('|')  //多选
-}
-
 // 没答的题数量
 const testnum=()=>{
   data.residue=data.questionsList.filter((item:any)=>{

@@ -6,7 +6,7 @@
       style="margin-top: 10px"
     >
       <h3>部门管理</h3>
-      <el-button type="primary" @click="(isShowAdd = true), (isShowAdd2 = false)">添加一级节点</el-button>
+      <el-button style="margin: 15px 0;" type="primary" @click="(isShowAdd = true), (isShowAdd2 = false)">添加一级节点</el-button>
     </div>
         <div class="tree">
           <el-tree
