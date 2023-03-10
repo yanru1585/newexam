@@ -62,7 +62,6 @@
           :key="index"
         >
         <i class="iconfont " :class=" item.ico " style="font-size: 22px;"></i>
-          <!-- <el-icon size="30"><item.icon /></el-icon> -->
           <span>{{ item.name }}</span>
         </el-menu-item>
       </div>
@@ -128,6 +127,7 @@ const leaveLogin = () => {
   })
     .then(() => {
       sessionStorage.clear();
+      localStorage.clear()
       router.push('/')
       ElMessage({
         type: 'success',

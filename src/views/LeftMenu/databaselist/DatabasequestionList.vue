@@ -58,10 +58,10 @@
             placement="top"
             :width="100"
             trigger="hover"
-            :content="scope.row.addtime.slice(0, 16)"
+            :content="moment(scope.row.addtime).format('YYYY-MM-DD hh:mm')"
           >
             <template #reference>
-              <span>{{ scope.row.addtime }}</span>
+              <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD hh:mm') }}</span>
             </template>
           </el-popover>
         </template>
@@ -107,6 +107,7 @@
 </template>
 
 <script lang="ts" setup>
+import moment from 'moment'
 import {Downblob} from '../../../utils/down'
 import AddtestDrawer from '../../../components/database/AddtestDrawer.vue';
 import DatabaseDetail from '../../../components/database/DatabaseDetail.vue'
