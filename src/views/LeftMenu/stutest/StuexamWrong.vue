@@ -50,9 +50,17 @@
                   class="radioItem"
                   :style="item.studentanswer.includes(it.answerno)&&item.answer.includes(it.answerno)? 'border: 1px solid #f0faf6;background-color: #f0faf6;border-radius:3px;':item.studentanswer.indexOf(it.answerno)==-1? '':'background-color: #fcf3f3;border: 1px solid #0089ff;border-radius:3px;'"
                 >
-                  <div class="radio">
-                    <p class="radio_left" :style="item.studentanswer.includes(it.answerno)&&item.answer.includes(it.answerno)?'background-color: #0089ff;color:#fff':item.studentanswer.indexOf(it.answerno)==-1?'':'background-color: #0089ff;color:#fff'">{{ it.answerno }}</p>
+                  <div class="radio" style="display: flex;justify-content: space-between;">
+                    <div style="display: flex;width: 70%">
+                      <p class="radio_left" :style="item.studentanswer.includes(it.answerno)&&item.answer.includes(it.answerno)?'background-color: #0089ff;color:#fff':item.studentanswer.indexOf(it.answerno)==-1?'':'background-color: #0089ff;color:#fff'">{{ it.answerno }}</p>
                     <span>{{ it.content }}</span>
+                    </div>
+                    <div v-if="item.studentanswer.includes(it.answerno)&&item.answer.includes(it.answerno)">
+                      <span v-if="item.studentanswer.includes(it.answerno)&&item.answer.includes(it.answerno)" style="color: #4cc0a4;display: block;font-size: 12px;">回答正确</span>
+                    </div>
+                    <div v-else>
+                      <span v-if="item.studentanswer.includes(it.answerno)&&item.answer.indexOf(item.studentanswer)==-1" style="color: #e25e61;display: block;font-size: 12px;">回答错误</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -91,9 +99,9 @@
         <p style="padding: 25px 24px;font-size: 19px;font-weight: 900;">答题卡</p>
         <div style="display: flex;margin-left: 25px;margin-bottom: 30px;">
           <div style="width: 16px;height: 16px;background-color: #f0f8ff;"></div>
-          <span style="font-size: 12px;margin: 0 15px 0 5px;">已答</span>
-          <div style="width: 15px;height: 15px;border: 1px solid #e9e9e9;"></div>
-          <span style="font-size: 12px;margin: 0 15px 0 5px;">未答</span>
+          <span style="font-size: 12px;margin: 0 15px 0 5px;">正确</span>
+          <div style="width: 15px;height: 15px;background-color: #fcf2f0;"></div>
+          <span style="font-size: 12px;margin: 0 15px 0 5px;">错误</span>
         </div>
 
         <div style="display: flex;flex-wrap: wrap;">
@@ -284,6 +292,7 @@ const scrollTo=(index:any)=> {
   margin: 0 10px;
 }
 .radioItem{
+  width: 70%;
   padding:7px 10px;
   margin-bottom:10px
 }
