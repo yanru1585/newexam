@@ -89,7 +89,7 @@
       />
     </div>
     <div>
-      <Addstu ref="studentref"  :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
+      <Addstu ref="studentref" v-if="stuShow" @stuEmit="stuEmit" :getListDialog="getlist" :stuentlist="stuentlist"></Addstu>
     </div>
     <div>
       <Pass ref="passstudenref"  :getListDialog="getlist" :passlistt="passlistt"></Pass>
@@ -115,7 +115,7 @@ import { departmentList } from '../../../api/department';
 import { useRouter } from 'vue-router';
 import Pass  from './Passwords.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
-
+const stuShow=ref(false)
 const addStudentUrl=ref('http://estate.eshareedu.cn/exam/upload/student.xlsx')
 const isShowAdd=ref(false)
 const batchAdd=()=>{
@@ -130,7 +130,7 @@ const closeDialog=(val:any)=>{
 
 const router = useRouter(); //跳转路由
 let ids = ref(''); //定义多选删除数据
-let studentref =ref<any>()
+// let studentref =ref<any>()
 const formInline: Iform = reactive({
   personType: [
     //访客类型列表
@@ -149,8 +149,13 @@ const cpass =(val:any)=>{
   datast.passlistt = val;
   passstudenref.value.dialogVisible = true;
 // console.log(statst.passlistt);
+}
+// 接收自定义属性控制显示隐藏
+const stuEmit=(data:any)=>{
+  stuShow.value=data
 
 }
+
 //列表数据
 interface Iparams {
   page: number; //页码 默认是1
@@ -308,8 +313,10 @@ const delId = (id: number) => {
 //添加学生
 
 const Addstudent = () => {
-  studentref.value.title='添加'
-  studentref.value.dialogVisible=true
+  // studentref.value.title='添加'
+  stats.stuentlist={} ;
+  stuShow.value=true
+  // studentref.value.dialogVisible=true
 };
 //修改
 // const istops =ref<boolean>()
@@ -321,11 +328,12 @@ const stats =reactive({
 })
 
 const edit = (val: any) => {
+  stuShow.value=true
   
   console.log('编辑', val);
   stats.stuentlist = val;
 
-  studentref.value.dialogVisible = true;
+  // studentref.value.dialogVisible = true;
   console.log(stats.stuentlist );
 };
 const {  stuentlist } = toRefs(stats);

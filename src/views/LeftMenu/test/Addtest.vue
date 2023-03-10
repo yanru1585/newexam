@@ -616,8 +616,6 @@ const datetimerangeChange=(data:any)=>{
 
   addFrom.value.begintime=data[0]
   addFrom.value.endtime=data[1]
-  // console.log('时间选择器',addFrom.value.begintime);
-  // console.log('时间选择器',addFrom.value.endtime);
 ;
 }
 // 监听左侧数据变化
