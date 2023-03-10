@@ -27,7 +27,7 @@
         <el-button type="primary" @click="seacher">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: auto" v-loading="loading">
+    <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
       <el-table-column label="试卷名称" align="center">
         <template #default="scope">
           <span
@@ -261,10 +261,11 @@ const compile = (id: any) => {
 }
 
 .el-form {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .el-table {
-  font-size: 12px;
+  // font-size: 12px;
+  // margin-top: 20px;
 }
 .el-pagination {
   justify-content: right;

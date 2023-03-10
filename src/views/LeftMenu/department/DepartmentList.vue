@@ -1,9 +1,11 @@
 <template>
   <div>
     <el-container>
+      
       <el-aside width="380px" >
         <div class="top">
-          <p>部门管理</p>
+          <h3>部门管理</h3>
+          <!-- <p></p> -->
           <el-button
             type="primary"
             @click="(isShowAdd = true), (isShowAdd2 = false)"
@@ -250,9 +252,10 @@ const del = () => {
 <style lang="less" scoped>
 .top {
   margin-bottom: 20px;
-  p {
+  h3 {
     font-size: 20px;
-    margin-bottom: 15px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
   }
   .el-button {
     margin-left: 20px;

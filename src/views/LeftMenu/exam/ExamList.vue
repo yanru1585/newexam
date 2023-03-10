@@ -1,14 +1,21 @@
 <template>
   <div>
-    <el-container>
-        <el-header><h2>阅卷管理</h2></el-header>
-        <el-main>
-          <div class="cha">
+
+      <h3 class="h3">阅卷管理</h3>
+      <el-form :inline="true" :model="data" class="demo-form-inline">
+      <el-form-item label="关键字">
+        <el-input v-model="data.key" placeholder="请输入题库名称" @keyup.enter="reser"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" class="elbutton" @click="reser">查询</el-button>
+      </el-form-item>
+      </el-form>
+          <!-- <div class="cha">
             关键字： <el-input v-model="data.key" placeholder="请输入题库名称" @keyup.enter="reser"/>
             <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
-          </div>
+          </div> -->
           <div>
-            <el-table :data="data.list"   border style="width: 100%" v-loading="loading">
+            <el-table :data="data.list" stripe  style="width: 100% ;" v-loading="loading">
               <el-table-column prop="title" label="考试名称" align="center" />
               <el-table-column prop="info" label="考试说明" align="center"/>
               <el-table-column prop="subjectnum" label="题量" align="center"/>
@@ -46,8 +53,6 @@
               style="float: right;"
             />
           </div>
-        </el-main>
-      </el-container>
   </div>
 </template>
 
@@ -117,12 +122,21 @@ onActivated(()=>{
 </script>
 
 <style scoped>
+.h3 {
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+}
+.el-form{
+  margin-top: 20px;
+}
 .el-input {
-  width: 30%;
+  width: 200px;
   margin-right: 30px;
 }
 .cha {
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 .incomplete{
   color: red;

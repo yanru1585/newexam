@@ -148,7 +148,7 @@
       <el-form-item>
         <div class="footer">
           <el-button type="primary" @click="submitForm(ruleFormRef)">提交</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="cancel">取消</el-button>
         </div>
       </el-form-item>
     </el-form>
@@ -386,6 +386,27 @@ const transferEmit = (val: any) => {
       addFrom.value.limits.push({id:item})
     })
   }
+};
+// 点击取消
+const cancel=()=>{
+  ElMessageBox.confirm(
+    '确认要取消编辑试卷吗?',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  )
+    .then(() => {
+      router.push('/subjects')
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消',
+      })
+    })
+  
 };
 // 计算总分
 const scores = computed(() => {

@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>考试管理</h3>
       <el-button type="primary" @click="Addexam">创建考试</el-button>
@@ -526,7 +526,12 @@ const getAnalyse=(data:any)=>{
 
 <style lang="less" scoped>
 .box h3 {
-  padding: 10px;
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+}
+.el-form{
+  margin-top: 20px;
 }
 .el-input {
   width: 100px;
