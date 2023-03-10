@@ -46,7 +46,11 @@
           </span>
         </el-table-column>
         <el-table-column prop="counts" label="题目数量" width="180" align="center"/>
-        <el-table-column prop="addtime" label="创建时间" align="center"/>
+        <el-table-column prop="addtime" label="创建时间" align="center">
+          <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+          </el-table-column>
         <el-table-column prop="admin" label="创建人" align="center"/>
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="scope">
@@ -95,6 +99,7 @@
 </template>
 
 <script lang="ts" setup>
+import  moment  from "moment"
 import {debounce}  from "../../../utils/throTtle"
 import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
 import { ElMessage, ElMessageBox } from 'element-plus';

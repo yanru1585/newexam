@@ -45,7 +45,11 @@
       <el-table-column prop="qas" label="问答" align="center" />
       <el-table-column prop="scores" label="总分" align="center" />
       <el-table-column prop="admin" label="创建人" align="center" />
-      <el-table-column prop="addtime" label="更新时间" align="center" />
+      <el-table-column prop="addtime" label="更新时间" align="center" >
+        <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" align="center">
         <template #default="scope">
           <el-button
@@ -87,6 +91,7 @@
 </template>
 
 <script lang="ts" setup>
+import  moment  from "moment"
 import { debounce } from '../../../utils/throTtle';
 import Test from '../../../components/test/TestgetDialog.vue';
 import { subjectList, DelSubject } from '../../../api/subjects';

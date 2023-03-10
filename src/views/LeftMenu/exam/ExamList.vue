@@ -20,7 +20,7 @@
               </el-table-column>
               <el-table-column label="开放时间" align="center">
                 <template #default="scope">
-                  <span>{{scope.row.begintime===null ? '不限':scope.row.begintime}}</span>
+                  <span>{{scope.row.begintime===null ? '不限':moment(scope.row.begintime).format('YYYY-MM-DD HH:mm')}}</span>
                 </template >
               </el-table-column>
               <el-table-column label="操作" align="center">
@@ -52,6 +52,7 @@
 </template>
 
 <script setup lang="ts">
+import  moment  from "moment"
 import {debounce}  from "../../../utils/throTtle"
 import { onMounted, reactive, ref,onActivated } from 'vue';
 import { Ilist } from '../../../api/admin';

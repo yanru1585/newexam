@@ -9,7 +9,7 @@
       </el-page-header>
       <div style="margin-top: 20px;margin-left: 40px;">
         <p>开放时间</p>
-        <span v-if="testData.begintime&&testData.endtime" style="font-size: 13px;margin-top: 8px;">{{ testData.begintime }}至{{ testData.endtime }}</span>
+        <span v-if="testData.begintime&&testData.endtime" style="font-size: 13px;margin-top: 8px;">{{  moment(testData.begintime).format('YYYY-MM-DD HH:mm')}}至{{ moment(testData.endtime ).format('YYYY-MM-DD HH:mm') }}</span>
         <span v-else>不限</span>
       </div>
       <p class="line"></p>
@@ -40,6 +40,7 @@
 </template>
 
 <script lang="ts" setup>
+import  moment  from "moment"
 import { useRouter,useRoute } from 'vue-router';
 import {onMounted,reactive,toRefs,ref} from 'vue'
 import {testGet} from '../../../../api/admin'
