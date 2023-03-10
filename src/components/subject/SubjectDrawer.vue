@@ -78,7 +78,7 @@
           <el-input type="textarea" style="width: 100%" v-model="addForm.analysis"  />
         </el-form-item>
 
-        <el-form-item label="分值" prop="scores">
+        <el-form-item label="分值" prop="scores">               
           <el-input style="width: 100px" v-model="addForm.scores" />
         </el-form-item>
         <el-form-item>
@@ -235,12 +235,10 @@ console.log(addForm.value);
 
   if (!formEl) return
   await formEl.validate((valid, fields) => {
-    // console.log(addForm.value.title ); 
     if (valid) {
       if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
         return ElMessage.error('请输入题目内容')
       }
-      // console.log('submit!')
       if(addForm.value.type==='单选题'||addForm.value.type==='多选题'){
        let arr= addForm.value.answers.filter(item=>{
         if(!item.content){
@@ -251,10 +249,7 @@ console.log(addForm.value);
         ElMessage.error('请输入选项内容')
         return false
        }
-        // console.log(444,arr)
       }
-      // console.log(2222);
-      
        if(addForm.value.type==='单选题'){
         if(!addForm.value.answer){
             ElMessage.error('正确答案必填')
