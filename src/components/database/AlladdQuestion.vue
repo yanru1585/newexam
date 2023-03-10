@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogVisible"
     title="批量导入试题"
-    width="40%"
+    width="50%"
     :before-close="handleClose"
   >
     <div style="height: 140px">
@@ -43,6 +43,7 @@
 </template>
 
 <script lang="ts" setup>
+import {htmlEncode}  from '../../utils/ByRegExp';
 import { databasequestionAddlist } from '../../api/database';
 import { Down } from '../../utils/down';
 import { ref, toRefs, reactive } from 'vue';
@@ -100,7 +101,9 @@ const onSuccess = (res: any) => {
     ElMessage.error(res.errMsg);
     return false;
   }
-  addData.list = res.data;
+  // subjectList.value=res.data.map(((item: { title: any; })=>({...item,title:htmlEncode(item.title)})))
+  // addData.list = res.data;
+  addData.list = res.data.map(((item: { title: any; })=>({...item,title:htmlEncode(item.title)})));
 };
 
 const onError = (val: any) => {
@@ -158,8 +161,11 @@ const confirm = async () => {
   emits('closeDialog', false);
 };
 </script>
-<style scoped>
+<style lang="less" scoped>
 .dialog-footer button:first-child {
   margin-right: 10px;
+}
+/deep/.el-step__description{
+  margin-top: 10px;
 }
 </style>
