@@ -177,3 +177,7 @@ export const testStudent=(params:any):Promise<AxiosResponse<any>>=>{
   return get('/student/test',params)
 }
 
+// 学生修改密码
+export const studentTest=(oldpass:string,pass:string):Promise<AxiosResponse<any>>=>{
+  return post('/student/test',{oldpass,pass})
+}

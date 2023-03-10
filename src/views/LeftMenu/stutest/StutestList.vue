@@ -47,7 +47,7 @@
           </div>
           <div style="font-size: 12px; color: #aaabad;display: flex;justify-content:space-between;margin: 10px 0;">
             <p>考试时间:
-              <span v-if="item.begintime&&item.endtime">{{item.begintime}}至{{item.endtime}}</span>
+              <span v-if="item.begintime&&item.endtime">{{ moment(item.begintime).format('YYYY-MM-DD hh:mm') }}至{{moment(item.endtime).format('YYYY-MM-DD hh:mm')}}</span>
               <span v-else>不限</span>
             </p>
             <p>{{item.pastnum}}人通过</p>
@@ -73,6 +73,7 @@
 </template>
 
 <script lang="ts" setup>
+import moment from 'moment'
 import { reactive, toRefs, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus'
 import { list } from '../../../api/admin';

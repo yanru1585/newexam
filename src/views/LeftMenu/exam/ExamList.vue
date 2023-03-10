@@ -72,7 +72,7 @@ const data: marking = reactive({
   page: 1,      //页数
   psize: 10,    //条数
   isread: 1,    //
-  list: [],     //
+  list: [],     //7
   key:'',        //input 绑定值
 });
 const getIlist =async () => {
@@ -115,6 +115,8 @@ onMounted(() => {
 onActivated(()=>{
   getIlist()
 })
+
+
 </script>
 
 <style scoped>
