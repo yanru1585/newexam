@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div style="display: flex; justify-content: space-between">
-      <p class="toptitle">角色管理</p>
-      <el-button type="primary" @click="isShowDialog = true"
-        >添加角色</el-button
-      >
+    <div
+      style="display: flex; justify-content: space-between; margin-top: 10px"
+    >
+      <h3>角色管理</h3>
+      <el-button type="primary" @click="isShowDialog = true">添加角色</el-button>
     </div>
 
     <el-table :data="tableData" style="width: 100%" v-loading="loading">

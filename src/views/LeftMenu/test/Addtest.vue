@@ -104,7 +104,7 @@
                 v-if="item.type === '判断题' || item.type === '填空题'"
               >
                 <span>正确答案</span>
-                {{ item.judge }}
+                {{ item.answer}}
               </div>
               <div
                 class="analyBox"
@@ -116,7 +116,7 @@
             </div>
           </div>
           <div class="buttons">
-            <el-button @click="addSubject" style="margin: 10px">添加题目</el-button >
+            <el-button @click="compile(0, -1)" style="margin: 10px">添加题目</el-button >
             <el-button  style="margin: 10px" @click="bulkImport">批量导入</el-button>
             <el-button  style="margin: 10px" @click="importDatabase">从题库导入</el-button>
             <el-button  style="margin: 10px" @click="checkSubject">选择已有试卷</el-button>
@@ -518,10 +518,10 @@ const qushowEmit=(data: any)=>{
   questionShow.value=data
 }
 // 点击添加题目
-const addSubject = () => {
-  console.log(2222);
-  drawerShow.value = true;
-};
+// const addSubject = () => {
+//   console.log(2222);
+//   drawerShow.value = true;
+// };
 // 点击事件单条编辑
 const compile = (data: any, index: number) => {
     // console.log('点击编辑',data,index);
@@ -556,6 +556,10 @@ const drawerEmit = (data: any) => {
   console.log('接收子组件题目传值', data);
   if (data.type === '多选题') {
     data.answer = data.checkList.join('|');
+  }
+  if(data.type==='填空题'){
+    // data.title=data.title.replaceAll('[]','_______,')
+    data.answer=data.answer.replaceAll('|',",")
   }
   console.log(data);
   if (data.oneIndex === -1) {

@@ -28,7 +28,7 @@
           <span v-html="item.title"></span>
           <div class="item_list" v-if="item.type==='单选题'||item.type==='多选题'">
             <div class="list" v-for="(itemc,indexc) in item.answers" :key="indexc">
-              <div class="box  "  :class="item.answer==item.studentanswer&& item.studentanswer==itemc.answerno?'backgr_box':item.answer!==item.studentanswer&&item.studentanswer==itemc.answerno?'backgr_no_box':''" >
+              <div class="box  "  :class="item.answer===item.studentanswer&& item.studentanswer===itemc.answerno?'backgr_box':item.answer!==item.studentanswer&&item.studentanswer===itemc.answerno?'backgr_no_box':''" >
               <div style="display: flex;" >
               <div class="radio">
              <span>{{itemc.answerno}}</span>

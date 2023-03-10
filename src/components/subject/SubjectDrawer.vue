@@ -27,7 +27,7 @@
               mode="default"
             />
             <Editor
-              style="height: 300px; overflow-y: hidden"
+              style="height: 350px; overflow-y: hidden"
               v-model="addForm.title"
               :defaultConfig="editorConfig"
               mode="default"
@@ -66,14 +66,18 @@
               :label="item.answerno"
             />
           </el-checkbox-group>
-          <el-radio-group v-model="addForm.judge" v-if="addForm.type === '判断题'">
+          <el-radio-group v-model="addForm.answer" v-if="addForm.type === '判断题'">
             <el-radio-button label="正确" />
             <el-radio-button label="错误" />
           </el-radio-group>
         </el-form-item> 
+        <el-form-item label="正确答案"   v-if="addForm.type ==='填空题'&&filling.length>0">
+          <el-input v-for="item in filling" v-model="item.cont" style="margin: 5px 0px;"  type="textarea"  size="small" class="put" />
+        </el-form-item>
         <el-form-item label="解析"  v-if="addForm.type ==='填空题' || addForm.type ==='问答题'">
           <el-input type="textarea" style="width: 100%" v-model="addForm.analysis"  />
         </el-form-item>
+
         <el-form-item label="分值" prop="scores">
           <el-input style="width: 100px" v-model="addForm.scores" />
         </el-form-item>
@@ -102,7 +106,7 @@ import {
   watch
 } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-import { ElMessage, FormInstance, FormRules } from 'element-plus'
+import { ElMessage, FormInstance, FormRules } from 'element-plus';
 
 const ruleFormRef = ref<FormInstance>()
 const props=defineProps({
@@ -110,6 +114,8 @@ const props=defineProps({
     type:Object,
   }
 })
+console.log(props.compileData);
+
 // const drawer = ref(true);
 const emit=defineEmits(['drawerEmit','showEmit'])
 interface IaddForm {
@@ -126,21 +132,23 @@ interface IaddForm {
 
 }
 interface Idata {
+  filling:Array<any>
   addForm: IaddForm;
   newAddForm: IaddForm;
 
   drawer:string
 }
 const data: Idata = reactive({
+  filling:[],
   drawer:'',
   addForm: {
     oneIndex:-1,
     type:'单选题',//题型
     scores: '',//分值
     radio: '1', //题型单选
-    answer: '', //单选框答案
+    answer: '', //正确答案
     checkList: [], //复选框答案
-    judge: '', //判断
+    judge: '', //
     title:'<p></p>',//富文本数据，题干
     answers: [//选项数组数据数组
     {answerno:'A',content:''},
@@ -168,7 +176,7 @@ const data: Idata = reactive({
   analysis:'',//解析
   },
 });
-const { addForm ,drawer,newAddForm} = toRefs(data);
+const { addForm ,drawer,newAddForm,filling} = toRefs(data);
 // 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef();
 
@@ -223,9 +231,11 @@ const cancelForm=()=>{
 }
 // 点击保存
 const submitForm = async (formEl: FormInstance | undefined) => {
+console.log(addForm.value);
+
   if (!formEl) return
   await formEl.validate((valid, fields) => {
-    console.log(addForm.value.title ); 
+    // console.log(addForm.value.title ); 
     if (valid) {
       if(addForm.value.title === '<p><br></p>' || addForm.value.title .includes(' &nbsp;') || addForm.value.title === '<p></p>'){
         return ElMessage.error('请输入题目内容')
@@ -243,7 +253,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
        }
         // console.log(444,arr)
       }
-      console.log(2222);
+      // console.log(2222);
       
        if(addForm.value.type==='单选题'){
         if(!addForm.value.answer){
@@ -257,15 +267,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
             return false
           }
       }
-      if(addForm.value.type==='判断题'){
-        if(!addForm.value.judge){
-            ElMessage.error('正确答案必填')
-            return false
-        }
+      if(addForm.value.type==='填空题'){
+        addForm.value.answer=filling.value.map(item=>item.cont).join('|')
       }
-      console.log(222222222);
+      console.log(222222222,addForm.value.answer);
       
       emit('drawerEmit',{...addForm.value})
+      // emit('drawerEmit',JSON.stringify(addForm.value))
       emit('showEmit',false)
       // drawer.value=false
     } else {
@@ -329,16 +337,28 @@ const submitGo=async (formEl: FormInstance | undefined) => {
 watch(
   [ () => props.compileData],
   (newValue, oldValue) => {
-    console.log('变化了', newValue);
+    // console.log('变化了', newValue);
     Object.assign(addForm.value,newValue[0])
     // console.log('变化了', addForm.value);
  
   },
   { immediate: true, deep: true }
 );
-// watch(props.compileData.type,(new,old)=>{
+watch(()=>addForm.value.title,(newVal,oldVal)=>{
+  // console.log(newVal);
+  filling.value=[]
+ if(newVal){
+  let num= newVal.match(/\[\]/g)
+  if(num){
+    // console.log(num.length);
+    for (var i =0;i<num.length;i++){
+      filling.value.push({cont:''})
+    }
+  }
+ }
 
-// },{immediate:true})
+
+})
 </script>
 
 <style lang="less" scoped>

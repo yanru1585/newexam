@@ -94,7 +94,7 @@
                   v-if="item.type === '判断题' || item.type === '填空题'"
                 >
                   <span>正确答案</span>
-                  {{ item.judge }}
+                  {{ item.answer}}
                 </div>
                 <div
                   class="analyBox"
@@ -106,7 +106,8 @@
               </div>
             </div>
             <div class="btn">
-              <el-button @click="addSubject">添加题目</el-button>
+
+              <el-button @click="compile(0,-1)">添加题目</el-button>
               <el-button @click="bulkImport">批量导入</el-button>
               <el-button @click="importDatabase">从题库中导入</el-button>
             </div>
@@ -268,7 +269,8 @@ const data: Idata = reactive({
     scores: 100,
     state: null,
     students: [],
-    title: '', //考试名称
+    title:'', //考试名称 
+
     
   },
   selectValue: '', //下拉框
@@ -294,11 +296,6 @@ const rules = reactive<FormRules>({
 
   ]
 })
-
-// 点击添加题目
-const addSubject = () => {
-  drawerShow.value = true;
-};
 //获取题目类型和数量
 const getQuseType=()=>{
   questionsType.value.forEach(item=>{
@@ -321,15 +318,20 @@ const getDatabaseList = async () => {
 };
 // 触发自定义事件接收添加题目传值
 const drawerEmit = (data: any) => {
-  // console.log('接收子组件题目传值', data);
+
+  console.log('接收子组件题目传值', data);
   if(data.type==='多选题'){
     data.answer=data.checkList.join('|')
+  }
+  if(data.type==='填空题'){
+    // data.title=data.title.replaceAll('[]','_______,')
+    data.answer=data.answer.replaceAll('|',",")
   }
   // console.log(data);
   if(data.oneIndex===-1){
     addFrom.value.questions.push(data);
   }else{
-    addFrom.value.questions[data.oneIndex]=data
+    addFrom.value.questions[data.oneIndex]={...data}
   }
   
 
@@ -367,6 +369,8 @@ const compile=(data:any,index:number)=>{
 // console.log(2222,compileData.value);
 
 }
+
+
 // 触发自定义事件接收批量导入试卷列表
 const subjectEmit=(obj: any)=>{
   addFrom.value.questions=[...addFrom.value.questions,...JSON.parse(JSON.stringify(obj))]
