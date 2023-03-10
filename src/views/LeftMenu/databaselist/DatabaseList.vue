@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
-    >
+
+    <div class="top">
       <h3>题库管理</h3>
-      <el-button type="primary" @click="add">创建考试</el-button>
+      <el-button type="primary" @click.prevent="add">创建题库</el-button>
+
     </div>
 
     <div>
@@ -35,26 +35,26 @@
       <el-table
         :data="tableData"
         style="width: 100%"
-        size="small"
+        stripe
         @selection-change="selectionChange"
         v-loading="loading"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="题库" #default="scope" width="450" align="center">
+        <el-table-column prop="title" label="题库" #default="scope"  align="center">
           <span
             style="color: #409eff; cursor: pointer"
             @click="toQuestions(scope.row.id)"
             >{{ scope.row.title }}
           </span>
         </el-table-column>
-        <el-table-column prop="counts" label="题目数量" width="180" align="center"/>
+        <el-table-column prop="counts" label="题目数量"  align="center"/>
         <el-table-column prop="addtime" label="创建时间" align="center">
           <template #default="scope">
           <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
         </template>
           </el-table-column>
         <el-table-column prop="admin" label="创建人" align="center"/>
-        <el-table-column fixed="right" label="操作" width="150" align="center">
+        <el-table-column fixed="right" label="操作"  align="center">
           <template #default="scope">
             <el-button
               link
@@ -270,8 +270,10 @@ const toQuestions = (id: any) => {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
-  p {
+  h3 {
     font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
   }
 }
 // 分页

@@ -1,13 +1,13 @@
 <template>
   <div>
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>角色管理</h3>
       <el-button type="primary" @click="edit">添加角色</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" v-loading="loading">
+    <el-table :data="tableData" style="width: 100%" stripe v-loading="loading">
       <el-table-column prop="name" label="名称" />
       <el-table-column label="操作" fixed="right" width="150">
         <template #default="scope">
@@ -148,13 +148,22 @@ const edit = (val: any) => {
 </script>
 
 <style scoped lang="less">
-.toptitle {
-  font-size: 22px;
-  // font-weight: bold;
+h3 {
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
 }
+// .toptitle {
+//   font-size: 20px;
+//     color: rgb(33, 33, 33);
+//     font-weight: normal;
+// }
 .el-pagination {
   display: flex;
   justify-content: right;
   margin-top: 15px;
+}
+.el-table{
+  margin-top: 20px;
 }
 </style>

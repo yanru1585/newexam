@@ -49,7 +49,7 @@
     <el-menu
       background-color="#ebebeb"
       class="el-menu-vertical-demo"
-      default-active='stutest'
+      :default-active=menuList[0].url
       :unique-opened="true"
       @open="handleOpen"
       @close="handleClose"
@@ -95,7 +95,8 @@ const data: any = reactive({
 const { info,defaultmenu } = toRefs(data);
 
 onMounted(() => {
-  // console.log(sessionStorage.getItem('type'));
+
+
   if(sessionStorage.getItem('type')==='teacher'){
     data.defaultmenu='test'
   }else{
