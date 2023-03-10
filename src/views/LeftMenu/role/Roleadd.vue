@@ -222,9 +222,9 @@ const confirm = async (formEl: FormInstance | undefined) => {
 
       let res: any = await roleadd(addData.addList);
       console.log('添加角色', res);
-      if (addData.addList.id == 0) {
+      if (addData.addList.id == undefined) {
         if (res.errCode !== 10000) {
-          ElMessage.error('添加失败！');
+          ElMessage.error(res.errMsg);
           return false;
         }
         ElMessage({
@@ -233,7 +233,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
       } else {
         if (res.errCode !== 10000) {
-          ElMessage.error('修改失败！');
+          ElMessage.error(res.errMsg);
           return false;
         }
         ElMessage({
