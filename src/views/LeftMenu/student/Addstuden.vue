@@ -3,6 +3,7 @@
     v-model="dialogVisible"
     :title="AddForm.id===0?'添加':'修改' "
     width="40%"
+    :before-close="handleClose"
   >
   <el-form
     ref="ruleFormRef"
@@ -56,8 +57,9 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="Cancel">取消</el-button>
+        <!-- AddForm.id===0?'添加':'修改' -->
         <el-button type="primary" @click="confirm(ruleFormRef)">
-         添加
+         {{AddForm.id===0?'添加':'修改' }}
         </el-button>
       </span>
     </template>
@@ -65,14 +67,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,onMounted,toRefs,watch,defineExpose } from 'vue'
+import { ref,onMounted,toRefs,watch,defineExpose,defineEmits } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus'
 import { reactive } from 'vue'
 import { departmentList } from '../../../api/department';
 import {classeslist,classesad}from '../../../api/admin'
-import { indexOf } from 'lodash';
-const dialogVisible = ref(false)
+const emit=defineEmits(['stuEmit'])
+const dialogVisible = ref(true)
 const title =ref()
 defineExpose({
   dialogVisible,
@@ -89,6 +91,7 @@ const propss = defineProps({
     required: true,
   },
 });
+
 const formSize = ref('default')
 const ruleFormRef = ref<FormInstance>()
 
@@ -103,7 +106,8 @@ interface Iadd{//添加数据接口
   depname:string,
 }
 interface Idatss{
-  AddForm:Iadd
+  AddForm:Iadd,
+  newAddForm:Iadd
 }
 const datss:Idatss = reactive({//添加数据
   AddForm:{
@@ -115,9 +119,19 @@ const datss:Idatss = reactive({//添加数据
     username:"",
     pass:'',
     depname:'',
+    },
+    newAddForm:{
+    id: 0,
+    name: '',
+    remarks:"",
+    classid: '',
+    photo:'',
+    username:"",
+    pass:'',
+    depname:'',
     }
 })
-const {AddForm} =toRefs(datss)
+const {AddForm,newAddForm} =toRefs(datss)
 //部门数据
 interface Idata{//部门列表接口
   DepartmentList:Array<any>//部门列表
@@ -181,7 +195,11 @@ const selectChange=async(val:any)=>{
   }
   datat.classList=res.data.list
 }
-
+const handleClose = (done: () => void) => {
+  Object.assign(AddForm.value,newAddForm.value)
+      // dialogVisible.value = false;
+      emit('stuEmit',false)
+}
 onMounted(()=>{
   getDepartmentList()//部门
   // Object.assign(propss.editList, AddForm);
@@ -192,28 +210,23 @@ watch(
   (newValue, oldValue) => {
     console.log('person的job变化了', newValue, oldValue);
     Object.assign(AddForm.value, newValue[0])
-    // AddForm=newValue[0]
+    // AddForm=newValue[0] 
+    console.log(9999,AddForm.value);
   },
-  { immediate: true, deep: true }
-);
 
-const checkPhone = (rule:any, value:any, callback:any) => {
-  const reg = /^1[345789]\d{9}$/
-  if (!reg.test(value)) {
-    callback(new Error('请输入11位手机号'))
-  } else {
-    callback()
-  }
-}
+  { immediate: true, deep: true }
+ 
+  
+);
 //校验
 const rules = reactive<FormRules>({
   name: [
     { required: true, message: '请输入名字', trigger: 'blur' },
-    { min: 4, max: 8, message: '长度在4-8个字符之间', trigger: 'blur' },
+    { min: 2, max: 8, message: '长度在2-8个字符之间', trigger: 'blur' },
   ],
   photo:[
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { type: 'number', validator: checkPhone, message: '请输入11位有效手机号号码', trigger: ['blur', 'change'] }
+  { required: true, message: '请输入手机号', trigger: 'change' },
+  { pattern: /^1[3|5|7|8|9]\d{9}$/, message: '请输入正确的号码格式', trigger: 'blur' }
   ],
   // username:[
   //   { required: true, message: '请输入账号', trigger:'blur' },
@@ -239,20 +252,27 @@ const confirm = async (formEl: FormInstance | undefined) => {
         return false;
       }
       if (AddForm.value.id === 0) {
+
+        Object.assign(AddForm.value,newAddForm.value)
         ElMessage({
           message: '添加成功！',
           type: 'success',
         });
       } else {
+
+        Object.assign(AddForm.value,newAddForm.value)
         ElMessage({
           message: '修改成功！',
           type: 'success',
         });
       }
-      dialogVisible.value = false;
+      emit('stuEmit',false)
+      // dialogVisible.value = false;
+     
     } else {
       console.log('error submit!', fields);
       ElMessage('请输入学生数据！');
+      // Object.assign(AddForm.value,newAddForm.value)
     }
     propss.getListDialog(); //调用父级的列表  刷新
     formEl.resetFields(); //重置表单
@@ -260,7 +280,9 @@ const confirm = async (formEl: FormInstance | undefined) => {
 };
 //取消
 const Cancel = () => {
-  dialogVisible.value = false;
+  emit('stuEmit',false)
+  // dialogVisible.value = false;
+  Object.assign(AddForm.value,newAddForm.value)
 
 };
 

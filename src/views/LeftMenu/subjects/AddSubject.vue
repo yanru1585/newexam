@@ -36,7 +36,7 @@
                 <p style="font-size: 13px; color: #848484; margin-bottom: 10px;">{{item.type}}<span>{{item.const}}</span> 道</p>
                 <div class="item_detail">
                   <span>每题</span>
-                  <el-input></el-input>
+                  <el-input v-model="item.score"></el-input>
                   <span>分</span>
                 </div>
               </div>
@@ -522,6 +522,22 @@ const empty=()=>{
       })
     })
 }
+// 监听左侧数据变化
+watch(()=>questionsType.value,(newVal)=>{
+
+if(newVal){
+  let res=newVal.filter(item=>item.score!==null)
+  res.forEach(ite=>{
+    addFrom.value.questions.forEach(datalist=>{
+      if(ite.type===datalist.type){
+        datalist.scores=ite.score?ite.score:datalist.scores
+      }
+    })
+}
+
+)}
+
+},{deep:true,immediate:true})
 </script>
 
 <style lang="less" scoped>
