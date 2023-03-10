@@ -21,12 +21,12 @@
               <p class="scores">分值：{{ item.scores }}</p>
 
               <div v-if="item.type=='单选题'||item.type=='多选题'||item.type=='判断题'">
-                <p v-if="item.studentanswer.includes(item.answer)" style="height: 16px;font-size: 12px;border: #4cc0a4 1px solid;color: #4cc0a4;border-radius: 3px;padding: 0 5px;">得分：{{item.scores}}</p>
-                <p v-else style="height: 16px;font-size: 12px;border: #ee0000 solid 1px;border-radius: 3px;color: #e00;padding: 0 5px;">得分：0</p>
+                <p style="height: 16px;font-size: 12px;border-radius: 3px;padding: 0 5px;" :style="item.studentscores===0?'border: #ee0000 solid 1px;color: #e00':'border: #4cc0a4 1px solid;color: #4cc0a4;'">得分：{{item.studentscores}}</p>
+                <!-- <p v-else style="height: 16px;font-size: 12px;border: #ee0000 solid 1px;border-radius: 3px;color: #e00;padding: 0 5px;">得分：0</p> -->
               </div>
-              <div v-if="item.type=='填空题'||item.type=='问答题'">
+              <!-- <div v-if="item.type=='填空题'||item.type=='问答题'">
                 <p style="height: 16px;font-size: 12px;border: #ee0000 solid 1px;border-radius: 3px;color: #e00;padding: 0 5px;">得分：0</p>
-              </div>
+              </div> -->
               
             </div>
             <!-- 选项 -->
@@ -74,7 +74,7 @@
                 <p class="answerItem" :style="item.type=='填空题'?'backgroundColor:red;padding: 10px;':'background-color:#f7fbff;padding: 10px;'">
                   <span :style="item.type=='填空题'?'color:#000':'color:#90adca'">正确答案</span>
                   <span class="answerItem_A" v-if="item.type=='单选题'">{{item.answer}}</span>
-                  <span class="answerItem_A" v-if="item.type=='多选题'" v-for="(i,index1) in item.answer">{{i}}</span>
+                  <span class="answerItem_A" v-if="item.type=='多选题'" v-for="(i,index1) in item.answer">{{i}}</span> <!-- 正确答案选项 -->
                   <span style="margin-left: 20px;color:rgb(102, 102, 102)" v-if="item.type=='判断题'">{{ item.answer }}</span>
                   <span style="color:#000;margin-left: 10px;margin-top: 2px;" v-if="item.type=='填空题'">{{item.answer}}</span>
                 </p>
@@ -104,11 +104,13 @@
           <span style="font-size: 12px;margin: 0 15px 0 5px;">错误</span>
         </div>
 
-        <div style="display: flex;flex-wrap: wrap;">
-          <div class="tiItem" v-for="(item, index) in testList" :key="index"> 
-            <div @click="scrollTo(index)" class="ti" :style="item.studentanswer.includes(item.answer)?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'background-color: #fcf2f0;color: #e9747f;cursor:pointer'">{{index+1}}</div>
+        <el-scrollbar height="425px">
+          <div style="display: flex;flex-wrap: wrap;">
+            <div class="tiItem" v-for="(item, index) in testList" :key="index"> 
+              <div @click="scrollTo(index)" class="ti" :style="item.studentscores!==0?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'background-color: #fcf2f0;color: #e9747f;cursor:pointer'">{{index+1}}</div>
+            </div>
           </div>
-        </div>
+        </el-scrollbar>
       </div>
   </div>
 </template>

@@ -71,21 +71,16 @@ onMounted(() => {
 });
 
 const isDuringDate= (beginDateStr:any, endDateStr:any)=> {
-  console.log(endDateStr);
   
   let curDate = new Date(),
   beginDate = new Date(beginDateStr),
   endDate = new Date(endDateStr);
-  console.log(curDate);
-  console.log(beginDate);
-  console.log(endDate);
   
   if (curDate >= beginDate && curDate <= endDate) {
       return true;
   }
   return false;
 }
-
 
 const getList=async()=>{
   let res: any = await testGet(route.query.id);
@@ -99,14 +94,12 @@ const getList=async()=>{
     // 开发时间
    nextTick(()=>{
     let isDuring =isDuringDate(testData.value.begintime, testData.value.endtime)
-    console.log(testData.value.begintime);
     
     if(isDuring){
       isOk.value=true
     }else{
       isOk.value=false
     }
-    console.log(isDuring);
   })
 }
 
