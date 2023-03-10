@@ -324,7 +324,7 @@ const drawerEmit = (data: any) => {
     data.answer=data.checkList.join('|')
   }
   if(data.type==='填空题'){
-    data.title=data.title.replaceAll('[]','_______,')
+    // data.title=data.title.replaceAll('[]','_______,')
     data.answer=data.answer.replaceAll('|',",")
   }
   // console.log(data);
