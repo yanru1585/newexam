@@ -107,7 +107,7 @@ import {
 } from 'vue';
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
 import { ElMessage, FormInstance, FormRules } from 'element-plus';
-
+import { SlateElement } from '@wangeditor/editor'
 const ruleFormRef = ref<FormInstance>()
 const props=defineProps({
   compileData:{
@@ -188,7 +188,32 @@ onMounted(() => {
 });
 
 const toolbarConfig = {};
-const editorConfig = { placeholder: '请输入内容...' };
+const editorConfig = {
+    placeholder: '请输入内容...',
+    
+    MENU_CONF: {
+      
+      uploadImage: { 
+        //上传图片配置
+        server: 'http://www.eshareedu.cn/exam/api/upload/editeradd', //上传接口地址
+        headers:{
+          Authorization:sessionStorage.getItem('token')
+        },
+        fieldName: 'file', //上传文件名
+        methods: 'post',
+        metaWithUrl: true, // 参数拼接到 url 上
+        // 单个文件上传成功之后
+        onSuccess(file:any, res:any) {
+          console.log(`${file.name} 上传成功`, res);
+        },
+        // 自定义插入图片
+        customInsert(res:any, insertFn:any) {
+          insertFn('http://www.eshareedu.cn/exam/upload/' + res.data[0].url.substring(4,res.data[0].url.length));
+        },
+      },
+    },
+  };
+
 
 // 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
@@ -198,6 +223,7 @@ onBeforeUnmount(() => {
 });
 
 const handleCreated = (editor: any) => {
+  console.log(sessionStorage.getItem('token'));
   editorRef.value = editor; // 记录 editor 实例，重要！
 };
 //验证
