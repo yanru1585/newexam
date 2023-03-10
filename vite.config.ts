@@ -12,7 +12,7 @@ export default defineConfig({
      //生产环境时移除console.log()
      drop_console: true,
      drop_debugger: true,
-   },
+   }
    }
   }
 })

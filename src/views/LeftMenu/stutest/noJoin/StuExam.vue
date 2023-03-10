@@ -333,9 +333,12 @@ const scrollTo=(index:any)=> {
 .left{
   height: 100vh;
   width: 100%;
-  background-color: #fafbfd;
+  // background-color: #fafbfd;
   padding-top: 20px;
   padding-left: 35px;
+  .content:last-child{
+    padding-bottom: 30px;
+  }
 }
 .right{
   width: 300px;
