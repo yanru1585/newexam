@@ -238,7 +238,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
         return false;
       }
-      if (AddForm.value.id === 0) {
+      if (AddForm.value.id == 0) {
         ElMessage({
           message: '添加成功！',
           type: 'success',

@@ -168,7 +168,7 @@ const getList = async () => {
   console.log('获取考试题目（开始考试）', res);
   if (res.errCode !== 10000) {
     ElMessage.error(res.errMsg);
-    return false;
+    return false;nextTick
   }
 
   data.testData = res.data;
