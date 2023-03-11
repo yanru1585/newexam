@@ -4,7 +4,7 @@
       style="display: flex; justify-content: space-between; margin-top: 10px"
     >
       <h3>题库管理</h3>
-      <el-button type="primary" @click="add">创建考试</el-button>
+      <el-button type="primary" @click="add">创建题库</el-button>
     </div>
 
     <div>
@@ -18,10 +18,11 @@
         <el-form-item>
           <el-checkbox
             v-model="ismy"
-            true-label="1"
-            false-label="0"
+            :true-label="1"
+            :false-label="0"
             label="只看我创建的"
             size="large"
+            @change="onlyMine"
           />
         </el-form-item>
         <el-form-item>
@@ -38,6 +39,9 @@
         size="small"
         @selection-change="selectionChange"
         v-loading="loading"
+        :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+        :header-row-style="{height:'40px'}"
+        :row-style="{height:'40px'}"
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="题库" #default="scope" width="450" align="center">
@@ -50,9 +54,16 @@
         <el-table-column prop="counts" label="题目数量" width="180" align="center"/>
         <el-table-column prop="addtime" label="创建时间" align="center">
           <template #default="scope">
-          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
-        </template>
-          </el-table-column>
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="moment(scope.row.addtime).format('YYYY-MM-DD hh:mm')"
+                placement="top"
+              >
+                <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD hh:mm') }}</span>
+              </el-tooltip>
+            </template>
+        </el-table-column>
         <el-table-column prop="admin" label="创建人" align="center"/>
         <el-table-column fixed="right" label="操作" width="150" align="center">
           <template #default="scope">
@@ -149,6 +160,20 @@ const state: any = reactive({
 
 const { key, admin, ismy } = toRefs(data);
 const { tableData, total, ids } = toRefs(state);
+
+watch(admin,(newVal)=>{
+  if(newVal[0]){
+    data.ismy=0
+  } 
+})
+// 点击只看我的
+const onlyMine=(val:any)=>{
+  console.log(val);
+  if(val==1){
+    data.admin=''
+    data.ismy=1
+  }
+}
 
 onMounted(() => {
   getList(); //题库列表

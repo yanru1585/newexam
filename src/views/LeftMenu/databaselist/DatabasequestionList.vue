@@ -44,9 +44,13 @@
       style="width: 100%"
       @selection-change="selectionChange"
       size="small"
+      :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}"
     >
       <el-table-column type="selection" width="55" />
-      <el-table-column prop="title" label="题目名称" width="450">
+      
+      <el-table-column prop="title" label="题目名称" tooltip-effect="dark" width="450">
         <template #default="scope">
           <span @click="testDetail(scope.row)" style="color: #409eff;cursor: pointer" v-html="scope.row.title"></span>
         </template>
@@ -54,16 +58,14 @@
       <el-table-column prop="type" label="题目类型" width="180" />
       <el-table-column prop="addtime" label="创建时间">
         <template #default="scope">
-          <el-popover
-            placement="top"
-            :width="100"
-            trigger="hover"
+          <el-tooltip
+            class="box-item"
+            effect="dark"
             :content="moment(scope.row.addtime).format('YYYY-MM-DD hh:mm')"
+            placement="top"
           >
-            <template #reference>
-              <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD hh:mm') }}</span>
-            </template>
-          </el-popover>
+            <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD hh:mm') }}</span>
+          </el-tooltip>
         </template>
       </el-table-column>
       <el-table-column prop="admin" label="创建人" />

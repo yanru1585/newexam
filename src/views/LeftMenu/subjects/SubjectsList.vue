@@ -29,7 +29,9 @@
         <el-button type="primary" @click="seacher">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: auto" v-loading="loading">
+    <el-table :data="tableData" style="width: auto" v-loading="loading" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}">
       <el-table-column label="试卷名称" align="center">
         <template #default="scope">
           <span

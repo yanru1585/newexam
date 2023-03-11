@@ -33,7 +33,9 @@
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
 
-    <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading">
+    <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}">
       <el-table-column prop="name" label="姓名" align="center"> </el-table-column>
       <el-table-column prop="depname" label="部门" align="center"> </el-table-column>
       <el-table-column prop="tel" label="电话" align="center"> </el-table-column>
