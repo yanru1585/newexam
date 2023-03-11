@@ -35,7 +35,6 @@
       <el-table
         :data="tableData"
         style="width: 100%"
-        stripe
         @selection-change="selectionChange"
         v-loading="loading"
         :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"

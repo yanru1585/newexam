@@ -49,7 +49,6 @@
 
     <el-table
       :data="data.tableData"
-      stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
       v-loading="loading"
@@ -87,7 +86,7 @@
       <el-pagination
         v-model:current-page="currentPage1"
         v-model:page-size="pageSize2"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[10, 20, 50, 100]"
         style="margin-top: 10px; float: right"
         layout="total, sizes, prev, pager, next, jumper"
         :total="data.total"
@@ -197,7 +196,7 @@ interface Iform {
 const data = reactive<Istate>({
   params: {
     page: 1, //页码 默认是1
-    psize: 5, //每页显示多少条 默认是2
+    psize: 10, //每页显示多少条 默认是2
     key: '', //搜索关键字(名称)
     depid: '', //部门id
     classid: '', //班级id
@@ -346,7 +345,7 @@ const edit = (val: any) => {
 };
 const {  stuentlist } = toRefs(stats);
 //分页
-const pageSize2 = ref(4);
+const pageSize2 = ref(10);
 const currentPage1 = ref(1);
 const handleSizeChange = (val: number) => {
   console.log(val);
