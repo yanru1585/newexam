@@ -66,7 +66,6 @@
 
     <el-table
       :data="data.tableData"
-      stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
       v-loading="loading"
