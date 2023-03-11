@@ -175,13 +175,13 @@ const getList = async () => {
       console.log(item.studentanswer.split('|'));
       let garArr:any = item.studentanswer.split('|')
       console.log(garArr);
-      // let _index = garArr.map((i:any,index:any)=>{
-      //   console.log(i);
+      garArr.forEach((i:any,index:any)=>{
+        console.log(i);
 
-      //   return data.gapFilling
-      // })
-      // console.log(_index);
-      data.gapFilling=item.title.replace('[]',garArr)
+        // return data.gapFilling
+        data.gapFilling=item.title.replace(/\[\]/,`<input value="${i}"/>`)
+
+      })
      
       // data.gapFilling=item.title.replaceAll('[]',`<span v-for="(item,index) in garArr" :key="index">item</span>`)
     }
