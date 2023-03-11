@@ -161,7 +161,6 @@ const cancel=()=>{
 }
 /* 问题 */
 .issue {
-  height: 50px;
   line-height: 50px;
 }
 /* 回答 */
