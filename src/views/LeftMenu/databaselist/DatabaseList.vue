@@ -3,12 +3,7 @@
 
     <div class="top">
       <h3>题库管理</h3>
-<<<<<<< HEAD
       <el-button type="primary" @click="add">创建题库</el-button>
-=======
-      <el-button type="primary" @click.prevent="add">创建题库</el-button>
-
->>>>>>> ac7d2e64b1015860e1dda9ee5294e50f36d70725
     </div>
 
     <div>
