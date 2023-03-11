@@ -33,7 +33,8 @@
       <el-button type="primary" @click="onSubmit">查询</el-button>
     </el-form>
 
-    <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      
+    <el-table :data="data.tableData" style="width: 100%" size="small"  v-loading="loading" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
       :header-row-style="{height:'40px'}"
       :row-style="{height:'40px'}">
       <el-table-column prop="name" label="姓名" align="center"> </el-table-column>
@@ -63,7 +64,7 @@
       <el-pagination
         v-model:current-page="currentPage1"
         v-model:page-size="pageSize2"
-        :page-sizes="[5, 10, 15, 20]"
+        :page-sizes="[10, 20, 50, 100]"
         style="margin-top: 10px; float: right"
         layout="total, sizes, prev, pager, next, jumper"
         :total="data.total"
@@ -197,7 +198,7 @@ interface Iform {
 const data = reactive<Istate>({
   params: {
     page: 1, //页码 默认是1
-    psize: 5, //每页显示多少条 默认是2
+    psize: 10, //每页显示多少条 默认是2
     key: '', //搜索关键字(名称)
     depid: '', //部门id
   },
@@ -244,7 +245,7 @@ const delId = (id: number) => {
     });
 };
 //分页
-const pageSize2 = ref(5);
+const pageSize2 = ref(10);
 const currentPage1 = ref(1);
 const handleSizeChange = (val: number) => {
   console.log(val);

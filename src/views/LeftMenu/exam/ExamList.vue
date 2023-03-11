@@ -16,7 +16,7 @@
           </div> -->
           <div>
             <el-table :data="data.list"   
-            border style="width: 100%" 
+            style="width: 100%" 
             v-loading="loading"
             :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
             :header-row-style="{height:'40px'}"
