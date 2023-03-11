@@ -90,7 +90,6 @@
       :total="total"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      style="float: right;"
     />
   </div>
 
@@ -278,8 +277,6 @@ const toQuestions = (id: any) => {
 }
 // 分页
 .el-pagination {
-  display: flex;
   justify-content: center;
-  margin-top: 20px;
 }
 </style>

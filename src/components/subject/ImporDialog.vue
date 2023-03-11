@@ -108,13 +108,14 @@ const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => {
 const dialogVisible = ref(true);
 
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('是否取消批量上传?')
-    .then(() => {
-      emit('showEmit', false);
-    })
-    .catch(() => {
-      // catch error
-    });
+  emit('showEmit', false);
+  // ElMessageBox.confirm('是否取消批量上传?')
+  //   .then(() => {
+  //     emit('showEmit', false);
+  //   })
+  //   .catch(() => {
+  //     // catch error
+  //   });
 };
 // 点击确定
 const confirm = () => {

@@ -85,7 +85,6 @@
         v-model:current-page="currentPage1"
         v-model:page-size="pageSize2"
         :page-sizes="[5, 10, 15, 20]"
-        style="margin-top: 10px; float: right"
         layout="total, sizes, prev, pager, next, jumper"
         :total="data.total"
         @size-change="handleSizeChange"
@@ -101,7 +100,7 @@
   </div>
   <AlladdQuestion @closeDialog="closeDialog" :addUrl="addStudentUrl" :getList="getlist" v-if="isShowAdd"/> <!-- 批量上传学生 -->
 </template>
-
+ 
 <script setup lang="ts">
 import  moment  from "moment"
 import {debounce}  from "../../../utils/throTtle"
@@ -382,5 +381,8 @@ onActivated(()=>{
 }
 .el-table .cell {
   color: #409eff;
+}
+/deep/.el-pagination{
+  justify-content: center;
 }
 </style>

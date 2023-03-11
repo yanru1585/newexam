@@ -274,4 +274,5 @@ const del = () => {
   position: fixed;
   overflow-y: scroll;
 }
+
 </style>

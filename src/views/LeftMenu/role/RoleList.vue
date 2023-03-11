@@ -158,10 +158,8 @@ h3 {
 //     color: rgb(33, 33, 33);
 //     font-weight: normal;
 // }
-.el-pagination {
-  display: flex;
-  justify-content: right;
-  margin-top: 15px;
+/deep/.el-pagination{
+  justify-content: center;
 }
 .el-table{
   margin-top: 20px;

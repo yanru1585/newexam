@@ -36,7 +36,8 @@
                 <p style="font-size: 13px; color: #848484; margin-bottom: 10px;">{{item.type}}<span>{{item.const}}</span> 道</p>
                 <div class="item_detail">
                   <span>每题</span>
-                  <el-input v-model="item.score"></el-input>
+                  <!-- <el-input v-model="item.score"></el-input> -->
+                  <el-input-number class="input_num" :controls="false" v-model.number="item.score"/>
                   <span>分</span>
                 </div>
               </div>
@@ -440,10 +441,6 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         ElMessage.error('请添加题目')
         return false
       }
-      if(!addFrom.value.databaseid){
-        ElMessage.error('请选择题库')
-        return false
-      }
       if(addFrom.value.limits.length===0){
         ElMessage.error('请选择可见老师')
         return false
@@ -606,7 +603,7 @@ h3 {
         display: inline;
         font-size: 13px;
         color: #848484;
-        .el-input{
+        .input_num{
           width: 50px;
           margin: 0px 5px;
         }

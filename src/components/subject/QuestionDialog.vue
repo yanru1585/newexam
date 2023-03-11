@@ -70,6 +70,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted,defineProps, ref, watch, toRaw,defineEmits } from 'vue';
 import {databasequestionList} from '../../api/database'

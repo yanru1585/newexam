@@ -62,7 +62,6 @@
         v-model:current-page="currentPage1"
         v-model:page-size="pageSize2"
         :page-sizes="[5, 10, 15, 20]"
-        style="margin-top: 10px; float: right"
         layout="total, sizes, prev, pager, next, jumper"
         :total="data.total"
         @size-change="handleSizeChange"
@@ -277,5 +276,8 @@ const onSubmit =debounce( () => {
 }
 .el-table .cell {
   color: #409eff;
+}
+/deep/.el-pagination{
+  justify-content: center;
 }
 </style>

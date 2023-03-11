@@ -45,7 +45,6 @@
               :total="total"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              style="float: right;"
             />
           </div>
 
@@ -119,7 +118,7 @@ onActivated(()=>{
 
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .h3 {
   font-size: 20px;
     color: rgb(33, 33, 33);
@@ -138,5 +137,8 @@ onActivated(()=>{
 }
 .incomplete{
   color: red;
+}
+/deep/.el-pagination{
+  justify-content: center;
 }
 </style>

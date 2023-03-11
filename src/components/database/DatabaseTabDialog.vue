@@ -33,16 +33,20 @@
         :data="tableData"
         style="width: 100%"
       >
-        <el-table-column prop="title" label="题库" align="center" style="width: auto">
+        <el-table-column prop="title" label="题库"  style="width: auto">
           <template #default="scope">
              <el-radio-group v-model="radioId" class="ml-4">
               <el-radio :label="scope.row.id" size="large"><span style="margin-left: 10px;width: 50px;">{{ scope.row.title }}</span></el-radio> 
              </el-radio-group>
           </template>
           </el-table-column>
-        <el-table-column prop="counts" label="题目数量"  align="center"/>
-        <el-table-column prop="addtime" label="创建时间" align="center"/>
-        <el-table-column prop="admin" label="创建人" align="center"/>
+        <el-table-column prop="counts" label="题目数量"  />
+        <el-table-column prop="addtime" label="创建时间" >
+          <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+          </el-table-column>
+        <el-table-column prop="admin" label="创建人" />
       </el-table>
     </div>
 
@@ -72,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import  moment  from "moment"
 import {databasequestionList} from '../../api/database'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted, ref, watch, toRaw,defineEmits } from 'vue';
@@ -140,14 +145,15 @@ onMounted(() => {
 
 
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('是否确认关闭弹窗')
-    .then(() => {
-      emit('showEmit',false)
-      // done()
-    })
-    .catch(() => {
-      // catch error
-    })
+  emit('showEmit',false)
+  // ElMessageBox.confirm('是否确认关闭弹窗')
+  //   .then(() => {
+  //     emit('showEmit',false)
+  //     // done()
+  //   })
+  //   .catch(() => {
+  //     // catch error
+  //   })
 }
 // 点击确定
 const submitForm= async ()=>{
@@ -193,16 +199,14 @@ const cancelForm=()=>{
 }
 
 /* 分页 */
-.el-pagination {
+.el-pagination{
   display: flex;
   justify-content: center;
-  margin-top: 20px;
 }
 /deep/.el-radio{
   span:first-of-type{
     width: 15px;
     border-radius: 50%;
-    // text-align: center;
   }
   span:last-of-type{
     width: 50px;

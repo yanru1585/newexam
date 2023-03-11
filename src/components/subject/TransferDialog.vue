@@ -3,7 +3,7 @@
     <el-dialog
       v-model="dialogVisible"
       :title="title"
-      width="70%"
+      width="50%"
       :before-close="handleClose"
     >
       <div class="seleBox">

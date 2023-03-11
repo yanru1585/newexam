@@ -267,8 +267,7 @@ const compile = (id: any) => {
   // font-size: 12px;
   // margin-top: 20px;
 }
-.el-pagination {
-  justify-content: right;
-  
+/deep/.el-pagination{
+  justify-content: center;
 }
 </style>

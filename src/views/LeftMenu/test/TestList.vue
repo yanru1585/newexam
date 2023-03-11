@@ -130,7 +130,7 @@
         v-model:current-page="params.page"
         v-model:page-size="params.psize"
         :page-sizes="[5, 10, 15, 20]"
-        style="margin-top: 10px; float: right"
+       
         layout="total, sizes, prev, pager, next, jumper"
         :total="data.total"
         @size-change="handleSizeChange"
@@ -547,8 +547,7 @@ const getAnalyse=(data:any)=>{
 .el-table .cell {
   color: #409eff;
 }
-//   .el-main{
-//   height: 100vh ;
-
-// }
+/deep/.el-pagination{
+  justify-content: center;
+}
 </style>
