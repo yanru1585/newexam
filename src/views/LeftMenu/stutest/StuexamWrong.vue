@@ -170,9 +170,20 @@ const getList = async () => {
       item.answer=item.answer.split('|')
     }
   })
-  data.testList.filter((item:any)=>{
+  data.testList.filter((item:any,ind:any)=>{
     if(item.type=='填空题'){
-      data.gapFilling=item.title.replaceAll('[]','____')
+      console.log(item.studentanswer.split('|'));
+      let garArr:any = item.studentanswer.split('|')
+      console.log(garArr);
+      // let _index = garArr.map((i:any,index:any)=>{
+      //   console.log(i);
+
+      //   return data.gapFilling
+      // })
+      // console.log(_index);
+      data.gapFilling=item.title.replace('[]',garArr)
+     
+      // data.gapFilling=item.title.replaceAll('[]',`<span v-for="(item,index) in garArr" :key="index">item</span>`)
     }
   })
 };

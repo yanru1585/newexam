@@ -7,7 +7,9 @@
       <el-button type="primary" @click="edit">添加角色</el-button>
     </div>
 
-    <el-table :data="tableData" style="width: 100%" stripe v-loading="loading">
+    <el-table :data="tableData" style="width: 100%" v-loading="loading" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}">
       <el-table-column prop="name" label="名称" />
       <el-table-column label="操作" fixed="right" width="150">
         <template #default="scope">

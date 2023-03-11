@@ -185,6 +185,8 @@ const getList = async () => {
   data.questionsList = data.questionsList.map((item:any,index:any)=>{
     
     if(item.type=='填空题'){
+      console.log(index);
+      
        item.title=item.title.replaceAll("[]",`<input class="input input${index}" data="${index}" type="text" />`)
     }
     return item
@@ -199,6 +201,7 @@ const getList = async () => {
       item.oninput = function () {
         //获取填空题在试题列表里面的下标
         let _index = this.getAttribute('data');
+        
         let arr:any=[] // 声明一个空数组
         document.querySelectorAll('.input'+_index).forEach((i:any)=>{
           console.log(i.value);
@@ -206,23 +209,26 @@ const getList = async () => {
         })
         console.log(arr);
         data.questionsList[_index].studentanswer=arr.length==0?null:arr.join('|')
+        console.log(data.questionsList[_index]);
+        
       };
     });
   });
-  
 
-const shuffle = (arr:any) => { //防作弊 打乱题目
-  for (let i = 0; i < arr.length; i++) {
-    const randomIndex = Math.round(Math.random() * (arr.length - 1 - i)) + i;
-    [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
-  }
-  return arr
-};
-shuffle(data.questionsList)
+// const shuffle = (arr:any) => { //防作弊 打乱题目
+//   for (let i = 0; i < arr.length; i++) {
+//     const randomIndex = Math.round(Math.random() * (arr.length - 1 - i)) + i;
+//     [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+//   }
+//   return arr
+// };
+// shuffle(data.questionsList)
 };
 
 // 点击交卷
 const trueFn=()=>{
+  console.log(data.questionsList);
+  
   data.addList=data.questionsList.map((i:any,index:any)=>{ //要添加的数据
     if(!i.studentanswer){
       i.studentanswer=''
@@ -233,7 +239,7 @@ const trueFn=()=>{
       i.studentanswer=i.studentanswer.split('|').sort().join('|')
     }
     
-    return {answer:i.studentanswer,questionid:i.id,scores:i.type=='判断题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
+    return {answer:i.studentanswer,questionid:i.id,scores:i.type=='填空题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
   })
   console.log(data.addList);
 }
@@ -331,7 +337,6 @@ const scrollTo=(index:any)=> {
 
 <style lang="less" scoped>
 .left{
-  height: 100vh;
   width: 100%;
   background-color: #fafbfd;
   padding-top: 20px;
