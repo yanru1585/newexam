@@ -127,13 +127,12 @@ const getList = async () => {
 
       if(item.type=='问答题'||item.type=='填空题'){
         item.correct = typeData.filter((it:any)=>{
-          if(it.studentanswer){
+          if(it.studentscores>0){
             return it
           }
         }).length+'题'
         item.mistak=typeData.filter((it:any)=>{
-          if(!it.studentanswer){
-            // console.log(it);
+          if(it.studentscores==0){
             return it
           }
         }).length+'题'

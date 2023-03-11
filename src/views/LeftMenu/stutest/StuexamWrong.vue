@@ -20,24 +20,15 @@
               </div>
               <p class="scores">分值：{{ item.scores }}</p>
 
-              <div v-if="item.type=='单选题'||item.type=='多选题'||item.type=='判断题'">
+              <!-- <div v-if="item.type=='单选题'||item.type=='多选题'||item.type=='判断题'"> -->
                 <p style="height: 16px;font-size: 12px;border-radius: 3px;padding: 0 5px;" :style="item.studentscores===0?'border: #ee0000 solid 1px;color: #e00':'border: #4cc0a4 1px solid;color: #4cc0a4;'">得分：{{item.studentscores}}</p>
-                <!-- <p v-else style="height: 16px;font-size: 12px;border: #ee0000 solid 1px;border-radius: 3px;color: #e00;padding: 0 5px;">得分：0</p> -->
-              </div>
-              <!-- <div v-if="item.type=='填空题'||item.type=='问答题'">
-                <p style="height: 16px;font-size: 12px;border: #ee0000 solid 1px;border-radius: 3px;color: #e00;padding: 0 5px;">得分：0</p>
-              </div> -->
+              <!-- </div> -->
               
             </div>
             <!-- 选项 -->
             <div>
               <p style="margin: 20px 0;" >
-                <p v-if="item.type!=='填空题'">
                   <span v-html="item.title"></span>
-                </p>
-                <p v-if="item.type=='填空题'">
-                  <span v-html="gapFilling"></span>
-                </p>
               </p>
               
               <div
@@ -130,19 +121,17 @@ const goBack = () => {
 interface Idata {
   testData: any;
   testList: Array<any>;
-  gapFilling:Array<any>;
   judgeAnswer:Array<any>
 }
 const data: Idata = reactive({
   testData: {},
   testList: [],
-  gapFilling:[],
   judgeAnswer:[
     {judge:'正确'},
     {judge:'错误'}
   ]
 });
-const { testData, testList,gapFilling,judgeAnswer } = toRefs(data);
+const { testData, testList,judgeAnswer } = toRefs(data);
 
 onMounted(() => {
   getList();
@@ -164,27 +153,20 @@ const getList = async () => {
   }
   data.testData = res.data;
   data.testList = res.data.questions;
-  console.log(data.testList);
+
   data.testList.map((item:any)=>{
     if(item.type=="多选题"){
       item.answer=item.answer.split('|')
     }
-  })
-  data.testList.filter((item:any,ind:any)=>{
     if(item.type=='填空题'){
       console.log(item.studentanswer.split('|'));
       let garArr:any = item.studentanswer.split('|')
       console.log(garArr);
-      garArr.forEach((i:any,index:any)=>{
-        console.log(i);
-
-        // return data.gapFilling
-        data.gapFilling=item.title.replace(/\[\]/,`<input value="${i}"/>`)
-
+      garArr.forEach((i:any)=>{
+        item.title=item.title.replace('[]',`<span style="border-bottom:1px solid #000;margin-left:5px">${i}</span>`)
       })
-     
-      // data.gapFilling=item.title.replaceAll('[]',`<span v-for="(item,index) in garArr" :key="index">item</span>`)
     }
+
   })
 };
 

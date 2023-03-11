@@ -66,9 +66,6 @@ const isOk=ref(true)
 
 onMounted(() => {
   getList();
- 
- 
-  
 });
 
 const isDuringDate= (beginDateStr:any, endDateStr:any)=> {

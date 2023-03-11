@@ -135,7 +135,7 @@ const getIQuestion = async () => {
   arr.map((item)=>{
     if(item.type==='填空题'){
       let arr1 = item.studentanswer.split('|')
-      // console.log(arr1);
+      console.log(arr1);
       arr1.forEach((data:string)=>{
         // console.log(data);      
         item.title=item.title.replace(
