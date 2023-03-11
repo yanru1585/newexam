@@ -251,13 +251,10 @@ const confirm = async (formEl: FormInstance | undefined) => {
         });
         return false;
       }
+
       if (AddForm.value.id === 0) {
 
         Object.assign(AddForm.value,newAddForm.value)
-        ElMessage({
-          message: '添加成功！',
-          type: 'success',
-        });
       } else {
 
         Object.assign(AddForm.value,newAddForm.value)
