@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>试卷管理</h3>
       <el-button type="primary" @click="addSubject">创建考试</el-button>
@@ -254,21 +254,20 @@ const compile = (id: any) => {
 };
 </script>
 <style lang="less" scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
+
   h3 {
     font-size: 20px;
     color: rgb(33, 33, 33);
     font-weight: normal;
   }
-}
+
 
 .el-form {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .el-table {
-  font-size: 12px;
+  // font-size: 12px;
+  // margin-top: 20px;
 }
 .el-pagination {
   justify-content: right;

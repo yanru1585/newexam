@@ -176,7 +176,7 @@ const ress = async (formEl: FormInstance | undefined) => {
             message: '修改成功',
             type: 'success',
           });
-          a.fal();
+          a.fal()
         }
       }
     } else {

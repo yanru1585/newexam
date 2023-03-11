@@ -13,10 +13,10 @@
         <el-input v-model="ruleForm.oldpass" />
       </el-form-item>
       <el-form-item label="新密码" prop="pass">
-        <el-input v-model="ruleForm.pass" />
+        <el-input v-model="ruleForm.pass" type="password" />
       </el-form-item>
       <el-form-item label="确认新密码" prop="passOk">
-        <el-input v-model="ruleForm.passOk" />
+        <el-input v-model="ruleForm.passOk"  type="password"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)">

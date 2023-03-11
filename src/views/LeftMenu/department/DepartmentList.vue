@@ -1,13 +1,21 @@
 <template>
   <div>
     <el-container>
+      
       <el-aside width="380px" >
-        <div
-      style="margin-top: 10px"
-    >
-      <h3>部门管理</h3>
-      <el-button style="margin: 15px 0;" type="primary" @click="(isShowAdd = true), (isShowAdd2 = false)">添加一级节点</el-button>
-    </div>
+
+
+        <div class="top">
+          <h3>部门管理</h3>
+          <!-- <p></p> -->
+          <el-button
+          style="margin: 15px 0;"
+            type="primary"
+            @click="(isShowAdd = true), (isShowAdd2 = false)"
+            >添加一级节点</el-button
+          >
+        </div>
+
         <div class="tree">
           <el-tree
             :data="list"
@@ -248,9 +256,10 @@ const del = () => {
 <style lang="less" scoped>
 .top {
   margin-bottom: 20px;
-  p {
+  h3 {
     font-size: 20px;
-    margin-bottom: 15px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
   }
   .el-button {
     margin-left: 20px;

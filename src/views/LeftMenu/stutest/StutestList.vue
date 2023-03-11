@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <p>考试列表</p>
+      <h3>考试列表</h3>
       <div>
         <el-form :inline="true" :model="searchData" class="demo-form-inline">
           <el-form-item label="关键字：">
@@ -161,6 +161,9 @@ onMounted(() => {
 });
 
 const getList = async () => {
+  if(listParams.value.result==='所有'){
+    listParams.value.result=''
+  }
   let res: any = await list(listParams.value);
   console.log('考试列表', res);
   if(res.errCode!==10000){
@@ -186,6 +189,11 @@ const testGet=(item:any)=>{
 </script>
 
 <style lang="less" scoped>
+h3 {
+    font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+  }
 .top {
   display: flex;
   justify-content: space-between;

@@ -166,7 +166,7 @@ const getList = async () => {
   console.log('获取考试题目（开始考试）', res);
   if (res.errCode !== 10000) {
     ElMessage.error(res.errMsg);
-    return false;
+    return false;nextTick
   }
 
   data.testData = res.data;
@@ -341,6 +341,10 @@ const scrollTo=(index:any)=> {
   background-color: #fafbfd;
   padding-top: 20px;
   padding-left: 35px;
+  overflow-y: scroll;
+  .content:last-child{
+    padding-bottom: 30px;
+  }
 }
 .right{
   width: 300px;
