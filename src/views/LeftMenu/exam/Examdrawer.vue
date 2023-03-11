@@ -1,46 +1,70 @@
 <template>
   <el-drawer :title="data.name" size="50%">
     <el-form
-          ref="ruleFormRef"
-          :model="data"
-          label-width="70px"
-          class="demo-ruleForm"
-          :size="formSize"
-          status-icon
+      ref="ruleFormRef"
+      :model="data"
+      label-width="70px"
+      class="demo-ruleForm"
+      :size="formSize"
+      status-icon
+    >
+      <div class="box" v-for="(item, index) in data.list" :key="index">
+        <div v-if="item.type === '问答题'">
+          <div class="top">
+            <span>{{ index + 1 }}.{{ item.type }}</span>
+            <span>分值：{{ item.scores }}</span>
+          </div>
+          <div class="issue">
+            <span v-html="item.title"></span>
+          </div>
+          <div class="answer">
+            <span>回答：</span>
+          </div>
+          <div class="answerr">
+            <span>{{ item.studentanswer }}</span>
+          </div>
+          <div class="isNum">
+            <el-form-item
+              :rules="studentscores(item.scores)"
+              label="打分"
+              :prop="'list.' + index + '.studentscores'"
+            >
+              <el-input class="elinput" v-model="item.studentscores" />
+            </el-form-item>
+            <el-form-item label="批注">
+              <el-input v-model="item.comments" type="textarea" />
+            </el-form-item>
+          </div>
+        </div>
+        <div v-if="item.type === '填空题'">
+          <div class="top">
+            <span>{{ index + 1 }}.{{ item.type }}</span>
+            <span>分值：{{ item.scores }}</span>
+          </div>
+          <div class="issue">
+            <span v-html="getReplace(item.title)"></span>
+          </div>
+          <div class="isNum">
+            <el-form-item
+              :rules="studentscores(item.scores)"
+              label="打分"
+              :prop="'list.' + index + '.studentscores'"
+            >
+              <el-input class="elinput" v-model="item.studentscores" />
+            </el-form-item>
+            <el-form-item label="批注">
+              <el-input v-model="item.comments" type="textarea" />
+            </el-form-item>
+          </div>
+        </div>
+      </div>
+      <div class="elbutton">
+        <el-button type="primary" @click="submitForm(ruleFormRef)"
+          >阅卷完毕</el-button
         >
-    <div class="box" v-for="(item, index) in data.list" :key="index">
-      <div class="top">
-        <span>{{index+1}}.{{ item.type }}</span>
-        <span>分值：{{ item.scores }}</span>
+        <el-button @click="cancel">取消</el-button>
       </div>
-      <div class="issue">
-        <span v-html="item.title"></span>
-      </div>
-      <div class="answer">
-        <span>回答：</span>
-      </div>
-      <div class="answerr">
-        <span>{{ item.studentanswer }}</span>
-      </div>
-      <div class="isNum">
-
-          <el-form-item
-            :rules="studentscores(item.scores)"
-            label="打分"
-            :prop="'list.' + index + '.studentscores'"
-          >
-            <el-input class="elinput" v-model="item.studentscores" />
-          </el-form-item>
-          <el-form-item label="批注">
-            <el-input v-model="item.comments" type="textarea" />
-          </el-form-item>
-      </div>
-    </div>
-    <div class="elbutton">
-      <el-button type="primary" @click="submitForm(ruleFormRef)">阅卷完毕</el-button>
-      <el-button @click="cancel">取消</el-button>
-    </div>
-  </el-form>
+    </el-form>
   </el-drawer>
 </template>
 
@@ -48,7 +72,7 @@
 import { ref, reactive, onMounted, defineProps } from 'vue';
 import { IQuestion, IButton } from '../../../api/admin';
 
-import type { FormInstance,  } from 'element-plus';
+import type { FormInstance } from 'element-plus';
 import { ElMessage } from 'element-plus';
 
 const formSize = ref('default');
@@ -107,41 +131,65 @@ const getIQuestion = async () => {
   const res = await IQuestion(data.studentid, data.testid);
   console.log(res);
   data.list = res.data.list;
+  let arr = data.list
+  arr.map((item)=>{
+    if(item.type==='填空题'){
+      let arr1 = item.studentanswer.split('|')
+      // console.log(arr1);
+      arr1.forEach((data:string)=>{
+        // console.log(data);      
+        item.title=item.title.replace(
+          /\[\]/,
+          `<input type="text" value="${data}" disabled style="width:90px;border:none;border-bottom:1px solid #b9b8b8;margin-left:10px"/>`
+        )
+      })
+    } 
+    return item   
+  })
 };
+
+
 onMounted(() => {
   getIQuestion();
 });
 // 点击阅卷完毕
 const submitForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return
-  formEl.validate(async(valid) => {
+  if (!formEl) return;
+  formEl.validate(async (valid) => {
     if (valid) {
-         let dat = data.list.map((item: any) => {
-     return {
-       answerid: item.answerid,
-       scores: item.studentscores,
-       comments: item.comments,
-     };
-   });
-   let res: any = await IButton(dat);
-   // console.log(res);
-   if (res.errCode === 10000) {
-     ElMessage({
-       message: '阅卷完毕',
-       type: 'success',
-     });
-  
-   a.carr()
-   }
+      let dat = data.list.map((item: any) => {
+        return {
+          answerid: item.answerid,
+          scores: item.studentscores,
+          comments: item.comments,
+        };
+      });
+      let res: any = await IButton(dat);
+      // console.log(res);
+      if (res.errCode === 10000) {
+        ElMessage({
+          message: '阅卷完毕',
+          type: 'success',
+        });
+
+        a.carr();
+      }
     } else {
-      ElMessage.error('有错误')
+      ElMessage.error('有错误');
     }
-  })
-}
+  });
+};
 // 点击取消
-const cancel=()=>{
-  ElMessage.error('取消阅卷了')
-  a.carr()
+const cancel = () => {
+  ElMessage.error('取消阅卷了');
+  a.carr();
+};
+// 填空题替换方法
+const getReplace=(str:any)=>{
+//   console.log('填空题括号',str);
+  
+  return  str.replaceAll('[]','_______,')
+
 }
 </script>
 
