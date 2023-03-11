@@ -23,9 +23,12 @@
 
     <el-table
       :data="data.tableData"
-      stripe
+      size="small"
       style="width: 100%"
       @selection-change="handleSelectionChange"
+      :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}"
     >
       <el-table-column type="selection" />
       <el-table-column prop="name" label="姓名"  />
@@ -101,7 +104,7 @@ interface Iform {
 const data = reactive<Istate>({
   params: {
     page: 1, //页码 默认是1
-    psize: 5, //每页显示多少条 默认是2
+    psize: 10, //每页显示多少条 默认是2
     key: '', //搜索关键字(名称)
     depid: '', //部门id
   },
@@ -231,7 +234,7 @@ const father = () => {
 };
 
 //分页
-const pageSize2 = ref(5);
+const pageSize2 = ref(10);
 const currentPage1 = ref(1);
 const handleSizeChange = (val: number) => {
   console.log(val);

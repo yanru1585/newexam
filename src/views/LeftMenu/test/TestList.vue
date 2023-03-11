@@ -71,10 +71,12 @@
 
     <el-table
       :data="data.tableData"
-      stripe
       style="width: 100%"
       @selection-change="handleSelectionChange"
       v-loading="loading"
+      :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}"
+      :row-style="{height:'40px'}"
     >
       <el-table-column type="selection" />
       <el-table-column prop="title" label="考试名称" #default="scope">

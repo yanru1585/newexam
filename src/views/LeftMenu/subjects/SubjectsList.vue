@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      style="display: flex; justify-content: space-between;"
+      style="display: flex; justify-content: space-between; margin-top: 10px"
     >
       <h3>试卷管理</h3>
       <el-button type="primary" @click="addSubject">创建试卷</el-button>
@@ -29,8 +29,9 @@
         <el-button type="primary" @click="seacher">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
-      <el-table-column label="试卷名称" >
+    <el-table :data="tableData" style="width: auto" v-loading="loading" size="small" :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+      :header-row-style="{height:'40px'}" :row-style="{height:'40px'}">
+      <el-table-column label="试卷名称" align="center">
         <template #default="scope">
           <span
             style="color: #409eff; cursor: pointer"
@@ -75,7 +76,7 @@
     <el-pagination
       v-model:current-page="formInline.page"
       v-model:page-size="formInline.psize"
-      :page-sizes="[5, 10, 15, 20]"
+      :page-sizes="[10, 20, 30, 40]"
       :small="small"
       :disabled="disabled"
       :background="background"
@@ -144,7 +145,7 @@ const data: Idata = reactive({
     admin: '', //创建人
     ismy: 0, //只看我的
     page: 1, //页码
-    psize: 5, //显示数量
+    psize: 10, //显示数量
   },
   checkIsmy: [], //多选框
   tableData: [], //表格数据
@@ -252,20 +253,21 @@ const compile = (id: any) => {
 };
 </script>
 <style lang="less" scoped>
-
+.header {
+  display: flex;
+  justify-content: space-between;
   h3 {
     font-size: 20px;
     color: rgb(33, 33, 33);
     font-weight: normal;
   }
-
+}
 
 .el-form {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 .el-table {
-  // font-size: 12px;
-  // margin-top: 20px;
+  font-size: 12px;
 }
 /deep/.el-pagination{
   justify-content: center;

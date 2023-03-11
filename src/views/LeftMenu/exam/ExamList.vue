@@ -10,7 +10,12 @@
       </el-form-item>
       </el-form>
           <div>
-            <el-table :data="data.list" stripe  style="width: 100% ;" v-loading="loading">
+            <el-table :data="data.list"   
+            style="width: 100%" 
+            v-loading="loading"
+            :header-cell-style="{backgroundColor: 'rgb(250, 250, 250)',padding:'0px'}"
+            :header-row-style="{height:'40px'}"
+            :row-style="{height:'40px'}">
               <el-table-column prop="title" label="考试名称" />
               <el-table-column prop="info" label="考试说明" />
               <el-table-column prop="subjectnum" label="题量"/>
