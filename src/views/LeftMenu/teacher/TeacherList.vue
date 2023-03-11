@@ -34,12 +34,12 @@
     </el-form>
 
     <el-table :data="data.tableData" stripe style="width: 100%" v-loading="loading">
-      <el-table-column prop="name" label="姓名" align="center"> </el-table-column>
-      <el-table-column prop="depname" label="部门" align="center"> </el-table-column>
-      <el-table-column prop="tel" label="电话" align="center"> </el-table-column>
-      <el-table-column prop="rolename" label="角色" align="center"> </el-table-column>
-      <el-table-column prop="username" label="账号" align="center"> </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200" align="center">
+      <el-table-column prop="name" label="姓名" > </el-table-column>
+      <el-table-column prop="depname" label="部门" > </el-table-column>
+      <el-table-column prop="tel" label="电话" > </el-table-column>
+      <el-table-column prop="rolename" label="角色" > </el-table-column>
+      <el-table-column prop="username" label="账号" > </el-table-column>
+      <el-table-column fixed="right" label="操作" width="200" >
         <template #default="scope">
           <el-button link type="primary" size="small" @click="reset(scope.row)"
             >重置密码</el-button

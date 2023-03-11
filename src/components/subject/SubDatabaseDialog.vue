@@ -10,8 +10,8 @@
     :size="formSize"
     status-icon
   >
-    <el-form-item label="题库名称" prop="name">
-      <el-input v-model="ruleForm.title" placeholder="请输入题库名称"/>
+    <el-form-item label="题库名称" prop="title">
+      <el-input v-model="ruleForm.title"  placeholder="请输入题库名称"/>
     </el-form-item>
     <el-form-item label="被他人使用" prop="resource">
       <el-radio-group v-model="ruleForm.isshow" :change="radioChange()">
@@ -26,21 +26,22 @@
     </el-form>
       <el-dialog
         v-model="innerVisible"
-        width="60%"
+        width="50%"
         title="可见老师"
         append-to-body
       >
       <span style="margin: 0px 10px 0px 20px;">部门</span>
 
-      <el-select v-model="select" class="m-2" style="margin-bottom: 20px;" placeholder="请选择" @change="selectChang">
+      <el-select v-model="select" class="m-2" style="margin-bottom: 20px;" placeholder="请选择" @change="selectChang"  >
         <el-option
           v-for="(item,index) in options"
           :key="index"
         :label="item.name"
         :value="item.id"
+       
         />
       </el-select>
-      <el-transfer v-model="value" :data="transdata" style="margin-left: 10%;" :props="props"/>
+      <el-transfer v-model="value" :data="transdata" style="margin-left: 5%;" :props="props" @left-check-change="leftChange" @right-check-change="rightOptionsChange"/>
       <div class="dialog-footer" style="margin-top: 20px; text-align: right;">
         <el-button  @click="innerVisible = false">取消</el-button>
         <el-button type="primary" @click="submit">
@@ -142,7 +143,26 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     }
   })
 }
-
+// 穿梭框左侧数据发生变化
+const leftChange=(val:any)=>{
+  console.log('左侧数据',val);
+  val.forEach((item:any)=>{
+    if(value.value.indexOf(item)===-1){
+      value.value.push(item)
+    }
+  }) 
+}
+const rightOptionsChange=(key: any)=>{
+  // console.log('右侧穿梭框',key);
+  // console.log('左侧数据22',data.value);
+  key.forEach((it:any)=>{
+    value.value=value.value.filter((item: any)=>{
+   if(item!==it) {
+    return item
+   }      
+  }) 
+  })
+}
 // 下拉框点击事件
 const selectChang=async (val: any)=>{
 console.log('点击下拉',val);
@@ -155,13 +175,7 @@ transdata.value=res.data.list
 
 }
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('是否确认关闭弹窗?')
-    .then(() => {
-      emit('showEmit',false)
-    })
-    .catch(() => {
-      // catch error
-    })
+  emit('showEmit',false)
 }
 
 // 获取部门列表
@@ -233,5 +247,21 @@ const cancel=()=>{
 .el-input{
   width: 200px;
 }
+/deep/.el-transfer__buttons{
+  display: none;
+}
+/deep/.el-transfer-panel{
+  width: 36%;
+  height: 500px;
+  margin: 10px 20px;
 
+  .el-transfer-panel__body{
+    height: 90%;
+  }
+}
+.el-transfer {
+  // margin-left: 30px;
+  width:100% ;
+  height: 500px;
+}
 </style>

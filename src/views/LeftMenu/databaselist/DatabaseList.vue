@@ -40,21 +40,21 @@
         v-loading="loading"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="题库" #default="scope"  align="center">
+        <el-table-column prop="title" label="题库" #default="scope"  >
           <span
             style="color: #409eff; cursor: pointer"
             @click="toQuestions(scope.row.id)"
             >{{ scope.row.title }}
           </span>
         </el-table-column>
-        <el-table-column prop="counts" label="题目数量"  align="center"/>
-        <el-table-column prop="addtime" label="创建时间" align="center">
+        <el-table-column prop="counts" label="题目数量"  />
+        <el-table-column prop="addtime" label="创建时间" >
           <template #default="scope">
           <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
         </template>
           </el-table-column>
-        <el-table-column prop="admin" label="创建人" align="center"/>
-        <el-table-column fixed="right" label="操作"  align="center">
+        <el-table-column prop="admin" label="创建人" />
+        <el-table-column fixed="right" label="操作"  >
           <template #default="scope">
             <el-button
               link

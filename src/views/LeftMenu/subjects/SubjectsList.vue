@@ -4,7 +4,7 @@
       style="display: flex; justify-content: space-between;"
     >
       <h3>试卷管理</h3>
-      <el-button type="primary" @click="addSubject">创建考试</el-button>
+      <el-button type="primary" @click="addSubject">创建试卷</el-button>
     </div>
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="关键字">
@@ -30,7 +30,7 @@
       </el-form-item>
     </el-form>
     <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
-      <el-table-column label="试卷名称" align="center">
+      <el-table-column label="试卷名称" >
         <template #default="scope">
           <span
             style="color: #409eff; cursor: pointer"
@@ -39,20 +39,20 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="counts" label="题量" align="center" />
-      <el-table-column prop="singles" label="单选" align="center" />
-      <el-table-column prop="multiples" label="多选" align="center" />
-      <el-table-column prop="judges" label="判断" align="center" />
-      <el-table-column prop="blanks" label="填空" align="center" />
-      <el-table-column prop="qas" label="问答" align="center" />
-      <el-table-column prop="scores" label="总分" align="center" />
-      <el-table-column prop="admin" label="创建人" align="center" />
-      <el-table-column prop="addtime" label="更新时间" align="center" >
+      <el-table-column prop="counts" label="题量"  />
+      <el-table-column prop="singles" label="单选"  />
+      <el-table-column prop="multiples" label="多选"  />
+      <el-table-column prop="judges" label="判断"  />
+      <el-table-column prop="blanks" label="填空"  />
+      <el-table-column prop="qas" label="问答"  />
+      <el-table-column prop="scores" label="总分"  />
+      <el-table-column prop="admin" label="创建人"  />
+      <el-table-column prop="addtime" label="更新时间"  >
         <template #default="scope">
           <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" align="center">
+      <el-table-column fixed="right" label="操作" >
         <template #default="scope">
           <el-button
             link

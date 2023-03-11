@@ -72,7 +72,8 @@
                     <el-icon size="25px" @click="itemDel(index)"><Delete /></el-icon>
                   </div>
                 </div>
-                <p v-html="item.title" style="margin-left: 20px"></p>
+                <p v-if="item.type==='填空题'" v-html="getReplace(item.title)"   style="margin-left: 20px;line-height: 30px;"></p>
+                <p v-else  v-html="item.title" style="margin-left: 20px"></p>
                 <el-radio-group v-if="item.type === '单选题'">
                     <el-radio v-for="(itemr, indexr) in item.answers" :key="indexr" :label="itemr.answerno+'：'+itemr.content"  :style="item.answer===itemr.answerno? 'background-color: #eefaf6; width: 100%;':''"
                       ></el-radio
@@ -287,13 +288,6 @@ const { addFrom, baseList,itemType,questionsType,selectValue,compileData,databas
 const rules = reactive<FormRules>({
   title: [
     { required: true, message: '请输入考试名称', trigger: 'blur' },
-
-    // number: [
-//  { required: true, message: "数字", trigger: "blur" },
-//  { pattern: /^[0-9]*.?[0-9]{1,2}?$/ , message: '金额为数字', trigger: "blur"},
-
-// ]
-
   ]
 })
 //获取题目类型和数量
@@ -302,6 +296,13 @@ const getQuseType=()=>{
   item.const= addFrom.value.questions.filter(it=>it.type===item.type).length
   })
   // console.log(222,questionsType.value); 
+}
+// 填空题替换方法
+const getReplace=(str:any)=>{
+  console.log('填空题括号',str);
+  
+  return  str.replaceAll('[]','_______,')
+
 }
 // 试卷类型事件监听
 watch(() =>addFrom.value.questions ,(newVal,oldVal)=>{
@@ -388,23 +389,7 @@ const transferEmit = (val: any) => {
 };
 // 点击取消
 const cancel=()=>{
-  ElMessageBox.confirm(
-    '确认要取消编辑试卷吗?',
-    {
-      confirmButtonText: '确认',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  )
-    .then(() => {
-      router.push('/subjects')
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '取消',
-      })
-    })
+ router.go(-1)
   
 };
 // 计算总分

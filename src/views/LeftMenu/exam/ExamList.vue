@@ -9,28 +9,23 @@
         <el-button type="primary" class="elbutton" @click="reser">查询</el-button>
       </el-form-item>
       </el-form>
-          <!-- <div class="cha">
-
-            关键字： <el-input v-model="data.key" placeholder="请输入题库名称" @keyup.enter="reser"/>
-            <el-button type="primary" class="elbutton" @click="reser">搜索</el-button>
-          </div> -->
           <div>
             <el-table :data="data.list" stripe  style="width: 100% ;" v-loading="loading">
-              <el-table-column prop="title" label="考试名称" align="center" />
-              <el-table-column prop="info" label="考试说明" align="center"/>
-              <el-table-column prop="subjectnum" label="题量" align="center"/>
-              <el-table-column prop="studentcounts" label="考试人数" align="center"/>
-              <el-table-column  label="未判人数" align="center">
+              <el-table-column prop="title" label="考试名称" />
+              <el-table-column prop="info" label="考试说明" />
+              <el-table-column prop="subjectnum" label="题量"/>
+              <el-table-column prop="studentcounts" label="考试人数"/>
+              <el-table-column  label="未判人数" >
                 <template #default="scope">
                   <span class="incomplete">{{scope.row.incomplete}}</span>
                 </template >
               </el-table-column>
-              <el-table-column label="开放时间" align="center">
+              <el-table-column label="开放时间" >
                 <template #default="scope">
                   <span>{{scope.row.begintime===null ? '不限':moment(scope.row.begintime).format('YYYY-MM-DD HH:mm')}}</span>
                 </template >
               </el-table-column>
-              <el-table-column label="操作" align="center">
+              <el-table-column label="操作" >
                 <template #default="scope" >
                   <el-button link type="primary" size="small" @click="see(scope.row)">
                   <span>{{scope.row.incomplete === 0 ? '查看':'阅卷'}}</span>

@@ -28,10 +28,10 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" />
-      <el-table-column prop="name" label="姓名" align="center" />
-      <el-table-column prop="depname" label="部门" align="center">
+      <el-table-column prop="name" label="姓名"  />
+      <el-table-column prop="depname" label="部门" >
       </el-table-column>
-      <el-table-column fixed="right" label="操作" width="200" align="center">
+      <el-table-column fixed="right" label="操作" width="200" >
         <template #default="scope">
           <el-button link type="primary" size="small" @click="reser(scope.row)"
             >修改</el-button

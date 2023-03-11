@@ -233,7 +233,7 @@ const trueFn=()=>{
       i.studentanswer=i.studentanswer.split('|').sort().join('|')
     }
     
-    return {answer:i.studentanswer,questionid:i.id,scores:i.type=='判断题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
+    return {answer:i.studentanswer,questionid:i.id,scores:i.type=='填空题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
   })
   console.log(data.addList);
 }

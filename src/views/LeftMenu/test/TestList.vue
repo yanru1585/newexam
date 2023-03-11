@@ -17,18 +17,20 @@
       </el-form-item>
       <el-form-item label="创建人">
         <el-input v-model="params.admin" placeholder="创建人" />
-      </el-form-item>
-      <el-checkbox-group v-model="checkIsmy" @change="checkoutIsmy">
-        <el-checkbox label="我创建的 开放时间" />
+        <el-checkbox-group v-model="checkIsmy" @change="checkoutIsmy" style="margin-left: 10px;">
+        <el-checkbox label="我创建的 " />
       </el-checkbox-group>
-      <el-radio-group
+      </el-form-item>
+      
+      <el-form-item label="开放时间" style="margin-left: 10px;">
+        <el-radio-group
         v-model="params.opentime"
-        style="margin-top: -16px; margin-left: 20px"
+        
       >
         <el-radio label="1">永久开放</el-radio>
         <el-radio label="0">部分时段</el-radio>
       </el-radio-group>
-      <div class="block">
+      <!-- <div class="block"> -->
         <el-date-picker
             style="width: 360px;margin-left: 15px;"
             v-model="time"
@@ -38,10 +40,13 @@
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             @change="datetimerangeChange"
-            format="YYYY-MM-DD HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
+            :disabled="params.opentime==='1'"
           />
-      </div>
+      <!-- </div> -->
+      </el-form-item>
+      
       <el-form-item label="状态" prop="region" style="margin-left: 10px">
         <el-select
           style="width: 100px"

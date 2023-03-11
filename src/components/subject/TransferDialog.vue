@@ -3,7 +3,7 @@
     <el-dialog
       v-model="dialogVisible"
       :title="title"
-      width="50%"
+      width="70%"
       :before-close="handleClose"
     >
       <div class="seleBox">
@@ -24,12 +24,14 @@
             <!--  -->
           </el-select>
         </div>
-        <div v-if="title == '学生考试列表'">
+        <div v-if="title == '学生考试列表'" style="margin-left: 50px;">
           <span>班级</span>
           <el-select
             v-model="classid"
             style="width: 200px"
             placeholder="请选择"
+            @change="selectClassChang" 
+            :disabled="classList.length===0"
           >
             <el-option
               v-for="item in classList"
@@ -59,10 +61,10 @@
 </template>
 
 <script setup lang="ts">
-import { teacherlsit, classeslist, testGetmarkteachers } from '../../api/admin';
+import { teacherlsit, classeslist, testGetmarkteachers,studentlist } from '../../api/admin';
 import { departmentList } from '../../api/department';
-import { ref, onMounted, reactive, toRefs, defineEmits } from 'vue';
-import { ElMessageBox } from 'element-plus';
+import { ref, onMounted, reactive, toRefs, defineEmits,watch } from 'vue';
+
 const emit = defineEmits(['transferEmit', 'showEmit']);
 
 const propsd = defineProps({
@@ -70,7 +72,13 @@ const propsd = defineProps({
     type: String,
     required: true,
   },
+  transData:{
+    type:Array
+  }
 });
+
+console.log(2222,propsd.transData);
+
 const title = ref();
 title.value = propsd.title;
 // console.log(propsd.title);
@@ -118,15 +126,18 @@ const { options, seleValue, props, classid, classData, classList } =
 const dialogVisible = ref(true);
 
 const handleClose = (done: () => void) => {
-  ElMessageBox.confirm('是否要关闭弹窗?')
-    .then(() => {
-      // done()
-      emit('showEmit', false);
-    })
-    .catch(() => {
-      // catch error
-    });
+  emit('showEmit', false);
 };
+watch(()=>propsd.transData,(newVal,oldVal)=>{
+  if(newVal&&newVal.length!==0){
+    console.log('穿梭框监听',newVal);
+    // value.value=[]
+    value.value=newVal
+    console.log(3333,value.value);
+    
+  }
+
+},{deep:true,immediate:true})
 // 获取部门列表
 const getList = async () => {
   const res: any = await departmentList().catch(() => {});
@@ -137,8 +148,9 @@ const getList = async () => {
   options.value = res.data.list;
   // console.log(options.value);
 };
-// 下拉框点击事件
+const debaId =ref(0)
 const selectChang = async (val: any) => {
+  debaId.value=val
   console.log(val);
   if (title.value == '可见老师') {
     const res: any = await teacherlsit({ depid: val }).catch(() => {});
@@ -157,7 +169,7 @@ const selectChang = async (val: any) => {
       return false;
     }
     dialogData.classList = result.data.list;
-    data.value = result.data.list;
+    // data.value = result.data.list;
   }
 
   if (title.value == '阅卷老师') {
@@ -168,9 +180,22 @@ const selectChang = async (val: any) => {
       return false;
     }
     dialogData.classList = result.data.list;
-    data.value = result.data.list;
+    // data.value = result.data.list;
   }
 };
+// 点击班级列表下拉框触发事件
+const selectClassChang=async (val:any)=>{
+  console.log('班级下拉框',val);
+  let res:any=await studentlist({depid:debaId.value,classid:val})
+  console.log('请求学生列表',res);
+  if(res.errCode !== 10000){
+    return false
+  }
+  data.value = res.data.list;
+  
+  
+
+}
 // 点击左侧穿梭框
 const leftOptionsChange=(key: any)=>{
   // console.log('左侧穿梭框',key);
@@ -190,14 +215,9 @@ const rightOptionsChange=(key: any)=>{
     value.value=value.value.filter((item: any)=>{
    if(item!==it) {
     return item
-   }
-      
+   }      
+  }) 
   })
- 
-  })
-  
-
-
 }
 onMounted(() => {
   getList();
@@ -221,7 +241,7 @@ const cancelForm = () => {
 <style lang="less" scoped>
 .seleBox {
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
   margin-bottom: 30px;
   span {
     margin-right: 10px;
@@ -232,5 +252,19 @@ const cancelForm = () => {
 }
 /deep/.el-transfer__buttons{
   display: none;
+}
+/deep/.el-transfer-panel{
+  width: 260px;
+  height: 500px;
+  margin: 10px 20px;
+
+  .el-transfer-panel__body{
+    height: 90%;
+  }
+}
+.el-transfer {
+  // margin-left: 30px;
+  width:100% ;
+  height: 500px;
 }
 </style>

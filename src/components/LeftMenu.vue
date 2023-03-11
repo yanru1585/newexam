@@ -47,21 +47,24 @@
       </div>
     </div>
     <el-menu
-      background-color="#ebebeb"
+    background-color="#ebebeb"
       class="el-menu-vertical-demo"
       :default-active=menuList[0].url
       :unique-opened="true"
       @open="handleOpen"
       @close="handleClose"
       router
+   
+      
     >
       <div class="iconTxt">
         <el-menu-item
           :index="item.url"
           v-for="(item, index) in menuList"
           :key="index"
+          :style="path===item.url?'background-color:#d1d3d5;border-radius:5px':''"
         >
-        <i class="iconfont " :class=" item.ico " style="font-size: 22px;"></i>
+        <i class="iconfont " :class=" item.ico " style="font-size: 22px; margin-top: 5px;"></i>
           <span>{{ item.name }}</span>
         </el-menu-item>
       </div>
@@ -78,9 +81,11 @@ import {
 } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { onMounted, ref, reactive, toRefs, defineExpose } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 
+const route= useRoute()
 const router = useRouter()
+console.log(222,route.path);
 
 const isShow = ref(false);
 
@@ -111,8 +116,9 @@ let menuList = JSON.parse(menu);
 menuList = menuList.filter((item: { pid: number }) => {
   return item.pid == 0;
 });
-
+const path=ref('')
 const handleOpen = (key: string, keyPath: string[]) => {
+  path.value=key
   console.log(key, keyPath);
 };
 const handleClose = (key: string, keyPath: string[]) => {
@@ -176,6 +182,7 @@ isShow.value=false
   margin: auto;
   font-size: 13px;
   margin-top: 8px;
+  // background-color: #666;
 }
 .popoverTop {
   background-color: #dfe1e6;

@@ -36,7 +36,8 @@
                 <p style="font-size: 13px; color: #848484; margin-bottom: 10px;">{{item.type}}<span>{{item.const}}</span> 道</p>
                 <div class="item_detail">
                   <span>每题</span>
-                  <el-input v-model="item.score" type="text"/>
+                  <!-- <el-input v-model="item.score" type="text"/> -->
+                  <el-input-number class="input_num" :controls="false" v-model.number="item.score"/>
                   <span>分</span>
                 </div>
               </div>
@@ -65,7 +66,7 @@
                   <span>{{ index + 1 }}.</span>
                   <span>{{ item.type }}</span>
                   <span>分值</span>
-                  <el-input v-model="item.scores"></el-input>
+                  <el-input v-model="item.scores" ></el-input>
                 </div>
                 <div class="tit_right">
                   <el-icon size="20px" @click="compile(item, index)"
@@ -75,8 +76,10 @@
                     ><Delete
                   /></el-icon>
                 </div>
-              </div>
-              <p v-html="item.title" style="margin-left: 20px;line-height: 30px;"></p>
+              </div>getReplace
+              <!-- v-html="item.title" -->
+              <p v-if="item.type==='填空题'" v-html="getReplace(item.title)"   style="margin-left: 20px;line-height: 30px;"></p>
+              <p v-else v-html="item.title" style="margin-left: 20px;line-height: 30px;"></p>
               <el-radio-group
                 v-if="item.type === '单选题'"
               >
@@ -173,8 +176,8 @@
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             @change="datetimerangeChange"
-            format="YYYY-MM-DD HH:mm:ss"
-            value-format="YYYY-MM-DD HH:mm:ss"
+            format="YYYY-MM-DD HH:mm"
+            value-format="YYYY-MM-DD HH:mm"
           />
         </div>
         <span class="bu">不填表示永久</span>
@@ -247,7 +250,7 @@
      <!-- 题目列表 -->
      <Question v-if="questionShow" :databaseData="databaseData" @questionsEmit="questionsEmit" @qushowEmit="qushowEmit"></Question>
      <!-- 可见老师 -->
-     <TransferDialog v-if="teacherDialogisShow" @showEmit="showEmit" @transferEmit="transferEmit" :title="title"/> 
+     <TransferDialog v-if="teacherDialogisShow" :transData="transData" @showEmit="showEmit" @transferEmit="transferEmit" :title="title"/> 
      <!-- 从题库中导入 -->
      <SubjectList v-if="subjectListShow" @showEmit="showEmit" @questionsEmit="questionsEmit"></SubjectList>
   </div>
@@ -268,6 +271,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import { databaseList } from '../../../api/subjects';
 import { useRouter,useRoute } from 'vue-router';
 import type { FormInstance, FormRules } from 'element-plus'
+import { array } from 'snabbdom';
 const ruleFormRef = ref<FormInstance>()
 const router =useRouter()
 const route=useRoute()
@@ -309,10 +313,12 @@ interface ItestData {
   compileData:any
   baseList: Array<any>;
   databaseData:object
-  score:string
+  score:string,
+  transData:Array<any>
 }
 const aorderCheck = ref<any>([]);
 const testData: ItestData = reactive({
+  transData:[],
   // 添加数据
   addFrom: {
     admin: 'ldq',
@@ -337,13 +343,13 @@ const testData: ItestData = reactive({
     students: [],//学生可见
     title: '', //考试名称
   },
-  questionsType:[{type:'单选题',const:0,score:''},{type:'多选题',const:0,score:''},{type:'判断题',const:0,score:''},{type:'填空题',const:0,score:''},{type:'问答题',const:0,score:''}],
+  questionsType:[{type:'单选题',const:0,score:0},{type:'多选题',const:0,score:0},{type:'判断题',const:0,score:0},{type:'填空题',const:0,score:0},{type:'问答题',const:0,score:0}],
   compileData:{},//编辑数据详情
   baseList: [], //题库列表
   databaseData:{},//题库
   score:'',//分值
 });
-const { addFrom,questionsType,compileData,baseList ,databaseData,score} = toRefs(testData);
+const { addFrom,questionsType,compileData,baseList ,databaseData,score,transData} = toRefs(testData);
 const show: Ishow = reactive({
   drawerShow: false, //控制抽屉显示隐藏
   tranferShow: false, //控制弹框显示隐藏
@@ -364,15 +370,15 @@ const form = reactive({
   resource: '',
   desc: '',
 });
+// const transferData=ref:array<any>([])
+
+// const {limits,markteachers,students}=toRefs(transferData)
 const rules = reactive<FormRules>({
   title: [
     { required: true, message: '请输入考试名称', trigger: 'blur' },
   ],
   info:[
   { required: true, message: '请输入考试说明', trigger: 'blur' },
-  ],
-  databaseid:[
-  {required: true,message: '请选择试题库',trigger: 'change',}
   ],
   pastscores:[
   { required: true, message: '通过分数必填', trigger: 'blur' },
@@ -403,7 +409,10 @@ const teacherDialogisShow=ref(false) //是否显示弹框  学生，老师，阅
 
 const studentDialog=()=>{//学生
   teacherDialogisShow.value=true
-
+  // transData.value=addFrom.value.students.map(item=>item.id)
+  console.log(transData.value);
+  
+  
   title.value='学生考试列表'
 }
 
@@ -421,8 +430,7 @@ const transferEmit=(data: any)=>{
   console.log('接收可见',data);
   if(data.tit==='可见老师'){
     addFrom.value.limits=data.arr.map((item: any)=>{
-      return {id:item}
-      
+      return {id:item} 
     })
   }else if(data.tit==='学生考试列表'){
     addFrom.value.students=data.arr.map((item: any)=>{
@@ -448,6 +456,7 @@ const allScores = computed(() => {
   }, 0);
 });
 console.log('接收编辑参数',route.query.id);
+// 编辑获取单条考试详情
 const getTestEmit=async ()=>{
   const res:any=await testGet(route.query.id).catch(()=>{})
   if(res.errCode!==10000){
@@ -455,7 +464,7 @@ const getTestEmit=async ()=>{
   }
   Object.assign(addFrom.value,res.data)
   console.log('编辑单条考试',res);
-  
+  // transferData.value=[addFrom.value.markteachers]
 }
 
 //多选框
@@ -493,6 +502,13 @@ const shortcuts = [
   },
 
 ];
+// 填空题替换方法
+const getReplace=(str:any)=>{
+  console.log('填空题括号',str);
+  
+  return  str.replaceAll('[]','_______,')
+
+}
 //获取题目类型和数量
 const getQuseType=()=>{
   questionsType.value.forEach(item=>{
@@ -709,26 +725,7 @@ const empty=()=>{
 }
 // 点击取消
 const resetForm = (formEl: FormInstance | undefined) => {
-  ElMessageBox.confirm('确定要取消吗？', {
-    confirmButtonText: '确认',
-    cancelButtonText: '取消',
-    type: 'warning',
-  })
-    .then(() => {
-      if (!formEl) return
-  formEl.resetFields()
-  addFrom.value.questions=[]
-  time.value=''
-  
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '已取消',
-      });
-    });
-   
-  
+  router.go(-1)
 }
 </script>
 
@@ -738,7 +735,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
   width: 100%;
   position: fixed;
   overflow-y: scroll;
-
+  h3 {
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+}
 }
 
 .box {
@@ -941,7 +942,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
         display: inline;
         font-size: 13px;
         color: #848484;
-        .el-input{
+        .input_num{
           width: 50px;
           margin: 0px 5px;
         }
