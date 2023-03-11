@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <p>考试列表</p>
+      <h3>考试列表</h3>
       <div>
         <el-form :inline="true" :model="searchData" class="demo-form-inline">
           <el-form-item label="关键字：">
@@ -47,7 +47,7 @@
           </div>
           <div style="font-size: 12px; color: #aaabad;display: flex;justify-content:space-between;margin: 10px 0;">
             <p>考试时间:
-              <span v-if="item.begintime&&item.endtime">{{item.begintime}}至{{item.endtime}}</span>
+              <span v-if="item.begintime&&item.endtime">{{ moment(item.begintime).format('YYYY-MM-DD hh:mm') }}至{{moment(item.endtime).format('YYYY-MM-DD hh:mm')}}</span>
               <span v-else>不限</span>
             </p>
             <p>{{item.pastnum}}人通过</p>
@@ -73,6 +73,7 @@
 </template>
 
 <script lang="ts" setup>
+import moment from 'moment'
 import { reactive, toRefs, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus'
 import { list } from '../../../api/admin';
@@ -160,6 +161,9 @@ onMounted(() => {
 });
 
 const getList = async () => {
+  if(listParams.value.result==='所有'){
+    listParams.value.result=''
+  }
   let res: any = await list(listParams.value);
   console.log('考试列表', res);
   if(res.errCode!==10000){
@@ -185,6 +189,11 @@ const testGet=(item:any)=>{
 </script>
 
 <style lang="less" scoped>
+h3 {
+    font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+  }
 .top {
   display: flex;
   justify-content: space-between;

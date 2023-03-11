@@ -49,7 +49,7 @@
     <el-menu
       background-color="#ebebeb"
       class="el-menu-vertical-demo"
-      default-active='stutest'
+      :default-active=menuList[0].url
       :unique-opened="true"
       @open="handleOpen"
       @close="handleClose"
@@ -62,7 +62,6 @@
           :key="index"
         >
         <i class="iconfont " :class=" item.ico " style="font-size: 22px;"></i>
-          <!-- <el-icon size="30"><item.icon /></el-icon> -->
           <span>{{ item.name }}</span>
         </el-menu-item>
       </div>
@@ -96,7 +95,8 @@ const data: any = reactive({
 const { info,defaultmenu } = toRefs(data);
 
 onMounted(() => {
-  // console.log(sessionStorage.getItem('type'));
+
+
   if(sessionStorage.getItem('type')==='teacher'){
     data.defaultmenu='test'
   }else{
@@ -128,6 +128,7 @@ const leaveLogin = () => {
   })
     .then(() => {
       sessionStorage.clear();
+      localStorage.clear()
       router.push('/')
       ElMessage({
         type: 'success',

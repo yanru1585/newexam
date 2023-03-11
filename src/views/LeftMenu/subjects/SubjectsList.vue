@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>试卷管理</h3>
       <el-button type="primary" @click="addSubject">创建考试</el-button>
@@ -29,7 +29,7 @@
         <el-button type="primary" @click="seacher">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-table :data="tableData" style="width: auto" v-loading="loading">
+    <el-table :data="tableData" stripe style="width: 100%" v-loading="loading">
       <el-table-column label="试卷名称" align="center">
         <template #default="scope">
           <span
@@ -47,7 +47,11 @@
       <el-table-column prop="qas" label="问答" align="center" />
       <el-table-column prop="scores" label="总分" align="center" />
       <el-table-column prop="admin" label="创建人" align="center" />
-      <el-table-column prop="addtime" label="更新时间" align="center" />
+      <el-table-column prop="addtime" label="更新时间" align="center" >
+        <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" align="center">
         <template #default="scope">
           <el-button
@@ -89,6 +93,7 @@
 </template>
 
 <script lang="ts" setup>
+import  moment  from "moment"
 import { debounce } from '../../../utils/throTtle';
 import Test from '../../../components/test/TestgetDialog.vue';
 import { subjectList, DelSubject } from '../../../api/subjects';
@@ -247,21 +252,20 @@ const compile = (id: any) => {
 };
 </script>
 <style lang="less" scoped>
-.header {
-  display: flex;
-  justify-content: space-between;
+
   h3 {
     font-size: 20px;
     color: rgb(33, 33, 33);
     font-weight: normal;
   }
-}
+
 
 .el-form {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .el-table {
-  font-size: 12px;
+  // font-size: 12px;
+  // margin-top: 20px;
 }
 .el-pagination {
   justify-content: right;

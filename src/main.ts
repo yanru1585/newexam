@@ -11,7 +11,6 @@ import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import './assets/css/font/iconfont.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import 'default-passive-events'
-
 const app = createApp(App)
 // 全局挂载 echarts
 app.config.globalProperties.$echarts = echarts;

@@ -13,10 +13,10 @@
         <el-input v-model="ruleForm.oldpass" />
       </el-form-item>
       <el-form-item label="新密码" prop="pass">
-        <el-input v-model="ruleForm.pass" />
+        <el-input v-model="ruleForm.pass" type="password" />
       </el-form-item>
       <el-form-item label="确认新密码" prop="passOk">
-        <el-input v-model="ruleForm.passOk" />
+        <el-input v-model="ruleForm.passOk"  type="password"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(ruleFormRef)">
@@ -30,9 +30,10 @@
 
 <script lang="ts" setup>
 import { reactive, ref,onMounted,toRefs } from 'vue';
-import {teacherChangePass} from '../../../api/admin'
+import {teacherChangePass,studentTest} from '../../../api/admin'
 import type { FormInstance, FormRules } from 'element-plus';
 import { ElMessage } from 'element-plus'
+import {debounce} from '../../../utils/throttle'
 
 const data: any = reactive({
   info: {},
@@ -40,7 +41,7 @@ const data: any = reactive({
 const { info } = toRefs(data);
 
 onMounted(() => {
-  // console.log(sessionStorage.getItem('model'));
+  console.log(sessionStorage.getItem('type'));
   let obj: any = sessionStorage.getItem('model');
   data.info = JSON.parse(obj);
 });
@@ -73,7 +74,7 @@ let validateNewPassword2 = (rule: any, value: any, callback: any) => {
 const rules = reactive<FormRules>({
   oldpass: [
     { required: true, message: '原密码必填', trigger: 'blur' },
-    { min: 6, max: 15, message: '密码长度在6-15个字符', trigger: 'blur' },
+    { min: 5, max: 15, message: '密码长度在5-15个字符', trigger: 'blur' },
   ],
   pass: [
     { required: true, message: '新密码必填', trigger: 'blur' },
@@ -86,7 +87,7 @@ const rules = reactive<FormRules>({
 });
 
 // 修改密码
-const submitForm = async (formEl: FormInstance | undefined) => {
+const submitForm =debounce( async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate(async(valid, fields) => {
     if (valid) {
@@ -94,12 +95,20 @@ const submitForm = async (formEl: FormInstance | undefined) => {
         ElMessage.error('旧密码不正确!')
         return false
       }
-      
-      let res:any = await teacherChangePass(ruleForm.oldpass,ruleForm.pass)
-      console.log('修改密码',res);
-      if(res.errCode!==10000){
-        ElMessage.error('修改失败!')
-        return false
+      if(sessionStorage.getItem('type')=='student'){
+        let res:any = await studentTest(ruleForm.oldpass,ruleForm.pass)
+          console.log('修改密码',res);
+          if(res.errCode!==10000){
+            ElMessage.error(res.errMsg)
+            return false
+          }
+      }else{
+        let res:any = await teacherChangePass(ruleForm.oldpass,ruleForm.pass)
+          console.log('修改密码',res);
+          if(res.errCode!==10000){
+            ElMessage.error(res.errMsg)
+            return false
+          }
       }
       data.info.pass=ruleForm.pass
       sessionStorage.setItem('model',JSON.stringify(data.info))
@@ -110,13 +119,13 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       console.log('error submit!', fields);
     }
   });
-};
+},500);
 
 // 重置
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm =debounce((formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.resetFields();
-};
+},500);
 </script>
 
 <style lang="less" scoped>

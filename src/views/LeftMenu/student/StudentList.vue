@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>学员管理</h3>
       <div>
@@ -60,7 +60,11 @@
       <el-table-column prop="depname" label="所属部门"> </el-table-column>
       <el-table-column prop="classname" label="所在班级"> </el-table-column>
       <el-table-column prop="username" label="账号"> </el-table-column>
-      <el-table-column prop="addtime" label="添加时间"> </el-table-column>
+      <el-table-column prop="addtime" label="添加时间"> 
+        <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="cpass(scope.row)">重置密码</el-button>
@@ -99,6 +103,7 @@
 </template>
 
 <script setup lang="ts">
+import  moment  from "moment"
 import {debounce}  from "../../../utils/throTtle"
 import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
 import { onMounted } from 'vue';
@@ -362,10 +367,15 @@ onActivated(()=>{
 
 <style lang="less" scoped>
 .box h3 {
-  padding: 10px;
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
 }
 .el-input {
   width: 200px;
+}
+.el-form{
+  margin-top: 20px;
 }
 .book {
   color: #409eff;

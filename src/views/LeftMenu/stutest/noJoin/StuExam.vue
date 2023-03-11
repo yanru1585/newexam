@@ -56,11 +56,14 @@
         <span style="font-size: 12px;margin: 0 15px 0 5px;">未答</span>
       </div>
 
-      <div style="display: flex;flex-wrap: wrap;">
-        <div  class="tiItem" v-for="(item, index) in questionsList" :key="index"> 
-          <div @click="scrollTo(index)" class="ti" :style="item.studentanswer?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'cursor:pointer'">{{index+1}}</div>
+      <el-scrollbar height="425px">
+        <div style="display: flex;flex-wrap: wrap;">
+          <div  class="tiItem" v-for="(item, index) in questionsList" :key="index"> 
+            <div @click="scrollTo(index)" class="ti" :style="item.studentanswer?'background-color:#f0f8ff;color:#aab4fd;cursor:pointer':'cursor:pointer'">{{index+1}}</div>
+          </div>
         </div>
-      </div>
+      </el-scrollbar>
+
       <div class="bottom_div">
         <p>共<span>{{questionsList.length}}</span>道，剩余<span>{{residue}}</span>道未完成</p>
         
@@ -135,11 +138,6 @@ onBeforeUnmount(()=>{
   window.removeEventListener('scroll', onScroll)
 })
 
-// 点多选框触发
-const handleCheckAllChange=(index:any)=>{
-  data.questionsList[index].studentanswer=data.questionsList[index].checkedCities.join('|')  //多选
-}
-
 // 没答的题数量
 const testnum=()=>{
   data.residue=data.questionsList.filter((item:any)=>{
@@ -152,7 +150,7 @@ const testnum=()=>{
 // 监听  剩余数量
 watch(()=>data.questionsList,(newVal)=>{
   if(newVal.length>0){
-    // getTest() //存题
+    getTest() //存题
   }
   testnum() //剩余题目数量
 },{deep:true,immediate:true})
@@ -168,7 +166,7 @@ const getList = async () => {
   console.log('获取考试题目（开始考试）', res);
   if (res.errCode !== 10000) {
     ElMessage.error(res.errMsg);
-    return false;
+    return false;nextTick
   }
 
   data.testData = res.data;
@@ -226,44 +224,16 @@ shuffle(data.questionsList)
 // 点击交卷
 const trueFn=()=>{
   data.addList=data.questionsList.map((i:any,index:any)=>{ //要添加的数据
-    
     if(!i.studentanswer){
       i.studentanswer=''
     }
-    // if(i.type=='填空题'||i.type=='问答题'){
-    //   i.scores=null
-    // }
-
-    // if(i.type=='单选题'||i.type=='判断题'){
-    //   if(i.studentanswer!==i.answer){
-    //     i.scores=0
-    //     // console.log(i.scores);
-        
-    //     // console.log(i);
-        
-    //   }
-    // }
-    // // if(i.type=='单选题'||i.type=='判断题'){
-    // //   if(i.studentanswer!=i.answer){
-    // //     i.scores=0
-    // //   }
-    // // }
     
     if(i.type=='多选题'){
-      // i.scores=0
-      // let a = (i.studentanswer).join('')
-      // console.log(a);
-      // console.log(data.addList[index]);
-      // console.log();
-      
-      
-      
+      console.log(i.studentanswer.split('|').sort().join('|'));
+      i.studentanswer=i.studentanswer.split('|').sort().join('|')
     }
     
-    // console.log(i.type);
-    
     return {answer:i.studentanswer,questionid:i.id,scores:i.type=='判断题'||i.type=='问答题'?null:i.studentanswer.includes(i.answer)?i.scores:0,studentid:data.studentid,testid:i.testid}
-    // return {answer:i.studentanswer,questionid:i.id,scores:i.scores,studentid:data.studentid,testid:i.testid}
   })
   console.log(data.addList);
 }
@@ -366,6 +336,10 @@ const scrollTo=(index:any)=> {
   background-color: #fafbfd;
   padding-top: 20px;
   padding-left: 35px;
+  overflow-y: scroll;
+  .content:last-child{
+    padding-bottom: 30px;
+  }
 }
 .right{
   width: 300px;

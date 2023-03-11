@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div
-      style="display: flex; justify-content: space-between; margin-top: 10px"
+      style="display: flex; justify-content: space-between;"
     >
       <h3>考试管理</h3>
       <el-button type="primary" @click="Addexam">创建考试</el-button>
@@ -98,7 +98,13 @@
         <span>{{ scope.row.state === 0 ? '1小时' : '不限' }}</span>
       </el-table-column>
       <el-table-column prop="admin" label="创建人" />
-      <el-table-column prop="addtime" label="更新时间" width="200" />
+      <el-table-column prop="addtime" label="更新时间" width="200" >
+        <template #default="scope">
+          <span>{{ moment(scope.row.addtime).format('YYYY-MM-DD HH:mm') }}</span>
+        </template>
+        </el-table-column>
+
+      <!-- moment().format('MMMM Do YYYY, h:mm:ss a') -->
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
           <p>
@@ -140,6 +146,7 @@
 </template>
 
 <script setup lang="ts">
+import  moment  from "moment"
 import {debounce}  from "../../../utils/throTtle"
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
 import TransferDialog from '../../../components/subject/TransferDialog.vue';
@@ -519,7 +526,12 @@ const getAnalyse=(data:any)=>{
 
 <style lang="less" scoped>
 .box h3 {
-  padding: 10px;
+  font-size: 20px;
+    color: rgb(33, 33, 33);
+    font-weight: normal;
+}
+.el-form{
+  margin-top: 20px;
 }
 .el-input {
   width: 100px;

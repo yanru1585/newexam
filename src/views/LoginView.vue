@@ -26,6 +26,7 @@
               type="text"
               v-model="loginData.username"
               placeholder="用户名"
+              @submit.prevent.native  @keyup.enter.native="submitForm(ruleFormRef)"
             />
           </el-form-item>
           <el-form-item prop="pass">
@@ -113,6 +114,7 @@ const rules = reactive<FormRules>({
 
 // 点击登录
 const submitForm =debounce ( async (formEl: FormInstance | undefined) => {
+ 
   if (!formEl) return;
   await formEl.validate(async (valid, fields) => {
     if (valid) {
