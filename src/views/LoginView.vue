@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts" setup>
-import {debounce}  from "../utils/throTtle"
+import {debounce}  from "../utils/throttle"
 import { reactive, ref, toRefs } from 'vue';
 import type { FormInstance, FormRules } from 'element-plus';
 import { Loginteach } from '../api/admin';

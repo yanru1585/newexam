@@ -76,7 +76,7 @@
                     ><Delete
                   /></el-icon>
                 </div>
-              </div>getReplace
+              </div>
               <!-- v-html="item.title" -->
               <p v-if="item.type==='填空题'" v-html="getReplace(item.title)"   style="margin-left: 20px;line-height: 30px;"></p>
               <p v-else v-html="item.title" style="margin-left: 20px;line-height: 30px;"></p>
