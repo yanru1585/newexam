@@ -227,7 +227,14 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
+//检测路由是否已经添加
+// const hasNecessaryRoute=(to:any)=>{
 
+   
+//   let find = router.getRoutes().find(item => item.name === to.name);
+//   return !!find;
+
+// }
 // 路由守卫，没有进行登录时，不能访问其他页面
 router.beforeEach( (to: RouteLocationNormalized, from: RouteLocationNormalized, next: any)=> {
   // to:进入某条路径的路由对象，from：从哪条路径来的路由对象，next：表示往下执行的下一步函数
@@ -246,8 +253,22 @@ router.beforeEach( (to: RouteLocationNormalized, from: RouteLocationNormalized, 
         ElMessage.error('您还没有登录，请先登录');
     } else {
         next();
+        // const menu= sessionStorage.getItem('menu')
+        // // console.log('菜单',menu);
+        // if(!hasNecessaryRoute(to)){
+   
+        //   menu?JSON.parse(menu).forEach((item:any)=>{
+        
+        //     router.addRoute({ path: '/'+item.url, name:item.url, component: () => import(`../views/${item.url}.vue`) })
+        
+        //   }):''
+        //   return to.fullPath;
+        // }
+        
     }
+    
 }
+
 
 })
 

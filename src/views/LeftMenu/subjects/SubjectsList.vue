@@ -95,7 +95,7 @@
 
 <script lang="ts" setup>
 import  moment  from "moment"
-import { debounce } from '../../../utils/throTtle';
+import { debounce } from '../../../utils/throttle';
 import Test from '../../../components/test/TestgetDialog.vue';
 import { subjectList, DelSubject } from '../../../api/subjects';
 import {
