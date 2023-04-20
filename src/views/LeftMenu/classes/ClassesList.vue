@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import {debounce}  from "../../../utils/throTtle"
+import {debounce}  from "../../../utils/throttle"
 import { onMounted } from 'vue';
 import { reactive } from 'vue';
 import { ref ,toRefs} from 'vue';

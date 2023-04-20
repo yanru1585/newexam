@@ -111,7 +111,9 @@
 <script lang="ts" setup>
 import  moment  from "moment"
 import {debounce}  from "../../../utils/throttle"
-import DatabaseDialog from '../../../components/database/DatabaseDialog.vue';
+
+import DatabaseDialog from '../../components/database/DatabaseDialog.vue';
+
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted, ref, watch, toRaw, nextTick,onActivated } from 'vue';
 import {

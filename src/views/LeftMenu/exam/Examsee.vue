@@ -78,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import {debounce}  from "../../../utils/throTtle"
+import {debounce}  from "../../../utils/throttle"
 import { onMounted, reactive, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
 import { ISee, IClasses ,classeslist} from '../../../api/admin';

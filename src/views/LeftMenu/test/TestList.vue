@@ -154,7 +154,7 @@
 
 <script setup lang="ts">
 import  moment  from "moment"
-import {debounce}  from "../../../utils/throTtle"
+import {debounce}  from "../../../utils/throttle"
 import TestgetDialog from '../../../components/test/TestgetDialog.vue';
 import TransferDialog from '../../../components/subject/TransferDialog.vue';
 import { onMounted, defineProps, toRefs, toRaw ,watchEffect,onActivated} from 'vue';
@@ -551,5 +551,6 @@ const getAnalyse=(data:any)=>{
 }
 /deep/.el-pagination{
   justify-content: center;
+  margin-top: 20px;
 }
 </style>
