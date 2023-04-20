@@ -111,9 +111,9 @@
 <script lang="ts" setup>
 import moment from 'moment'
 import {Downblob} from '../../../utils/down'
-import AddtestDrawer from '../../../components/database/AddtestDrawer.vue';
-import DatabaseDetail from '../../../components/database/DatabaseDetail.vue'
-import AlladdQuestion from '../../../components/database/AlladdQuestion.vue';
+import AddtestDrawer from '../../components/database/AddtestDrawer.vue';
+import DatabaseDetail from '../../components/database/DatabaseDetail.vue'
+import AlladdQuestion from '../../components/database/AlladdQuestion.vue';
 import { ArrowLeft } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { reactive, toRefs, onMounted, ref, toRaw } from 'vue';
